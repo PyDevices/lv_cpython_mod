@@ -37,10 +37,26 @@ def test_widget_types(lv):
 
 
 def test_module_functions(lv):
-    for name in ("display_create", "screen_active", "tick_inc"):
+    for name in ("display_create", "screen_active", "tick_inc", "refr_now"):
         if not hasattr(lv, name):
             _fail(f"missing module function lv.{name}")
     print("OK: module functions (display_create, screen_active, …)")
+
+
+def test_refr_now(lv):
+    disp = lv.display_create(80, 80)
+    buf = lv.draw_buf_create(80, 8, lv.COLOR_FORMAT.RGB565, 0)
+    lv.display_set_draw_buffers(disp, buf, None)
+    lv.display_set_render_mode(disp, lv.DISPLAY_RENDER_MODE.PARTIAL)
+    disp.set_flush_cb(lambda d, area, color_p: d.flush_ready())
+    before = lv.display_get_default()
+    lv.refr_now(disp)
+    after = lv.display_get_default()
+    if before is None or after is None:
+        _fail("display_get_default() returned None around refr_now")
+    if lv.screen_active() is None:
+        _fail("screen_active() returned None after refr_now")
+    print("OK: refr_now refreshes without deleting the display")
 
 
 def _setup_display(lv):
@@ -91,8 +107,32 @@ def test_event_callback(lv):
     test_callbacks(lv)
 
 
-def test_button_callback(lv):
-    pass
+def test_blob_dereference(lv):
+    disp = lv.display_create(16, 16)
+    buf = lv.draw_buf_create(16, 4, lv.COLOR_FORMAT.RGB565, 0)
+    lv.display_set_draw_buffers(disp, buf, None)
+    seen = []
+
+    def flush_cb(d, area, color_p):
+        width = area.x2 - area.x1 + 1
+        height = area.y2 - area.y1 + 1
+        data = color_p.__dereference__(width * height * 2)
+        seen.append(len(data))
+        d.flush_ready()
+
+    disp.set_flush_cb(flush_cb)
+    lv.refr_now(disp)
+    if not seen:
+        _fail("flush callback did not run during refr_now")
+    print("OK: Blob.__dereference__ in flush callback")
+
+
+def test_nesting(lv):
+    if not hasattr(lv, "_nesting"):
+        _fail("missing lv._nesting")
+    if not hasattr(lv._nesting, "value"):
+        _fail("lv._nesting missing value attribute")
+    print("OK: lv._nesting present")
 
 
 def main():
@@ -103,10 +143,13 @@ def main():
     test_enums(lv)
     test_widget_types(lv)
     test_module_functions(lv)
+    test_nesting(lv)
 
     lv.init()
     try:
         _setup_display(lv)
+        test_refr_now(lv)
+        test_blob_dereference(lv)
         test_widget(lv)
         test_callbacks(lv)
     finally:

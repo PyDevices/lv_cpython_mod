@@ -18,6 +18,7 @@ extern "C" {
 
 extern PyObject *PyLvReferenceError;
 extern PyObject *mp_lv_global_user_data;
+extern PyObject *lvpy_nesting_obj;
 
 typedef struct {
     PyObject_HEAD
@@ -40,6 +41,18 @@ extern py_lv_obj_type_t *py_lv_obj_types[];
 
 PyTypeObject *py_get_base_obj_type(void);
 
+/* LVGL global lock (pydisplay may call task_handler from a timer thread). */
+void lvpy_lock(void);
+void lvpy_unlock(void);
+void lvpy_release_lock_for_python(void);
+void lvpy_reacquire_lock_after_python(void);
+
+void lvpy_nesting_inc(void);
+void lvpy_nesting_dec(void);
+
+void lv_struct_register_size(PyTypeObject *type, size_t size);
+size_t lv_struct_get_size(PyTypeObject *type);
+
 /* Primitive convertors (names match generated binding code). */
 bool mp_obj_is_true(PyObject *obj);
 PyObject *convert_to_bool(bool b);
@@ -61,7 +74,7 @@ PyObject *lv_to_mp_struct(PyTypeObject *type, void *lv_struct);
 PyObject *lv_to_mp_struct_own(PyTypeObject *type, void *lv_struct);
 void py_lv_struct_dealloc(py_lv_struct_t *self);
 py_lv_struct_t *mp_to_lv_struct(PyObject *obj);
-PyObject *make_new_lv_struct(PyTypeObject *type, PyObject *args, PyObject *kwargs);
+PyObject *make_new_lv_struct(PyTypeObject *type, PyObject *args, PyObject *kwargs, size_t elem_size);
 void *copy_buffer(const void *buffer, size_t size);
 
 void *mp_array_to_u8ptr(PyObject *arr);
@@ -96,6 +109,7 @@ extern PyTypeObject py_blob_type;
 extern PyTypeObject py_lv_obj_type;  /* defined in generated lvpy.c (phase 5+) */
 
 void py_lv_runtime_init_types(void);
+PyObject *lvpy_create_nesting_obj(void);
 
 #ifdef __cplusplus
 }
