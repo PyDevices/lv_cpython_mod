@@ -26,7 +26,11 @@ def test_string_constants(lv):
 def test_enums(lv):
     if lv.EVENT.CLICKED != 7:
         _fail("lv.EVENT.CLICKED unexpected value")
-    print("OK: enum namespaces (lv.EVENT.CLICKED)")
+    if lv.obj.FLAG.SCROLLABLE != lv.OBJ_FLAG.SCROLLABLE:
+        _fail("lv.obj.FLAG not aliased to lv.OBJ_FLAG")
+    if lv.label.LONG.DOT != lv.LABEL_LONG.DOT:
+        _fail("lv.label.LONG not aliased to lv.LABEL_LONG")
+    print("OK: enum namespaces (lv.EVENT.CLICKED, lv.obj.FLAG, lv.label.LONG)")
 
 
 def test_widget_types(lv):
