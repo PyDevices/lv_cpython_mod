@@ -17,20 +17,43 @@ def test_import_and_constants(lv):
 
 
 def test_string_constants(lv):
-    for name in ("SYMBOL_OK", "SYMBOL_CLOSE", "SYMBOL_HOME"):
-        if not hasattr(lv, name):
-            _fail(f"missing string constant {name}")
-    print("OK: LVGL string constants present")
+    for name in ("OK", "CLOSE", "HOME"):
+        if not hasattr(lv.SYMBOL, name):
+            _fail(f"missing lv.SYMBOL.{name}")
+    print("OK: LVGL SYMBOL namespace (lv.SYMBOL.OK, …)")
 
 
 def test_enums(lv):
     if lv.EVENT.CLICKED != 7:
         _fail("lv.EVENT.CLICKED unexpected value")
-    if lv.obj.FLAG.SCROLLABLE != lv.OBJ_FLAG.SCROLLABLE:
-        _fail("lv.obj.FLAG not aliased to lv.OBJ_FLAG")
-    if lv.label.LONG.DOT != lv.LABEL_LONG.DOT:
-        _fail("lv.label.LONG not aliased to lv.LABEL_LONG")
-    print("OK: enum namespaces (lv.EVENT.CLICKED, lv.obj.FLAG, lv.label.LONG)")
+    if not hasattr(lv.obj, "FLAG"):
+        _fail("lv.obj missing FLAG enum namespace")
+    if lv.obj.FLAG.SCROLLABLE != (1 << 4):
+        _fail("lv.obj.FLAG.SCROLLABLE unexpected value")
+    if hasattr(lv, "OBJ_FLAG"):
+        _fail("lv.OBJ_FLAG must not be exposed at module level")
+    if not hasattr(lv.label, "LONG"):
+        _fail("lv.label missing LONG enum namespace")
+    if hasattr(lv, "LABEL_LONG"):
+        _fail("lv.LABEL_LONG must not be exposed at module level")
+    print("OK: enum namespaces (lv.EVENT, lv.obj.FLAG, lv.label.LONG)")
+
+
+def test_module_types(lv):
+    for name in ("C_Pointer", "Blob", "Struct", "LvReferenceError"):
+        if not hasattr(lv, name):
+            _fail(f"missing module export lv.{name}")
+    print("OK: module types (C_Pointer, Blob, Struct, LvReferenceError)")
+
+
+def test_struct_helpers(lv):
+    size = lv.color_t.__SIZE__
+    if not isinstance(size, int) or size <= 0:
+        _fail("lv.color_t.__SIZE__ missing or invalid")
+    for name in ("__cast__", "__dereference__", "__cast_instance__"):
+        if not hasattr(lv.color_t, name):
+            _fail(f"lv.color_t missing helper {name}")
+    print("OK: struct helpers (__SIZE__, __cast__, …)")
 
 
 def test_widget_types(lv):
@@ -145,6 +168,8 @@ def main():
     test_import_and_constants(lv)
     test_string_constants(lv)
     test_enums(lv)
+    test_module_types(lv)
+    test_struct_helpers(lv)
     test_widget_types(lv)
     test_module_functions(lv)
     test_nesting(lv)

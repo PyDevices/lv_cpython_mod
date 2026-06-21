@@ -52,6 +52,7 @@ void lvpy_nesting_dec(void);
 
 void lv_struct_register_size(PyTypeObject *type, size_t size);
 size_t lv_struct_get_size(PyTypeObject *type);
+void lv_struct_expose_size(PyTypeObject *type);
 
 /* Primitive convertors (names match generated binding code). */
 bool mp_obj_is_true(PyObject *obj);

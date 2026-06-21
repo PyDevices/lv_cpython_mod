@@ -146,6 +146,40 @@ size_t lv_struct_get_size(PyTypeObject *type)
     return 0;
 }
 
+void lv_struct_expose_size(PyTypeObject *type)
+{
+    PyObject *size_obj;
+
+    if (!type) {
+        return;
+    }
+    size_t size = lv_struct_get_size(type);
+    if (size == 0) {
+        return;
+    }
+    if (PyType_Ready(type) < 0) {
+        PyErr_Clear();
+        return;
+    }
+    size_obj = PyLong_FromSize_t(size);
+    if (!size_obj) {
+        PyErr_Clear();
+        return;
+    }
+    if (type->tp_dict == NULL) {
+        type->tp_dict = PyDict_New();
+        if (type->tp_dict == NULL) {
+            Py_DECREF(size_obj);
+            PyErr_Clear();
+            return;
+        }
+    }
+    if (PyDict_SetItemString(type->tp_dict, "__SIZE__", size_obj) < 0) {
+        PyErr_Clear();
+    }
+    Py_DECREF(size_obj);
+}
+
 static PyObject *py_nesting_get_value(PyObject *self, void *closure)
 {
     (void)self;
@@ -221,6 +255,50 @@ static PyObject *py_blob_cast(PyObject *self, PyObject *args)
     out->owns_data = 0;
     return (PyObject *)out;
 }
+
+static PyObject *py_lv_struct_cast(PyObject *cls, PyObject *args)
+{
+    PyObject *type_obj = NULL;
+    PyObject *ptr_obj = NULL;
+
+    (void)cls;
+    if (!PyArg_ParseTuple(args, "OO", &type_obj, &ptr_obj)) {
+        return NULL;
+    }
+    if (!PyType_Check(type_obj)) {
+        PyErr_SetString(PyExc_TypeError, "cast argument must be a type");
+        return NULL;
+    }
+    void *ptr = mp_to_ptr(ptr_obj);
+    if (!ptr) {
+        Py_RETURN_NONE;
+    }
+    py_lv_struct_t *out = PyObject_New(py_lv_struct_t, (PyTypeObject *)type_obj);
+    if (!out) {
+        return NULL;
+    }
+    out->data = ptr;
+    out->owns_data = 0;
+    return (PyObject *)out;
+}
+
+static PyObject *py_lv_cast_instance(PyObject *self, PyObject *args)
+{
+    PyObject *ptr_obj = NULL;
+
+    if (!PyArg_ParseTuple(args, "O", &ptr_obj)) {
+        return NULL;
+    }
+    ((py_lv_struct_t *)self)->data = mp_to_ptr(ptr_obj);
+    return self;
+}
+
+static PyMethodDef py_base_struct_methods[] = {
+    {"__cast__", (PyCFunction)py_lv_struct_cast, METH_VARARGS | METH_CLASS, NULL},
+    {"__cast_instance__", py_lv_cast_instance, METH_VARARGS, NULL},
+    {"__dereference__", py_lv_dereference, METH_VARARGS, NULL},
+    {NULL, NULL, 0, NULL}
+};
 
 static PyMethodDef py_blob_methods[] = {
     {"__dereference__", py_lv_dereference, METH_VARARGS, NULL},
@@ -618,7 +696,7 @@ PyTypeObject py_lv_base_struct_type = {
     .tp_basicsize = sizeof(py_lv_struct_t),
     .tp_dealloc = (destructor)py_lv_struct_dealloc,
     .tp_flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,
-    .tp_methods = py_blob_methods,
+    .tp_methods = py_base_struct_methods,
 };
 
 PyTypeObject py_blob_type = {
