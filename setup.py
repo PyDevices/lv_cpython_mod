@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 import os
+import sys
 from pathlib import Path
 
 from setuptools import Extension, setup
+from setuptools.command.build_ext import build_ext
 
 ROOT = Path(__file__).resolve().parent
 WORKSPACE = ROOT.parent
@@ -37,7 +39,10 @@ include_dirs = [
 
 define_macros = [("CMODS_CPYTHON_BUILD", "1")]
 
-extra_compile_args = ["-Wno-unused-function", "-Wno-sign-compare"]
+if sys.platform == "win32":
+    extra_compile_args = ["/wd4101", "/wd4244", "/wd4267", "/wd4996"]
+else:
+    extra_compile_args = ["-Wno-unused-function", "-Wno-sign-compare"]
 
 ext = Extension(
     "lvgl",
@@ -47,10 +52,93 @@ ext = Extension(
     extra_compile_args=extra_compile_args,
 )
 
+
+class Win32LinkRspBuildExt(build_ext):
+    """MSVC link.exe has an ~8k command-line limit; LVGL needs a response file."""
+
+    def build_extensions(self):
+        if sys.platform == "win32":
+            self._patch_msvc_link()
+        super().build_extensions()
+
+    def _patch_msvc_link(self) -> None:
+        try:
+            from setuptools._distutils import _msvccompiler as msvc
+        except ImportError:
+            return
+        compiler_cls = getattr(msvc, "MSVCCompiler", None)
+        if compiler_cls is None or getattr(compiler_cls.link, "_lvcp_rsp", False):
+            return
+
+        orig_link = compiler_cls.link
+
+        def link_with_rsp(
+            compiler,
+            target_desc,
+            objects,
+            output_filename,
+            output_dir,
+            libraries,
+            library_dirs,
+            runtime_library_dirs,
+            export_symbols,
+            debug,
+            extra_preargs,
+            extra_postargs,
+            build_temp,
+            target_lang,
+        ):
+            obj_count = len(objects)
+            real_build_temp = build_temp
+            if not real_build_temp and objects and not str(objects[0]).startswith("@"):
+                real_build_temp = os.path.dirname(objects[0])
+            if obj_count > 50:
+                if not real_build_temp:
+                    real_build_temp = str(ROOT / "build" / "msvc")
+                os.makedirs(real_build_temp, exist_ok=True)
+                rsp_path = os.path.join(real_build_temp, "lvgl_link_objects.rsp")
+                with open(rsp_path, "w", encoding="utf-8") as rsp:
+                    for obj in objects:
+                        rsp.write(f'"{obj}"\n')
+                objects = [f"@{rsp_path}"]
+
+            orig_dirname = os.path.dirname
+
+            def dirname_fixup(path: str) -> str:
+                if isinstance(path, str) and path.startswith("@"):
+                    return real_build_temp or orig_dirname(path[1:])
+                return orig_dirname(path)
+
+            os.path.dirname = dirname_fixup
+            try:
+                return orig_link(
+                    compiler,
+                    target_desc,
+                    objects,
+                    output_filename,
+                    output_dir,
+                    libraries,
+                    library_dirs,
+                    runtime_library_dirs,
+                    export_symbols,
+                    debug,
+                    extra_preargs,
+                    extra_postargs,
+                    real_build_temp,
+                    target_lang,
+                )
+            finally:
+                os.path.dirname = orig_dirname
+
+        link_with_rsp._lvcp_rsp = True
+        compiler_cls.link = link_with_rsp
+
+
 setup(
     name="lvgl-cpython",
     version="0.1.0",
     description="LVGL bindings for CPython (generated)",
     ext_modules=[ext],
     python_requires=">=3.9",
+    cmdclass={"build_ext": Win32LinkRspBuildExt},
 )

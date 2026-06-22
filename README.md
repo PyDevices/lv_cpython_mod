@@ -4,10 +4,32 @@ Native CPython extension for [LVGL](https://lvgl.io/), generated from [`lv_bindi
 
 ## Requirements
 
-- Python 3.9+
-- A C compiler (GCC or Clang)
+### All platforms
+
+- Python 3.9+ with `pip` and `setuptools`
 - [`lv_bindings`](https://github.com/PyDevices/lv_bindings) checked out as a **sibling** of this directory (see layout below)
-- LVGL sources and headers inside that `lv_bindings` tree (via its submodule or checkout)
+- LVGL sources inside that `lv_bindings` tree (`lv_bindings/lvgl/`, usually via submodule)
+- Generated bindings: `lv_bindings/generated/lvpy.c` (from `regenerate_lvpy.sh`)
+
+### WSL / Linux / macOS
+
+- GCC or Clang
+- `python3-dev` (or equivalent) matching your Python version
+
+On Debian/Ubuntu:
+
+```bash
+sudo apt install python3-dev build-essential
+```
+
+### Windows (native or via WSL + `pip.exe`)
+
+- [python.org](https://www.python.org/) CPython (or another MSVC-built Python 3.9+)
+- **Microsoft C++ Build Tools** with the **Desktop development with C++** workload  
+  ([Visual Studio Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/))
+- MinGW is **not** supported for python.org Windows Python; use MSVC.
+
+`setup.py` selects MSVC warning flags on Windows and uses a linker response file (LVGL compiles ~285 `.c` files; the raw `link.exe` command line exceeds Windows limits).
 
 ## Repository layout
 
@@ -27,24 +49,90 @@ workspace/
 
 Clone both repositories into the same parent folder before building.
 
-## Build
+## Generate bindings
+
+Regenerate whenever `lv_bindings` or `max_phase` changes, or if `generated/lvpy.c` is missing or out of date:
 
 ```bash
-# 1. Generate CPython bindings (from lv_bindings)
-cd lv_bindings && ./regenerate_lvpy.sh
+cd lv_bindings
+./regenerate_lvpy.sh
+```
 
-# 2. Build and install the extension
+Requires GCC for preprocessing (`lv_bindings/regenerate_lvpy.sh` uses `gcc -E`). Run this step from WSL or Linux even when the final install targets Windows Python.
+
+## Build and install
+
+`pip install` compiles `lvpy_runtime.c`, the generated `lvpy.c`, and all LVGL sources under `lv_bindings/lvgl/src`. If `lv_bindings/generated/lvpy.c` is missing, the build exits with instructions to run `regenerate_lvpy.sh`.
+
+Use **editable** install (`-e`) while developing so the `.so` / `.pyd` in this directory stays in sync with rebuilds.
+
+### WSL (Linux Python)
+
+From WSL, using Linux Python in a venv:
+
+```bash
+# 1. Generate bindings (if not done already)
+cd ~/github/cmods/lv_bindings && ./regenerate_lvpy.sh
+
+# 2. Build and install
 cd ../lv_cpython_mod
 python3 -m venv .venv
 .venv/bin/pip install -e .
 
-# 3. Smoke tests
+# 3. Smoke test
 .venv/bin/python test_lvgl_cpython.py
 ```
 
-`pip install` compiles `lvpy_runtime.c`, the generated `lvpy.c`, and LVGL sources from `lv_bindings/lvgl/src`. If `lv_bindings/generated/lvpy.c` is missing, the build stops with instructions to run `regenerate_lvpy.sh`.
+Quick import check:
 
-To change how much of the API is emitted, edit `max_phase` in `lv_bindings/binding/emit_cpython.py` (currently **7**) and regenerate.
+```bash
+.venv/bin/python -c "import lvgl as lv; lv.init(); lv.deinit(); print('ok')"
+```
+
+### Windows Python from WSL (no copy to `C:\`)
+
+You can keep the repo on the WSL filesystem and install into **Windows** Python using `pip.exe`. `setup.py` resolves the sibling `lv_bindings` tree via relative paths.
+
+From a WSL bash shell (use a Linux cwd such as `~`, not a UNC path):
+
+```bash
+cd ~/github/cmods/lv_bindings && ./regenerate_lvpy.sh
+
+pip.exe install -e "$(wslpath -w ~/github/cmods/lv_cpython_mod)"
+```
+
+The first build compiles every LVGL source file and may take several minutes over `\\wsl.localhost\...`. Install completes into Windows `site-packages`; the extension module is also written beside this repo (e.g. `lvgl.cp314-win_amd64.pyd`).
+
+Verify:
+
+```bash
+python.exe -c "import lvgl as lv; lv.init(); print('ok'); lv.deinit()"
+```
+
+### Windows (native shell)
+
+With the repo on a Windows drive (or accessed via `\\wsl.localhost\...` in PowerShell/cmd):
+
+```powershell
+cd C:\path\to\cmods\lv_bindings
+# regenerate from WSL if gcc is not available on Windows:
+#   wsl ./regenerate_lvpy.sh
+
+cd ..\lv_cpython_mod
+py -m pip install -e .
+py -c "import lvgl as lv; lv.init(); lv.deinit(); print('ok')"
+```
+
+Open a **new** terminal after installing Build Tools so `cl.exe` is on `PATH`.
+
+### Changing API coverage
+
+To change how much of the API is emitted, edit `max_phase` in `lv_bindings/binding/emit_cpython.py` (currently **7**), run `regenerate_lvpy.sh`, then reinstall:
+
+```bash
+cd lv_bindings && ./regenerate_lvpy.sh
+cd ../lv_cpython_mod && pip install -e .    # or pip.exe on Windows
+```
 
 ## Usage
 
@@ -119,6 +207,8 @@ Phases 1–7 are enabled in the generator today. Smoke tests in `test_lvgl_cpyth
 ## Known limitations
 
 - **Sibling dependency**: this repo does not vendor `lv_bindings` or LVGL; both must be present at build time.
+- **Windows toolchain**: python.org CPython on Windows requires MSVC Build Tools; MinGW cannot build this extension for that interpreter.
+- **Regenerate before build**: `generated/lvpy.c` must match the current `emit_py_native.py` generator (run `regenerate_lvpy.sh` after pulling `lv_bindings` changes).
 - **Display OO API**: no methods on `lv_display_t` wrappers; use `lv.display_*` module functions.
 - **Prototype aliasing**: some widget `tp_methods` entries may point at the wrong C function when LVGL reuses prototypes; prefer module-level names when in doubt.
 - **`C_Pointer` helper struct**: emitted late; a runtime stub is used until helper emission is complete.
@@ -126,7 +216,7 @@ Phases 1–7 are enabled in the generator today. Smoke tests in `test_lvgl_cpyth
 
 ## Development
 
-Regenerate after changing `lv_bindings` or `max_phase`:
+Regenerate after changing `lv_bindings` or `max_phase`, then reinstall (see [Build and install](#build-and-install)):
 
 ```bash
 cd lv_bindings && ./regenerate_lvpy.sh
