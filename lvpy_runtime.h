@@ -95,6 +95,13 @@ PyObject *mp_get_callbacks(PyObject *obj);
 void lvpy_dealloc_obj(py_lv_obj_t *self);
 PyObject *get_callback_dict_from_user_data(void *user_data);
 
+/* Per-registration callback dicts (add_event_cb with user_data=None) are Py_INCREF'd in mp_lv_callback. */
+int lvpy_is_per_registration_callback_dict(void *user_data);
+void lvpy_release_callback_user_data(void *user_data);
+void *lvpy_peek_obj_event_cb_user_data(lv_obj_t *obj, lv_event_cb_t cb, void *specific_user_data);
+void *lvpy_peek_display_event_cb_user_data(lv_display_t *disp, lv_event_cb_t cb, void *specific_user_data);
+void *lvpy_peek_indev_event_cb_user_data(lv_indev_t *indev, lv_event_cb_t cb, void *specific_user_data);
+
 void *mp_lv_callback(PyObject *py_callback, void *lv_callback, const char *callback_name,
     void **user_data_ptr, void *containing_struct,
     void *(*get_user_data)(void *), void (*set_user_data)(void *, void *));

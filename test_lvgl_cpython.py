@@ -130,6 +130,40 @@ def test_callbacks(lv):
     print("OK: screen and button event callbacks")
 
 
+def test_multi_callbacks(lv):
+    """Multiple add_event_cb registrations on one object must not clobber each other."""
+    scr = lv.screen_active()
+    btn = lv.button(scr)
+    btn.set_size(80, 40)
+    fired = []
+
+    def mk(name):
+        def cb(event):
+            fired.append((name, event.get_code()))
+
+        return cb
+
+    for name, code in (
+        ("PRESSED", lv.EVENT.PRESSED),
+        ("RELEASED", lv.EVENT.RELEASED),
+        ("CLICKED", lv.EVENT.CLICKED),
+    ):
+        btn.add_event_cb(mk(name), code, None)
+
+    btn.send_event(lv.EVENT.PRESSED, None)
+    btn.send_event(lv.EVENT.CLICKED, None)
+    btn.send_event(lv.EVENT.RELEASED, None)
+
+    expected = [
+        ("PRESSED", lv.EVENT.PRESSED),
+        ("CLICKED", lv.EVENT.CLICKED),
+        ("RELEASED", lv.EVENT.RELEASED),
+    ]
+    if fired != expected:
+        _fail(f"multi-callback dispatch mismatch: got {fired!r}, expected {expected!r}")
+    print("OK: multiple filtered callbacks on one object")
+
+
 def test_event_callback(lv):
     test_callbacks(lv)
 
@@ -181,6 +215,7 @@ def main():
         test_blob_dereference(lv)
         test_widget(lv)
         test_callbacks(lv)
+        test_multi_callbacks(lv)
     finally:
         lv.deinit()
 

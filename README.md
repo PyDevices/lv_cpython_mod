@@ -212,7 +212,7 @@ Phases 1–7 are enabled in the generator today. Smoke tests in `test_lvgl_cpyth
 - **Display OO API**: no methods on `lv_display_t` wrappers; use `lv.display_*` module functions.
 - **Prototype aliasing**: some widget `tp_methods` entries may point at the wrong C function when LVGL reuses prototypes; prefer module-level names when in doubt.
 - **`C_Pointer` helper struct**: emitted late; a runtime stub is used until helper emission is complete.
-- **Callback lifetime**: Python wrappers clear `lv_obj->user_data` on dealloc; long-running apps should keep references to objects that register callbacks.
+- **Callback lifetime**: Per-registration callback dicts (`add_event_cb` with `user_data=None`) are released when the event is removed or the object is deleted. Python wrappers clear `lv_obj->user_data` on dealloc; long-running apps should still keep references to objects that register callbacks.
 
 ## Development
 
@@ -223,6 +223,14 @@ cd lv_bindings && ./regenerate_lvpy.sh
 cd ../lv_cpython_mod && .venv/bin/pip install -e .
 .venv/bin/python test_lvgl_cpython.py
 ```
+
+After the first full build, incremental rebuilds are much faster (only changed sources such as `generated/lvpy.c` are recompiled). From `lv_cpython_mod`, with `setuptools` and `wheel` installed in the target venv:
+
+```bash
+.venv/bin/python setup.py build_ext --inplace
+```
+
+With an editable install (`pip install -e .`), the updated `.so` / `.pyd` beside this repo is picked up immediately — no reinstall step needed.
 
 Generator work lives in the [`lv_bindings`](https://github.com/PyDevices/lv_bindings) repository (`binding/emit_py_native.py`, `binding/emit_py_cp.py`, `binding/emit_cpython.py`). Runtime fixes and CPython-specific behavior belong here in `lvpy_runtime.c`.
 

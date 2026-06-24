@@ -511,13 +511,7 @@ static PyObject *py_C_Pointer_new(PyTypeObject *type, PyObject *args, PyObject *
     return make_new_lv_struct(type, args, kwds, 0);
 }
 
-static void py_lv_delete_cb(lv_event_t *e)
-{
-    lv_obj_t *lv_obj = lv_event_get_target(e);
-    if (!lv_obj) return;
-    py_lv_obj_t *self = (py_lv_obj_t *)lv_obj->user_data;
-    if (self) self->lv_obj = NULL;
-}
+static void py_lv_delete_cb(lv_event_t *e);
 
 PyTypeObject *py_get_base_obj_type(void)
 {
@@ -619,6 +613,113 @@ PyObject *get_callback_dict_from_user_data(void *user_data)
     PyObject *obj = (PyObject *)user_data;
     if (PyDict_Check(obj)) return obj;
     return mp_get_callbacks(obj);
+}
+
+int lvpy_is_per_registration_callback_dict(void *user_data)
+{
+    if (!user_data) return 0;
+    PyObject *obj = (PyObject *)user_data;
+    if (!PyDict_Check(obj)) return 0;
+    PyTypeObject *base = py_get_base_obj_type();
+    if (base && PyObject_TypeCheck(obj, base)) return 0;
+    return 1;
+}
+
+void lvpy_release_callback_user_data(void *user_data)
+{
+    if (lvpy_is_per_registration_callback_dict(user_data)) {
+        Py_DECREF((PyObject *)user_data);
+    }
+}
+
+static void *lvpy_peek_event_dsc_list_cb_user_data(
+    uint32_t count,
+    lv_event_dsc_t *(*get_dsc)(uint32_t index, void *ctx),
+    void *ctx,
+    lv_event_cb_t cb,
+    void *specific_user_data)
+{
+    for (uint32_t i = 0; i < count; i++) {
+        lv_event_dsc_t *dsc = get_dsc(i, ctx);
+        if (!dsc) continue;
+        if (lv_event_dsc_get_cb(dsc) != cb) continue;
+        void *ud = lv_event_dsc_get_user_data(dsc);
+        if (specific_user_data != NULL && ud != specific_user_data) continue;
+        return ud;
+    }
+    return NULL;
+}
+
+typedef struct {
+    lv_obj_t *obj;
+} lvpy_obj_peek_ctx;
+
+static lv_event_dsc_t *lvpy_obj_peek_get_dsc(uint32_t index, void *ctx)
+{
+    lvpy_obj_peek_ctx *c = (lvpy_obj_peek_ctx *)ctx;
+    return lv_obj_get_event_dsc(c->obj, index);
+}
+
+void *lvpy_peek_obj_event_cb_user_data(lv_obj_t *obj, lv_event_cb_t cb, void *specific_user_data)
+{
+    if (!obj) return NULL;
+    lvpy_obj_peek_ctx ctx = {obj};
+    return lvpy_peek_event_dsc_list_cb_user_data(
+        lv_obj_get_event_count(obj), lvpy_obj_peek_get_dsc, &ctx, cb, specific_user_data);
+}
+
+typedef struct {
+    lv_display_t *disp;
+} lvpy_display_peek_ctx;
+
+static lv_event_dsc_t *lvpy_display_peek_get_dsc(uint32_t index, void *ctx)
+{
+    lvpy_display_peek_ctx *c = (lvpy_display_peek_ctx *)ctx;
+    return lv_display_get_event_dsc(c->disp, index);
+}
+
+void *lvpy_peek_display_event_cb_user_data(lv_display_t *disp, lv_event_cb_t cb, void *specific_user_data)
+{
+    if (!disp) return NULL;
+    lvpy_display_peek_ctx ctx = {disp};
+    return lvpy_peek_event_dsc_list_cb_user_data(
+        lv_display_get_event_count(disp), lvpy_display_peek_get_dsc, &ctx, cb, specific_user_data);
+}
+
+typedef struct {
+    lv_indev_t *indev;
+} lvpy_indev_peek_ctx;
+
+static lv_event_dsc_t *lvpy_indev_peek_get_dsc(uint32_t index, void *ctx)
+{
+    lvpy_indev_peek_ctx *c = (lvpy_indev_peek_ctx *)ctx;
+    return lv_indev_get_event_dsc(c->indev, index);
+}
+
+void *lvpy_peek_indev_event_cb_user_data(lv_indev_t *indev, lv_event_cb_t cb, void *specific_user_data)
+{
+    if (!indev) return NULL;
+    lvpy_indev_peek_ctx ctx = {indev};
+    return lvpy_peek_event_dsc_list_cb_user_data(
+        lv_indev_get_event_count(indev), lvpy_indev_peek_get_dsc, &ctx, cb, specific_user_data);
+}
+
+static void py_lv_delete_cb(lv_event_t *e)
+{
+    PyGILState_STATE gstate = PyGILState_Ensure();
+    lv_obj_t *lv_obj = lv_event_get_target(e);
+    if (lv_obj) {
+        uint32_t count = lv_obj_get_event_count(lv_obj);
+        for (uint32_t i = 0; i < count; i++) {
+            lv_event_dsc_t *dsc = lv_obj_get_event_dsc(lv_obj, i);
+            if (dsc) {
+                lvpy_release_callback_user_data(lv_event_dsc_get_user_data(dsc));
+            }
+        }
+        py_lv_obj_t *self = (py_lv_obj_t *)lv_obj->user_data;
+        if (self) self->lv_obj = NULL;
+    }
+    PyGILState_Release(gstate);
 }
 
 void *mp_lv_callback(PyObject *py_callback, void *lv_callback, const char *callback_name,
