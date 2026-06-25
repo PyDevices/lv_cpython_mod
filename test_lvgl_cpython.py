@@ -188,6 +188,15 @@ def test_blob_dereference(lv):
     print("OK: Blob.__dereference__ in flush callback")
 
 
+def test_remove_style_none(lv):
+    """remove_style(None, part) must pass NULL to LVGL, not dereference Py_None."""
+    scr = lv.screen_active()
+    arc = lv.arc(scr)
+    arc.set_size(40, 40)
+    arc.remove_style(None, lv.PART.KNOB)
+    print("OK: arc.remove_style(None, PART.KNOB)")
+
+
 def test_nesting(lv):
     if not hasattr(lv, "_nesting"):
         _fail("missing lv._nesting")
@@ -214,6 +223,7 @@ def main():
         test_refr_now(lv)
         test_blob_dereference(lv)
         test_widget(lv)
+        test_remove_style_none(lv)
         test_callbacks(lv)
         test_multi_callbacks(lv)
     finally:
