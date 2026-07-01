@@ -22,8 +22,9 @@ Create an annotated git tag for the next auto-computed release version:
 
   <major>.<lvgl_minor>.<binding_release>
 
-  lvgl_minor       — read from lv_bindings/lvgl/lvgl.h
-  binding_release  — highest existing v<major>.<minor>.* tag + 1 (0 if none)
+  lvgl_minor       — from the lv_bindings release tag when LV_BINDINGS_REF is set,
+                     else from lvgl/lv_version.h or lvgl/lvgl.h
+  binding_release  — patch from the lv_bindings tag, or highest v<major>.<minor>.* + 1
   major            — 0 for TestPyPI testing (set LVCPYTHON_USE_REAL_LVGL_MAJOR=1
                      to use LVGL_VERSION_MAJOR when ready for real releases)
 

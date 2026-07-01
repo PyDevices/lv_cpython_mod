@@ -70,6 +70,8 @@ jobs:
 
       - name: Create and push release tag
         if: inputs.skip_publish != true && steps.commit.outputs.changed == 'true'
+        env:
+          LV_BINDINGS_REF: ${{ steps.lv_bindings_ref.outputs.ref }}
         run: |
           set -euo pipefail
           git fetch --tags origin

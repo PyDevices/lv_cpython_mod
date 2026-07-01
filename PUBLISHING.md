@@ -24,13 +24,16 @@ lv_cpython_mod: Publish TestPyPI             (on tag push v*.*.*)
 
 ## Version numbers
 
-Tags and PyPI versions use **`0.<lvgl_minor>.<binding_release>`** while testing on TestPyPI:
+Tags and PyPI versions follow the same scheme as [lv_bindings](https://github.com/PyDevices/lv_bindings): **`X.Y.Z`** where **X.Y** is the LVGL API line and **Z** is the binding release on that line (see `regenerate_all.sh` there).
 
-| Part | Source |
-|------|--------|
-| `0` | TestPyPI override (use `LVCPYTHON_USE_REAL_LVGL_MAJOR=1` for real LVGL major, e.g. `9.1.N`) |
-| `<lvgl_minor>` | `LVGL_VERSION_MINOR` in `lvgl/lvgl.h` |
-| `<binding_release>` | Auto-incremented from existing `v0.<minor>.*` tags |
+When **Sync and release** runs with an `lv_bindings` commit that has a release tag (e.g. `v9.2.0`), **lv_cpython_mod uses that tag for versioning** — no need to parse `lvgl.h` / `lv_version.h`.
+
+| Mode | Example lv_bindings tag | lv_cpython_mod tag |
+|------|-------------------------|-------------------|
+| TestPyPI (default) | `v9.2.0` | `v0.2.0` (major forced to **0**) |
+| Real LVGL major | `v9.2.0` | `v9.2.0` (`LVCPYTHON_USE_REAL_LVGL_MAJOR=1`) |
+
+If `LV_BINDINGS_REF` has no release tag, the script falls back to the local `lvgl` submodule headers and auto-increments the patch from existing tags in this repo.
 
 Preview the next version:
 
