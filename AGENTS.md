@@ -11,9 +11,7 @@ reference.
 ### Environment layout (set up by the update script)
 - Workspace venv: `/workspace/.venv` (editable install of the `lvgl` extension).
 - **In-repo build inputs:** `generated/lvpy.c`, `lv_conf.h`, and the `lvgl` git submodule.
-- **Sync from upstream:** `./scripts/sync_from_lv_bindings.sh` fetches `generated/lvpy.c`,
-  `lv_conf.h`, and the `lvgl` pin from `PyDevices/lv_bindings` on GitHub (after
-  bindings are regenerated and committed there).
+- **Release pipeline:** see [PUBLISHING.md](PUBLISHING.md) (sync from lv_bindings on GitHub, TestPyPI via tag push).
 
 ### Build / test / run (use the workspace venv)
 - Initialize submodules: `git submodule update --init lvgl`

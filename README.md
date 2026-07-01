@@ -50,25 +50,16 @@ git clone --recurse-submodules https://github.com/PyDevices/lv_cpython_mod.git
 git submodule update --init lvgl
 ```
 
-## Sync bindings from lv_bindings
+## Sync and publish
 
-When LVGL or the generator changes in [lv_bindings](https://github.com/PyDevices/lv_bindings), regenerate and commit `generated/lvpy.c` there. Pushing to **lv_bindings `main`** (paths: `generated/lvpy.c`, `lv_conf.h`, `lvgl`) automatically triggers **Sync and release** in this repo.
+Binding updates flow from [lv_bindings](https://github.com/PyDevices/lv_bindings) into this repo and onto TestPyPI. See **[PUBLISHING.md](PUBLISHING.md)** for the full pipeline (automatic triggers, `gh` CLI without a clone, secrets, and versioning).
 
-Manual sync:
-
-```bash
-./scripts/sync_from_lv_bindings.sh          # default: lv_bindings main on GitHub
-./scripts/sync_from_lv_bindings.sh --ref v1 # optional branch/tag/SHA
-```
-
-Or from anywhere with `gh` (no clone):
+Quick manual sync from GitHub:
 
 ```bash
-gh workflow run sync-and-release.yml --repo PyDevices/lv_cpython_mod
-gh workflow run sync-and-release.yml --repo PyDevices/lv_cpython_mod -f lv_bindings_ref=abc1234
+./scripts/sync_from_lv_bindings.sh          # lv_bindings main
+./scripts/sync_from_lv_bindings.sh --ref SHA  # specific commit
 ```
-
-This copies `generated/lvpy.c`, `lv_conf.h`, and checks out the matching `lvgl` commit, then tags and publishes to TestPyPI when changes land.
 
 ## Build and install
 
@@ -211,9 +202,9 @@ Phases 1–7 are enabled in the generator today. Smoke tests in `test_lvgl_cpyth
 
 ## Known limitations
 
-- **Sibling dependency**: this repo does not vendor `lv_bindings` or LVGL; both must be present at build time.
+- **Build inputs are vendored here**: `generated/lvpy.c`, `lv_conf.h`, and the `lvgl` submodule are synced from lv_bindings (see [PUBLISHING.md](PUBLISHING.md)); generator work still happens in lv_bindings.
 - **Windows toolchain**: python.org CPython on Windows requires MSVC Build Tools; MinGW cannot build this extension for that interpreter.
-- **Regenerate before build**: `generated/lvpy.c` must match the current `emit_py_native.py` generator (run `regenerate_lvpy.sh` after pulling `lv_bindings` changes).
+- **Regenerate in lv_bindings first**: after generator changes, run `regenerate_lvpy.sh` there, commit `generated/lvpy.c`, then sync or let CI sync (see [PUBLISHING.md](PUBLISHING.md)).
 - **Display OO API**: no methods on `lv_display_t` wrappers; use `lv.display_*` module functions.
 - **Prototype aliasing**: some widget `tp_methods` entries may point at the wrong C function when LVGL reuses prototypes; prefer module-level names when in doubt.
 - **`C_Pointer` helper struct**: emitted late; a runtime stub is used until helper emission is complete.
