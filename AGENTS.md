@@ -1,31 +1,46 @@
-# AGENTS.md
+# AGENTS.md — lv_cpython_mod
 
-## Cursor Cloud specific instructions
+Native CPython extension module `lvgl` (no MicroPython runtime). See `README.md` for usage.
 
-This repo (`lv_cpython_mod`) builds a single native CPython C-extension module named
-`lvgl` (LVGL bindings, no MicroPython runtime). It is a library, not a long-running
-service — there is no dev server, database, or daemon. "Running" it means importing
-the compiled module and exercising the API. See `README.md` for the full build/usage
-reference.
+**Full multi-port build matrix:** [../AGENTS.md](../AGENTS.md) (“build them all”: parallel 1–4, then Windows CPython).
 
-### Environment layout (set up by the update script)
-- Workspace venv: `/workspace/.venv` (editable install of the `lvgl` extension).
-- **In-repo build inputs:** `generated/lvpy.c`, `lv_conf.h`, and the `lvgl` git submodule.
-- **Release pipeline:** see [PUBLISHING.md](PUBLISHING.md) (sync from lv_bindings on GitHub, TestPyPI via tag push).
+## Build / test
 
-### Build / test / run (use the workspace venv)
-- Initialize submodules: `git submodule update --init lvgl`
-- Build (after any change to `lvpy_runtime.c`): `/workspace/.venv/bin/pip install -e .`
-  (or incremental `/workspace/.venv/bin/python setup.py build_ext --inplace`).
-- Tests (smoke suite): `/workspace/.venv/bin/python test_lvgl_cpython.py`.
-- Quick check: `/workspace/.venv/bin/python -c "import lvgl as lv; lv.init(); lv.deinit(); print('ok')"`.
-- Lint: none configured (no flake8/ruff/black/CI). Nothing to run.
+### Unix (WSL) — use `.venv`
 
-### Non-obvious gotchas
-- Editable install does **not** auto-recompile C sources on import. After editing
-  `lvpy_runtime.c`, you must rebuild (`pip install -e .` or `build_ext --inplace`).
-- After LVGL or generator changes, regenerate in `lv_bindings`, commit `generated/lvpy.c`
-  there, then run `./scripts/sync_from_lv_bindings.sh` in this repo.
-- Headless: there is no display backend. Rendering is verified by registering a flush
-  callback (`disp.set_flush_cb(...)`) and reading pixels via `color_p.__dereference__(n)`,
-  exactly as `test_lvgl_cpython.py` does.
+```bash
+git submodule update --init lvgl
+python3 -m venv .venv
+.venv/bin/pip install -r requirements.txt
+.venv/bin/pip install -e .    # rebuild after lvpy_runtime.c or generated/lvpy.c changes
+
+.venv/bin/python test_lvgl_cpython.py
+```
+
+### Windows — **no venv**; use `pip.exe` / `python.exe` from WSL
+
+```bash
+pip.exe install -e "$(wslpath -w ~/github/cmods/lv_cpython_mod)"
+cd ~/github/cmods/lv_cpython_mod
+python.exe test_lvgl_cpython.py
+```
+
+Requires MSVC Build Tools (python.org CPython). Do not use MinGW for this extension.
+
+Run **after** parallel phase 1 (steps 1–4) completes — not alongside step 4.
+
+## Sync from lv_bindings
+
+```bash
+./scripts/sync_from_lv_bindings.sh              # lv_bindings main
+./scripts/sync_from_lv_bindings.sh --ref v9.3.0  # tag or SHA
+```
+
+Release pipeline: [PUBLISHING.md](PUBLISHING.md)
+
+## Gotchas
+
+- **Unix + Windows editable installs** share one tree (`build/`, `*.egg-info`, in-repo `.so`/`.pyd`). Never run `.venv/bin/pip install -e .` and `pip.exe install -e .` at the same time.
+- Editable install does **not** auto-recompile on import; rerun `pip install -e .` after C changes.
+- Headless: no display backend — tests use a flush callback (see `test_lvgl_cpython.py`).
+- Lint: none configured in this repo.

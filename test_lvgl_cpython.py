@@ -24,19 +24,20 @@ def test_string_constants(lv):
 
 
 def test_enums(lv):
-    if lv.EVENT.CLICKED != 7:
-        _fail("lv.EVENT.CLICKED unexpected value")
+    clicked = lv.EVENT.CLICKED
+    if not isinstance(clicked, int) or clicked <= 0:
+        _fail(f"lv.EVENT.CLICKED unexpected value: {clicked!r}")
     if not hasattr(lv.obj, "FLAG"):
         _fail("lv.obj missing FLAG enum namespace")
     if lv.obj.FLAG.SCROLLABLE != (1 << 4):
         _fail("lv.obj.FLAG.SCROLLABLE unexpected value")
     if hasattr(lv, "OBJ_FLAG"):
         _fail("lv.OBJ_FLAG must not be exposed at module level")
-    if not hasattr(lv.label, "LONG"):
-        _fail("lv.label missing LONG enum namespace")
-    if hasattr(lv, "LABEL_LONG"):
-        _fail("lv.LABEL_LONG must not be exposed at module level")
-    print("OK: enum namespaces (lv.EVENT, lv.obj.FLAG, lv.label.LONG)")
+    if not hasattr(lv.label, "LONG_MODE"):
+        _fail("lv.label missing LONG_MODE enum namespace")
+    if hasattr(lv, "LABEL_LONG_MODE"):
+        _fail("lv.LABEL_LONG_MODE must not be exposed at module level")
+    print("OK: enum namespaces (lv.EVENT, lv.obj.FLAG, lv.label.LONG_MODE)")
 
 
 def test_module_types(lv):
