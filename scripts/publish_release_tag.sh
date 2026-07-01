@@ -20,11 +20,10 @@ Usage: ./scripts/publish_release_tag.sh [--push] [--dry-run]
 
 Create an annotated git tag for the next auto-computed release version:
 
-  <major>.<lvgl_minor>.<binding_release>
+  <major>.<lvgl_minor>.<release>
 
-  lvgl_minor       — from the lv_bindings release tag when LV_BINDINGS_REF is set,
-                     else from lvgl/lv_version.h or lvgl/lvgl.h
-  binding_release  — patch from the lv_bindings tag, or highest v<major>.<minor>.* + 1
+  lvgl_minor       — from lv_bindings tag major.minor, or lvgl/lv_version.h / lvgl.h
+  release          — lv_cpython_mod counter on that line (0, 1, 2, …); not lv_bindings patch
   major            — 0 for TestPyPI testing (set LVCPYTHON_USE_REAL_LVGL_MAJOR=1
                      to use LVGL_VERSION_MAJOR when ready for real releases)
 

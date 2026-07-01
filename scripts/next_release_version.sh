@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
-# Compute the next lvgl-cpython release version: <major>.<lvgl_minor>.<binding_release>
+# Compute the next lvgl-cpython release version: <major>.<lvgl_minor>.<release>
 #
-# Preferred: resolve X.Y.Z from the lv_bindings tag at LV_BINDINGS_REF (same scheme as
-# lv_bindings regenerate_all.sh: LVGL major.minor + binding patch).
-#
-# Fallback: read LVGL version from lvgl/lv_version.h or lvgl/lvgl.h and increment the
-# highest existing v<major>.<minor>.* tag in this repo.
+#   major, lvgl_minor — from the lv_bindings tag at LV_BINDINGS_REF when present,
+#                       else lvgl/lv_version.h or lvgl/lvgl.h
+#   release           — lv_cpython_mod-only counter: highest v<major>.<minor>.* + 1
+#                       (starts at 0; independent of lv_bindings binding patch)
 #
 # Usage:
 #   ./scripts/next_release_version.sh
@@ -89,72 +88,72 @@ resolve_lv_bindings_tag_version() {
     return 1
 }
 
-apply_major_override() {
-    local major=$1 minor=$2 patch=$3
-    if [[ "${LVCPYTHON_USE_REAL_LVGL_MAJOR:-0}" == "1" ]]; then
-        echo "${major}.${minor}.${patch}"
-    else
-        echo "0.${minor}.${patch}"
-    fi
+next_release_patch() {
+    local version_major=$1 version_minor=$2
+    local last=-1 patch tag
+
+    cd "$SOURCE_REPO"
+    while IFS= read -r tag; do
+        [[ -z "$tag" ]] && continue
+        tag="${tag#v}"
+        if [[ "$tag" =~ ^${version_major}\.${version_minor}\.([0-9]+)$ ]]; then
+            patch="${BASH_REMATCH[1]}"
+            if (( patch > last )); then
+                last=$patch
+            fi
+        fi
+    done < <(git tag -l "v${version_major}.${version_minor}.*")
+
+    echo $((last + 1))
 }
 
 VERSION_SOURCE=""
 BINDINGS_TAG_VERSION=""
+LVGL_MAJOR=""
+LVGL_MINOR=""
+LVGL_PATCH=""
+
 if BINDINGS_TAG_VERSION=$(resolve_lv_bindings_tag_version); then
-    VERSION_SOURCE="lv_bindings tag v${BINDINGS_TAG_VERSION}"
-    IFS=. read -r TAG_MAJOR TAG_MINOR TAG_PATCH <<< "$BINDINGS_TAG_VERSION"
-    VERSION=$(apply_major_override "$TAG_MAJOR" "$TAG_MINOR" "$TAG_PATCH")
-    read_lvgl_version_from_tree || true
-else
-    if ! read_lvgl_version_from_tree; then
-        echo "Error: could not read LVGL version from lvgl/lv_version.h or lvgl/lvgl.h" >&2
-        echo "Set LV_BINDINGS_REF to an lv_bindings release tag (e.g. v9.2.0)." >&2
-        exit 1
-    fi
+    IFS=. read -r LVGL_MAJOR LVGL_MINOR _BINDINGS_PATCH <<< "$BINDINGS_TAG_VERSION"
+    VERSION_SOURCE="lv_bindings tag v${BINDINGS_TAG_VERSION} (major.minor only)"
+    LVGL_PATCH="${_BINDINGS_PATCH}"
+elif read_lvgl_version_from_tree; then
     VERSION_SOURCE="lvgl tree (${LVGL_MAJOR}.${LVGL_MINOR}.${LVGL_PATCH})"
-    if [[ "${LVCPYTHON_USE_REAL_LVGL_MAJOR:-0}" == "1" ]]; then
-        VERSION_MAJOR=$LVGL_MAJOR
-    else
-        VERSION_MAJOR=0
-    fi
-    VERSION_MINOR=$LVGL_MINOR
-
-    cd "$SOURCE_REPO"
-    LAST_BINDING=-1
-    while IFS= read -r tag; do
-        [[ -z "$tag" ]] && continue
-        tag="${tag#v}"
-        if [[ "$tag" =~ ^${VERSION_MAJOR}\.${VERSION_MINOR}\.([0-9]+)$ ]]; then
-            patch="${BASH_REMATCH[1]}"
-            if (( patch > LAST_BINDING )); then
-                LAST_BINDING=$patch
-            fi
-        fi
-    done < <(git tag -l "v${VERSION_MAJOR}.${VERSION_MINOR}.*")
-
-    NEXT_BINDING=$((LAST_BINDING + 1))
-    VERSION="${VERSION_MAJOR}.${VERSION_MINOR}.${NEXT_BINDING}"
+else
+    echo "Error: could not determine LVGL major.minor." >&2
+    echo "Set LV_BINDINGS_REF to an lv_bindings release tag, or init the lvgl submodule." >&2
+    exit 1
 fi
+
+if [[ "${LVCPYTHON_USE_REAL_LVGL_MAJOR:-0}" == "1" ]]; then
+    VERSION_MAJOR=$LVGL_MAJOR
+else
+    VERSION_MAJOR=0
+fi
+VERSION_MINOR=$LVGL_MINOR
+NEXT_RELEASE=$(next_release_patch "$VERSION_MAJOR" "$VERSION_MINOR")
+VERSION="${VERSION_MAJOR}.${VERSION_MINOR}.${NEXT_RELEASE}"
 
 if [[ "$VERBOSE" -eq 1 ]]; then
     echo "Version source: ${VERSION_SOURCE}"
     if [[ -n "${BINDINGS_TAG_VERSION:-}" ]]; then
-        echo "lv_bindings release: v${BINDINGS_TAG_VERSION}"
-        if [[ "${LVCPYTHON_USE_REAL_LVGL_MAJOR:-0}" == "1" ]]; then
-            echo "Published version: ${VERSION} (LVGL major from lv_bindings tag)"
-        else
-            echo "Published version: ${VERSION} (major 0 TestPyPI override; lv_bindings v${BINDINGS_TAG_VERSION})"
-        fi
-    else
-        echo "LVGL source: ${LVGL_MAJOR}.${LVGL_MINOR}.${LVGL_PATCH}"
-        if [[ "${LVCPYTHON_USE_REAL_LVGL_MAJOR:-0}" == "1" ]]; then
-            echo "Published major: ${VERSION_MAJOR} (from LVGL)"
-        else
-            echo "Published major: 0 (TestPyPI test override; LVGL major is ${LVGL_MAJOR})"
-        fi
-        echo "Published minor: ${VERSION_MINOR} (LVGL minor)"
-        echo "Next binding release: ${VERSION##*.}"
+        echo "lv_bindings tag: v${BINDINGS_TAG_VERSION}"
     fi
+    if [[ -n "${LVGL_MAJOR:-}" ]]; then
+        echo "LVGL API line: ${LVGL_MAJOR}.${LVGL_MINOR}"
+    fi
+    if [[ "${LVCPYTHON_USE_REAL_LVGL_MAJOR:-0}" == "1" ]]; then
+        echo "Published major: ${VERSION_MAJOR} (from LVGL)"
+    else
+        echo "Published major: 0 (TestPyPI override; LVGL major is ${LVGL_MAJOR})"
+    fi
+    echo "Published minor: ${VERSION_MINOR} (LVGL minor)"
+    if (( NEXT_RELEASE > 0 )); then
+        echo "Last lv_cpython_mod release: v${VERSION_MAJOR}.${VERSION_MINOR}.$((NEXT_RELEASE - 1))"
+    else
+        echo "Last lv_cpython_mod release: (none for v${VERSION_MAJOR}.${VERSION_MINOR}.*)"
+    fi
+    echo "Next lv_cpython_mod release: ${NEXT_RELEASE}"
     echo "Next version: ${VERSION}"
 else
     echo "$VERSION"
