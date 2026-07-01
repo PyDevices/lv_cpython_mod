@@ -1,0 +1,108 @@
+# Build lvgl-cpython and upload to TestPyPI.
+#
+# Release trigger: push an annotated semver tag vX.Y.Z (see scripts/publish_release_tag.sh).
+#
+# Required repository secret (Settings → Secrets and variables → Actions):
+#   TESTPYPI_API_TOKEN — TestPyPI API token (same as PyDevices/pydisplay)
+#
+# Install from TestPyPI (wheel is platform-specific):
+#   pip install -i https://test.pypi.org/simple/ lvgl-cpython
+
+name: Publish TestPyPI
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Semver X.Y.Z (required unless the checked-out ref is a vX.Y.Z tag)
+        type: string
+        required: false
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    if: github.repository == 'PyDevices/lv_cpython_mod'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          path: repo
+
+      - name: Resolve release version
+        id: version
+        working-directory: repo
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          normalize() {
+            local v="${1#v}"
+            v="$(echo "$v" | tr -d '[:space:]')"
+            if [[ ! "$v" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+              echo "Invalid semver: $1 (expected X.Y.Z)" >&2
+              exit 1
+            fi
+            echo "$v"
+          }
+
+          if [[ "${{ github.event_name }}" == "push" ]]; then
+            VERSION="$(normalize "${GITHUB_REF_NAME}")"
+          elif [[ -n "${INPUT_VERSION:-}" ]]; then
+            VERSION="$(normalize "$INPUT_VERSION")"
+          else
+            TAG="$(git describe --tags --exact-match 2>/dev/null || true)"
+            if [[ -z "$TAG" ]]; then
+              echo "Set the version input or run this workflow from a vX.Y.Z tag." >&2
+              exit 1
+            fi
+            VERSION="$(normalize "$TAG")"
+          fi
+
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Publishing lvgl-cpython release $VERSION"
+
+      - uses: actions/checkout@v4
+        with:
+          repository: PyDevices/lv_bindings
+          path: lv_bindings
+          submodules: recursive
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install build dependencies
+        run: sudo apt-get update && sudo apt-get install -y gcc python3-dev
+
+      - name: Generate lvpy.c
+        run: |
+          python3 -m venv lv_bindings/.venv
+          lv_bindings/.venv/bin/pip install pycparser==2.21
+          cd lv_bindings && ./regenerate_lvpy.sh
+
+      - name: Link lv_bindings for wheel build
+        run: ln -sfn "$GITHUB_WORKSPACE/lv_bindings" "$GITHUB_WORKSPACE/repo/lv_bindings"
+
+      - name: Build and test
+        working-directory: repo
+        run: |
+          echo "${{ steps.version.outputs.version }}" > VERSION
+          python -m pip install --upgrade pip build
+          pip install -e .
+          python test_lvgl_cpython.py
+          python -m build --wheel --no-isolation
+
+      - name: Upload to TestPyPI
+        working-directory: repo
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.TESTPYPI_API_TOKEN }}
+        run: |
+          python -m pip install twine
+          twine upload --repository testpypi --verbose dist/*

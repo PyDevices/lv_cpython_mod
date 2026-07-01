@@ -4,6 +4,9 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "lvgl-cpython"
-version = "0.1.0"
+dynamic = ["version"]
 description = "LVGL bindings for CPython (generated)"
 requires-python = ">=3.9"
+
+[tool.setuptools.dynamic]
+version = {file = "VERSION"}

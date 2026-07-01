@@ -10,8 +10,10 @@ from setuptools import Extension, setup
 from setuptools.command.build_ext import build_ext
 
 ROOT = Path(__file__).resolve().parent
-WORKSPACE = ROOT.parent
-LV_BINDINGS = WORKSPACE / "lv_bindings"
+_in_tree_bindings = ROOT / "lv_bindings"
+LV_BINDINGS = (
+    _in_tree_bindings if _in_tree_bindings.is_dir() else ROOT.parent / "lv_bindings"
+)
 LVGL_DIR = LV_BINDINGS / "lvgl"
 GENERATED = LV_BINDINGS / "generated" / "lvpy.c"
 
@@ -136,7 +138,6 @@ class Win32LinkRspBuildExt(build_ext):
 
 setup(
     name="lvgl-cpython",
-    version="0.1.0",
     description="LVGL bindings for CPython (generated)",
     ext_modules=[ext],
     python_requires=">=3.9",
