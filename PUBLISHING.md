@@ -217,7 +217,7 @@ That wheel is not TestPyPI-ready (`linux_x86_64` tag, not `manylinux_*`); use ci
 
 ## Install from TestPyPI
 
-CI publishes **CPython 3.12** wheels for:
+CI publishes wheels for **CPython 3.10–3.14** (one wheel per minor × platform). Pip picks the tag that matches your interpreter (`cp312`, `cp314`, …).
 
 | Platform | Wheel tag |
 |----------|-----------|
@@ -225,11 +225,11 @@ CI publishes **CPython 3.12** wheels for:
 | Windows x64 | `win_amd64` |
 
 ```bash
-pip install -i https://test.pypi.org/simple/ lvgl-cpython
-pip install -i https://test.pypi.org/simple/ lvgl-cpython==9.5.0
+pip install -i https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ lvgl-cpython
+pip install -i https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ lvgl-cpython==9.5.0
 ```
 
-Wheels are built with [cibuildwheel](https://cibuildwheel.pypa.io/) (`auditwheel` on Linux, `delvewheel` on Windows). Config lives in `pyproject.toml` under `[tool.cibuildwheel]`.
+Wheels are built with [cibuildwheel](https://cibuildwheel.pypa.io/) (`auditwheel` on Linux, `delvewheel` on Windows). Python versions and platforms are configured in `pyproject.toml` under `[tool.cibuildwheel]` (`build = "cp310-* … cp314-*"`). To support a newer CPython after a release, add its selector (e.g. `cp315-*`) and publish a **new** version — wheels cannot be added to an existing TestPyPI version.
 
 TestPyPI rejects re-uploading the same version — each release needs a new tag (handled automatically by `publish_release_tag.sh`).
 
@@ -246,4 +246,5 @@ TestPyPI rejects re-uploading the same version — each release needs a new tag 
 | Publish fails on Windows only | Check MSVC build logs in the `windows-latest` matrix job; local Windows builds need Visual Studio Build Tools |
 | Publish fails: 403 on TestPyPI | Bad or missing `TESTPYPI_API_TOKEN` |
 | Local cibuildwheel: `FileNotFoundError: 'docker'` | Linux manylinux builds need Docker locally; CI has it. See [Local wheel builds (cibuildwheel)](PUBLISHING.md#local-wheel-builds-cibuildwheel) |
+| pip: `lvgl-cpython==X.Y.Z (from versions: none)` | No wheel for your **CPython minor** on that platform — check files on TestPyPI; extend `[tool.cibuildwheel] build` and publish a new version |
 | Publish fails: 400 duplicate version | Tag already uploaded; bump version with a new tag |

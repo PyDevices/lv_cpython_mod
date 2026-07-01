@@ -2,6 +2,37 @@
 
 Native CPython extension for [LVGL](https://lvgl.io/), generated from [`lv_bindings`](https://github.com/PyDevices/lv_bindings) with **no MicroPython runtime**. The Python module is `lvgl`; the API surface is in `generated/lvpy.c`, with shared glue in `lvpy_runtime.c`. LVGL sources live in the `lvgl` git submodule.
 
+## Install from TestPyPI
+
+Prebuilt wheels are published as **`lvgl-cpython`** on [TestPyPI](https://test.pypi.org/project/lvgl-cpython/) (import as `lvgl`). CI builds a **separate wheel for each CPython minor** (3.10–3.14) on **Linux x86_64** and **Windows x64** — native extensions are not one-wheel-fits-all; pip selects `cp312`, `cp314`, etc. to match your interpreter.
+
+```bash
+pip install -i https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ lvgl-cpython
+```
+
+Pin a release:
+
+```bash
+pip install -i https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ lvgl-cpython==9.5.0
+```
+
+`--extra-index-url https://pypi.org/simple/` lets pip fetch dependencies (e.g. setuptools) from PyPI. Use the same `pip` / `python` you will run (e.g. `pip.exe` with Windows 3.14).
+
+Quick check:
+
+```bash
+python -c "import lvgl as lv; lv.init(); lv.deinit(); print('ok')"
+```
+
+**WSL + Windows Python** — `pip.exe` / `python.exe` on PATH:
+
+```bash
+pip.exe install -i https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ lvgl-cpython==9.5.0
+python.exe -c "import lvgl as lv; lv.init(); lv.deinit(); print('ok')"
+```
+
+Releases before the multi-Python wheel matrix may only have `cp312` wheels; upgrade to the latest tag or see **[PUBLISHING.md](PUBLISHING.md)**. To add a new Python line (e.g. 3.15), extend `build` in `pyproject.toml` `[tool.cibuildwheel]` and publish a new version.
+
 ## Requirements
 
 ### All platforms
