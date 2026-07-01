@@ -35,28 +35,37 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
+# Short-lived clone under /tmp so we never read the local sibling lv_bindings tree.
 TMP=$(mktemp -d)
 cleanup() { rm -rf "$TMP"; }
 trap cleanup EXIT
 
 echo "Fetching ${LV_BINDINGS_REPO} @ ${REF}..."
+echo "(using temp clone ${TMP}/lv_bindings — removed on exit)"
 git clone --filter=blob:none --no-checkout "${LV_BINDINGS_REPO}" "${TMP}/lv_bindings"
-git -C "${TMP}/lv_bindings" checkout "${REF}"
-git -C "${TMP}/lv_bindings" submodule update --init lvgl
+
+echo "Checking out generated/lvpy.c and lv_conf.h..."
+git -C "${TMP}/lv_bindings" checkout "${REF}" -- generated/lvpy.c lv_conf.h
 
 LVPY_SRC="${TMP}/lv_bindings/generated/lvpy.c"
 LV_CONF_SRC="${TMP}/lv_bindings/lv_conf.h"
 if [[ ! -f "$LVPY_SRC" ]]; then
-    echo "Error: ${LVPY_SRC} not found on ${REF}." >&2
+    echo "Error: generated/lvpy.c not found on ${REF}." >&2
     echo "Regenerate and commit generated/lvpy.c in lv_bindings first." >&2
     exit 1
 fi
 if [[ ! -f "$LV_CONF_SRC" ]]; then
-    echo "Error: ${LV_CONF_SRC} not found on ${REF}." >&2
+    echo "Error: lv_conf.h not found on ${REF}." >&2
     exit 1
 fi
 
-LVGL_SHA=$(git -C "${TMP}/lv_bindings/lvgl" rev-parse HEAD)
+# Read the pinned lvgl commit from git metadata — no submodule clone (avoids SSH URLs).
+echo "Reading lvgl submodule pin from lv_bindings..."
+LVGL_SHA=$(git -C "${TMP}/lv_bindings" ls-tree "${REF}" lvgl | awk '{print $3}')
+if [[ -z "$LVGL_SHA" || "$LVGL_SHA" == "lvgl" ]]; then
+    echo "Error: could not read lvgl submodule commit from lv_bindings ${REF}." >&2
+    exit 1
+fi
 
 mkdir -p "${SOURCE_REPO}/generated"
 cp "$LVPY_SRC" "${SOURCE_REPO}/generated/lvpy.c"
@@ -68,10 +77,12 @@ if [[ ! -f .gitmodules ]]; then
     exit 1
 fi
 
+echo "Updating local lvgl submodule to ${LVGL_SHA}..."
 git submodule update --init lvgl
 git -C lvgl fetch origin "${LVGL_SHA}" 2>/dev/null || git -C lvgl fetch origin
 git -C lvgl checkout "${LVGL_SHA}"
 
+echo
 echo "Synced from lv_bindings ${REF}:"
 echo "  generated/lvpy.c"
 echo "  lv_conf.h"
