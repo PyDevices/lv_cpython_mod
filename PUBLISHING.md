@@ -163,6 +163,18 @@ Preview without tagging:
 | [sync-and-release.yml](.github/workflows/sync-and-release.yml) | Manual; called from lv_bindings | Sync from GitHub → commit `main` → push next tag → dispatch publish |
 | [publish-testpypi.yml](.github/workflows/publish-testpypi.yml) | Tag push `v*.*.*` (local/manual tags); workflow_dispatch | **cibuildwheel**: Linux manylinux + Windows amd64 wheels, smoke tests, TestPyPI upload |
 
+### Reading the Sync and release job in the Actions UI
+
+The workflow defines three **mutually exclusive** release steps; GitHub lists **all** of them in the job graph, including steps that did not run:
+
+| Step name | When it runs |
+|-----------|----------------|
+| **Create and push release tag** | Sync produced a commit (`changed=true`) and publish was not skipped |
+| **No release tag** | Sync produced **no** commit (already in sync with lv_bindings) |
+| **Skipped publish** | Workflow was started with **skip_publish** checked |
+
+On a successful release, **Create and push release tag** shows **success** with logs for `vX.Y.Z` and “Publish TestPyPI workflow dispatched”. The other two steps appear as **skipped** — that is normal, not a failure. Do not read “No release tag” or “Skipped publish” in the step list unless that step’s status is **success** (expand **Create and push release tag** or check [Publish TestPyPI](https://github.com/PyDevices/lv_cpython_mod/actions/workflows/publish-testpypi.yml) for the dispatched run).
+
 ## Scripts
 
 | Script | Purpose |
@@ -227,7 +239,8 @@ TestPyPI rejects re-uploading the same version — each release needs a new tag 
 |---------|----------------|
 | lv_bindings trigger workflow fails immediately | `LVCPYTHON_MOD_DISPATCH_TOKEN` missing or lacks `actions:write` on this repo |
 | Sync succeeded, tag pushed, but no Publish TestPyPI run | Tag was pushed by `GITHUB_TOKEN` in CI — add `RELEASE_WORKFLOW_TOKEN` (see above) or run Publish TestPyPI manually with the version |
-| Sync workflow: “Already in sync” / “No release tag” | lv_cpython_mod already matches that lv_bindings ref; no commit, tag, or publish |
+| Sync workflow: “Already in sync” (Commit sync step) | lv_cpython_mod already matches that lv_bindings ref; **No release tag** step runs; no tag or publish |
+| Sync UI shows skipped “No release tag” / “Skipped publish” but job succeeded | Harmless — see [Reading the Sync and release job](#reading-the-sync-and-release-job-in-the-actions-ui); check **Create and push release tag** instead |
 | Sync workflow: `generated/lvpy.c not found` | lvpy.c not committed to lv_bindings at that ref |
 | Publish fails: `linux_x86_64` unsupported | Old hand-rolled workflow without wheel repair (use current cibuildwheel workflow) |
 | Publish fails on Windows only | Check MSVC build logs in the `windows-latest` matrix job; local Windows builds need Visual Studio Build Tools |
