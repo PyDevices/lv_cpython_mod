@@ -18,7 +18,7 @@ packages = []
 # Local reproduction: PUBLISHING.md § "Local wheel builds (cibuildwheel)" (Linux needs Docker).
 [tool.cibuildwheel]
 build = "cp310-* cp311-* cp312-* cp313-* cp314-*"
-skip = "*musllinux* *-macosx_* *-win32 *-cp314t_* *-cp313t_*"
+skip = "*musllinux* *-macosx_* *-win32"
 test-command = "python {project}/test_lvgl_cpython.py"
 test-sources = ["test_lvgl_cpython.py"]
 
