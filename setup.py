@@ -44,7 +44,13 @@ define_macros = [("CMODS_CPYTHON_BUILD", "1")]
 if sys.platform == "win32":
     extra_compile_args = ["/wd4101", "/wd4244", "/wd4267", "/wd4996"]
 else:
-    extra_compile_args = ["-Wno-unused-function", "-Wno-sign-compare"]
+    extra_compile_args = [
+        "-Wno-unused-function",
+        "-Wno-sign-compare",
+        "-Wno-incompatible-pointer-types",
+        "-Wno-unused-variable",
+        "-Wno-deprecated-declarations",
+    ]
 
 ext = Extension(
     "lvgl",
