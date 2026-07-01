@@ -1,11 +1,12 @@
-# Build lvgl-cpython and upload to TestPyPI.
+# Build lvgl-cpython wheels (Linux + Windows) with cibuildwheel and upload to TestPyPI.
 #
-# Release trigger: push an annotated semver tag vX.Y.Z (see scripts/publish_release_tag.sh).
+# Release trigger: push an annotated semver tag vX.Y.Z (see scripts/publish_release_tag.sh),
+# or workflow_dispatch (also used by sync-and-release via RELEASE_WORKFLOW_TOKEN).
 #
 # Required repository secret (Settings → Secrets and variables → Actions):
 #   TESTPYPI_API_TOKEN — TestPyPI API token (same as PyDevices/pydisplay)
 #
-# Install from TestPyPI (wheel is platform-specific):
+# Install from TestPyPI (wheels are platform-specific):
 #   pip install -i https://test.pypi.org/simple/ lvgl-cpython
 
 name: Publish TestPyPI
@@ -25,19 +26,18 @@ permissions:
   contents: read
 
 jobs:
-  publish:
+  prepare:
     runs-on: ubuntu-latest
     if: github.repository == 'PyDevices/lv_cpython_mod'
+    outputs:
+      version: ${{ steps.version.outputs.version }}
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          submodules: recursive
-          path: repo
 
       - name: Resolve release version
         id: version
-        working-directory: repo
         env:
           INPUT_VERSION: ${{ inputs.version }}
         run: |
@@ -68,35 +68,51 @@ jobs:
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "Publishing lvgl-cpython release $VERSION"
 
+  build-wheels:
+    needs: prepare
+    runs-on: ${{ matrix.os }}
+    if: github.repository == 'PyDevices/lv_cpython_mod'
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      - name: Write VERSION file
+        shell: bash
+        run: echo "${{ needs.prepare.outputs.version }}" > VERSION
+
+      - name: Build wheels
+        uses: pypa/cibuildwheel@v3
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cibw-wheels-${{ matrix.os }}
+          path: wheelhouse/*.whl
+
+  publish:
+    needs: [prepare, build-wheels]
+    runs-on: ubuntu-latest
+    if: github.repository == 'PyDevices/lv_cpython_mod'
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: cibw-wheels-*
+          merge-multiple: true
+          path: dist
+
+      - name: List wheels
+        run: ls -la dist/
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
 
-      - name: Install build dependencies
-        run: sudo apt-get update && sudo apt-get install -y gcc python3-dev patchelf
-
-      - name: Build and test
-        working-directory: repo
-        run: |
-          echo "${{ steps.version.outputs.version }}" > VERSION
-          python -m pip install --upgrade pip build setuptools wheel
-          pip install -e .
-          python test_lvgl_cpython.py
-          rm -rf build
-          python -m build --wheel --no-isolation
-
-      - name: Repair wheel for manylinux
-        working-directory: repo
-        run: |
-          pip install auditwheel
-          WHEEL=$(ls dist/*.whl)
-          echo "Built: $WHEEL"
-          auditwheel repair "$WHEEL" -w dist/
-          rm -f "$WHEEL"
-          auditwheel show dist/*.whl
-
       - name: Upload to TestPyPI
-        working-directory: repo
         env:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.TESTPYPI_API_TOKEN }}

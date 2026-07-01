@@ -13,3 +13,18 @@ version = {file = "VERSION"}
 
 [tool.setuptools]
 packages = []
+
+# Wheel CI: pypa/cibuildwheel in publish-testpypi.yml (Linux manylinux + Windows amd64).
+# Local reproduction: see PUBLISHING.md § "Local wheel builds (cibuildwheel)" (Linux needs Docker).
+[tool.cibuildwheel]
+build = "cp312-*"
+skip = "*musllinux* *-macosx_* *-win32"
+test-command = "python {project}/test_lvgl_cpython.py"
+test-sources = ["test_lvgl_cpython.py"]
+
+[tool.cibuildwheel.linux]
+archs = ["x86_64"]
+manylinux-x86_64-image = "manylinux_2_28"
+
+[tool.cibuildwheel.windows]
+archs = ["AMD64"]

@@ -54,6 +54,8 @@ git submodule update --init lvgl
 
 Binding updates flow from [lv_bindings](https://github.com/PyDevices/lv_bindings) into this repo and onto TestPyPI. See **[PUBLISHING.md](PUBLISHING.md)** for the full pipeline (automatic triggers, `gh` CLI without a clone, secrets, and versioning).
 
+To reproduce CI wheels locally with cibuildwheel, see **[Local wheel builds](PUBLISHING.md#local-wheel-builds-cibuildwheel)** — Linux needs Docker; dev-only wheels can use `python -m build --wheel` without it.
+
 Quick manual sync from GitHub:
 
 ```bash

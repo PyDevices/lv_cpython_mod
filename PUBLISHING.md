@@ -18,8 +18,8 @@ lv_cpython_mod: Sync and release
   sync files from GitHub → commit main → push tag v0.<minor>.<N>
            │
            ▼
-lv_cpython_mod: Publish TestPyPI             (on tag push v*.*.*)
-  build → test → auditwheel → twine upload
+lv_cpython_mod: Publish TestPyPI             (on tag push v*.*.* or workflow_dispatch)
+  cibuildwheel → Linux manylinux + Windows amd64 → smoke tests → twine upload
 ```
 
 ## Version numbers
@@ -158,7 +158,7 @@ Preview without tagging:
 | Workflow | Trigger | What it does |
 |----------|---------|--------------|
 | [sync-and-release.yml](.github/workflows/sync-and-release.yml) | Manual; called from lv_bindings | Sync from GitHub → commit `main` → push next tag → dispatch publish |
-| [publish-testpypi.yml](.github/workflows/publish-testpypi.yml) | Tag push `v*.*.*` (local/manual tags); workflow_dispatch | Build Linux wheel, `auditwheel repair`, upload TestPyPI |
+| [publish-testpypi.yml](.github/workflows/publish-testpypi.yml) | Tag push `v*.*.*` (local/manual tags); workflow_dispatch | **cibuildwheel**: Linux manylinux + Windows amd64 wheels, smoke tests, TestPyPI upload |
 
 ## Scripts
 
@@ -168,14 +168,53 @@ Preview without tagging:
 | `scripts/next_release_version.sh` | Print next `0.<minor>.<N>` version |
 | `scripts/publish_release_tag.sh` | Create annotated tag `vX.Y.Z` and optionally push (triggers publish) |
 
+## Local wheel builds (cibuildwheel)
+
+CI uses [cibuildwheel](https://cibuildwheel.pypa.io/) (config in `pyproject.toml`). To reproduce wheel builds locally **later**:
+
+```bash
+pipx install cibuildwheel   # one-time
+echo "0.0.0.dev" > VERSION  # required; setuptools reads this file
+pipx run cibuildwheel --platform linux    # or --platform windows
+ls wheelhouse/
+```
+
+**Linux requires Docker.** cibuildwheel builds inside a manylinux container (`auditwheel repair` needs that environment). Without Docker you get:
+
+```text
+FileNotFoundError: [Errno 2] No such file or directory: 'docker'
+```
+
+Install [Docker Engine](https://docs.docker.com/engine/install/) (or Docker Desktop on WSL2), ensure your user can run `docker`, then retry. GitHub Actions runners already have Docker — you do not need it for releases, only for local Linux wheel reproduction.
+
+**Windows** does not need Docker: run `pipx run cibuildwheel --platform windows` on a native Windows shell with MSVC Build Tools (same as a normal `pip install -e .` build).
+
+**Without Docker (dev-only Linux wheel):** a non-manylinux wheel is enough to smoke-test the packaging path:
+
+```bash
+echo "0.0.0.dev" > VERSION
+python -m pip install build
+python -m build --wheel
+python test_lvgl_cpython.py   # after pip install dist/*.whl or -e .
+```
+
+That wheel is not TestPyPI-ready (`linux_x86_64` tag, not `manylinux_*`); use cibuildwheel + Docker when you want to match CI.
+
 ## Install from TestPyPI
 
-CI publishes a **manylinux x86_64, CPython 3.12** wheel:
+CI publishes **CPython 3.12** wheels for:
+
+| Platform | Wheel tag |
+|----------|-----------|
+| Linux x86_64 | `manylinux_*` |
+| Windows x64 | `win_amd64` |
 
 ```bash
 pip install -i https://test.pypi.org/simple/ lvgl-cpython
-pip install -i https://test.pypi.org/simple/ lvgl-cpython==0.1.3
+pip install -i https://test.pypi.org/simple/ lvgl-cpython==0.3.0
 ```
+
+Wheels are built with [cibuildwheel](https://cibuildwheel.pypa.io/) (`auditwheel` on Linux, `delvewheel` on Windows). Config lives in `pyproject.toml` under `[tool.cibuildwheel]`.
 
 TestPyPI rejects re-uploading the same version — each release needs a new tag (handled automatically by `publish_release_tag.sh`).
 
@@ -187,9 +226,10 @@ TestPyPI rejects re-uploading the same version — each release needs a new tag 
 | Sync succeeded, tag pushed, but no Publish TestPyPI run | Tag was pushed by `GITHUB_TOKEN` in CI — add `RELEASE_WORKFLOW_TOKEN` (see above) or run Publish TestPyPI manually with the version |
 | Sync workflow: “Already in sync” / “No release tag” | lv_cpython_mod already matches that lv_bindings ref; no commit, tag, or publish |
 | Sync workflow: `generated/lvpy.c not found` | lvpy.c not committed to lv_bindings at that ref |
-| Publish fails: `linux_x86_64` unsupported | Old workflow without `auditwheel repair` (fixed in current `publish-testpypi.yml`) |
+| Publish fails: `linux_x86_64` unsupported | Old hand-rolled workflow without wheel repair (use current cibuildwheel workflow) |
+| Publish fails on Windows only | Check MSVC build logs in the `windows-latest` matrix job; local Windows builds need Visual Studio Build Tools |
 | Publish fails: 403 on TestPyPI | Bad or missing `TESTPYPI_API_TOKEN` |
-| Publish fails: 400 duplicate version | Tag already uploaded; bump version with a new tag |
+| Local cibuildwheel: `FileNotFoundError: 'docker'` | Linux manylinux builds need Docker locally; CI has it. See [Local wheel builds (cibuildwheel)](PUBLISHING.md#local-wheel-builds-cibuildwheel) |
 
 ## Switching to real LVGL major in version tags
 
