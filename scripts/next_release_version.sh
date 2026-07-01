@@ -3,7 +3,7 @@
 #
 #   major           — 0 while testing on TestPyPI (override); LVGL_VERSION_MAJOR when
 #                     LVCPYTHON_USE_REAL_LVGL_MAJOR=1
-#   lvgl_minor      — from sibling lv_bindings/lvgl/lvgl.h (LVGL_VERSION_MINOR)
+#   lvgl_minor      — from lvgl/lvgl.h (LVGL_VERSION_MINOR)
 #   binding_release — one greater than the highest existing v<major>.<minor>.* tag
 #
 # Usage (from repo root or anywhere):
@@ -36,16 +36,9 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-_in_tree_bindings="$SOURCE_REPO/lv_bindings"
-if [[ -d "$_in_tree_bindings" ]]; then
-    LV_BINDINGS="$_in_tree_bindings"
-else
-    LV_BINDINGS="$SOURCE_REPO/../lv_bindings"
-fi
-
-LVGL_H="$LV_BINDINGS/lvgl/lvgl.h"
+LVGL_H="$SOURCE_REPO/lvgl/lvgl.h"
 if [[ ! -f "$LVGL_H" ]]; then
-    echo "Error: $LVGL_H not found (check out lv_bindings beside this repo)." >&2
+    echo "Error: $LVGL_H not found (run: git submodule update --init lvgl)." >&2
     exit 1
 fi
 

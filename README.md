@@ -1,15 +1,14 @@
 # lv_cpython_mod
 
-Native CPython extension for [LVGL](https://lvgl.io/), generated from [`lv_bindings`](https://github.com/PyDevices/lv_bindings) with **no MicroPython runtime**. The Python module is `lvgl`; most of the API surface is emitted into `lv_bindings/generated/lvpy.c`, with shared glue in `lvpy_runtime.c`.
+Native CPython extension for [LVGL](https://lvgl.io/), generated from [`lv_bindings`](https://github.com/PyDevices/lv_bindings) with **no MicroPython runtime**. The Python module is `lvgl`; the API surface is in `generated/lvpy.c`, with shared glue in `lvpy_runtime.c`. LVGL sources live in the `lvgl` git submodule.
 
 ## Requirements
 
 ### All platforms
 
 - Python 3.9+ with `pip` and `setuptools`
-- [`lv_bindings`](https://github.com/PyDevices/lv_bindings) checked out as a **sibling** of this directory (see layout below)
-- LVGL sources inside that `lv_bindings` tree (`lv_bindings/lvgl/`, usually via submodule)
-- Generated bindings: `lv_bindings/generated/lvpy.c` (from `regenerate_lvpy.sh`)
+- `generated/lvpy.c` and `lv_conf.h` (committed in this repo; sync from lv_bindings with `./scripts/sync_from_lv_bindings.sh`)
+- LVGL sources: `lvgl/` git submodule (`git submodule update --init lvgl`)
 
 ### WSL / Linux / macOS
 
@@ -33,36 +32,38 @@ sudo apt install python3-dev build-essential
 
 ## Repository layout
 
-`setup.py` expects this directory layout:
-
 ```text
-workspace/
-├── lv_bindings/          # code generator + LVGL tree + generated/lvpy.c
-│   ├── lvgl/
-│   ├── generated/lvpy.c  # produced by regenerate_lvpy.sh
-│   └── regenerate_lvpy.sh
-└── lv_cpython_mod/       # this package
-    ├── lvpy_runtime.c
-    ├── lvpy_runtime.h
-    └── setup.py
+lv_cpython_mod/
+├── generated/lvpy.c    # CPython binding (synced from lv_bindings)
+├── lv_conf.h           # LVGL config (synced from lv_bindings)
+├── lvgl/               # LVGL git submodule
+├── lvpy_runtime.c
+├── lvpy_runtime.h
+└── setup.py
 ```
 
-Clone both repositories into the same parent folder before building.
-
-## Generate bindings
-
-Regenerate whenever `lv_bindings` or `max_phase` changes, or if `generated/lvpy.c` is missing or out of date:
+Clone with submodules:
 
 ```bash
-cd lv_bindings
-./regenerate_lvpy.sh
+git clone --recurse-submodules https://github.com/PyDevices/lv_cpython_mod.git
+# or after a plain clone:
+git submodule update --init lvgl
 ```
 
-Requires GCC for preprocessing (`lv_bindings/regenerate_lvpy.sh` uses `gcc -E`). Run this step from WSL or Linux even when the final install targets Windows Python.
+## Sync bindings from lv_bindings
+
+When LVGL or the generator changes in [lv_bindings](https://github.com/PyDevices/lv_bindings), regenerate and commit `generated/lvpy.c` there, then:
+
+```bash
+./scripts/sync_from_lv_bindings.sh          # default: lv_bindings main on GitHub
+./scripts/sync_from_lv_bindings.sh --ref v1 # optional branch/tag/SHA
+```
+
+This copies `generated/lvpy.c`, `lv_conf.h`, and checks out the matching `lvgl` commit.
 
 ## Build and install
 
-`pip install` compiles `lvpy_runtime.c`, the generated `lvpy.c`, and all LVGL sources under `lv_bindings/lvgl/src`. If `lv_bindings/generated/lvpy.c` is missing, the build exits with instructions to run `regenerate_lvpy.sh`.
+`pip install` compiles `lvpy_runtime.c`, `generated/lvpy.c`, and all LVGL sources under `lvgl/src`.
 
 Use **editable** install (`-e`) while developing so the `.so` / `.pyd` in this directory stays in sync with rebuilds.
 
@@ -71,15 +72,10 @@ Use **editable** install (`-e`) while developing so the `.so` / `.pyd` in this d
 From WSL, using Linux Python in a venv:
 
 ```bash
-# 1. Generate bindings (if not done already)
-cd ~/github/cmods/lv_bindings && ./regenerate_lvpy.sh
-
-# 2. Build and install
-cd ../lv_cpython_mod
+git clone --recurse-submodules https://github.com/PyDevices/lv_cpython_mod.git
+cd lv_cpython_mod
 python3 -m venv .venv
-.venv/bin/pip install -e .
-
-# 3. Smoke test
+.venv/bin/pip install -r requirements.txt
 .venv/bin/python test_lvgl_cpython.py
 ```
 

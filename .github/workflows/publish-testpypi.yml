@@ -32,6 +32,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          submodules: recursive
           path: repo
 
       - name: Resolve release version
@@ -67,27 +68,12 @@ jobs:
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "Publishing lvgl-cpython release $VERSION"
 
-      - uses: actions/checkout@v4
-        with:
-          repository: PyDevices/lv_bindings
-          path: lv_bindings
-          submodules: recursive
-
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
 
       - name: Install build dependencies
         run: sudo apt-get update && sudo apt-get install -y gcc python3-dev
-
-      - name: Generate lvpy.c
-        run: |
-          python3 -m venv lv_bindings/.venv
-          lv_bindings/.venv/bin/pip install pycparser==2.21
-          cd lv_bindings && ./regenerate_lvpy.sh
-
-      - name: Link lv_bindings for wheel build
-        run: ln -sfn "$GITHUB_WORKSPACE/lv_bindings" "$GITHUB_WORKSPACE/repo/lv_bindings"
 
       - name: Build and test
         working-directory: repo

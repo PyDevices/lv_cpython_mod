@@ -10,15 +10,13 @@ reference.
 
 ### Environment layout (set up by the update script)
 - Workspace venv: `/workspace/.venv` (editable install of the `lvgl` extension).
-- External sibling dependency: `/lv_bindings` (cloned from
-  `https://github.com/PyDevices/lv_bindings`, with the `lvgl` git submodule).
-  `setup.py` hardcodes this path as `<parent of repo>/lv_bindings` (here `/lv_bindings`).
-  It is **not vendored** in this repo and lives outside `/workspace`.
-- Generator venv: `/lv_bindings/.venv` (has `pycparser==2.21`, used only to emit bindings).
-- Generated bindings: `/lv_bindings/generated/lvpy.c` (gitignored, ~3 MB). `setup.py`
-  hard-fails if this file is missing.
+- **In-repo build inputs:** `generated/lvpy.c`, `lv_conf.h`, and the `lvgl` git submodule.
+- **Sync from upstream:** `./scripts/sync_from_lv_bindings.sh` fetches `generated/lvpy.c`,
+  `lv_conf.h`, and the `lvgl` pin from `PyDevices/lv_bindings` on GitHub (after
+  bindings are regenerated and committed there).
 
 ### Build / test / run (use the workspace venv)
+- Initialize submodules: `git submodule update --init lvgl`
 - Build (after any change to `lvpy_runtime.c`): `/workspace/.venv/bin/pip install -e .`
   (or incremental `/workspace/.venv/bin/python setup.py build_ext --inplace`).
 - Tests (smoke suite): `/workspace/.venv/bin/python test_lvgl_cpython.py`.
@@ -28,12 +26,8 @@ reference.
 ### Non-obvious gotchas
 - Editable install does **not** auto-recompile C sources on import. After editing
   `lvpy_runtime.c`, you must rebuild (`pip install -e .` or `build_ext --inplace`).
-- After editing anything that changes the generated surface, regenerate first:
-  `cd /lv_bindings && ./regenerate_lvpy.sh` (requires `gcc -E` and the
-  `/lv_bindings/.venv` with `pycparser==2.21`), then rebuild the extension.
-- The LVGL submodule clones via an `ssh://git@github.com` URL in `.gitmodules`; on this
-  VM that resolves over HTTPS and succeeds. If a fresh clone ever fails on the submodule,
-  re-run `git -C /lv_bindings submodule update --init` after rewriting the URL to HTTPS.
+- After LVGL or generator changes, regenerate in `lv_bindings`, commit `generated/lvpy.c`
+  there, then run `./scripts/sync_from_lv_bindings.sh` in this repo.
 - Headless: there is no display backend. Rendering is verified by registering a flush
   callback (`disp.set_flush_cb(...)`) and reading pixels via `color_p.__dereference__(n)`,
   exactly as `test_lvgl_cpython.py` does.

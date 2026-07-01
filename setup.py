@@ -10,16 +10,17 @@ from setuptools import Extension, setup
 from setuptools.command.build_ext import build_ext
 
 ROOT = Path(__file__).resolve().parent
-_in_tree_bindings = ROOT / "lv_bindings"
-LV_BINDINGS = (
-    _in_tree_bindings if _in_tree_bindings.is_dir() else ROOT.parent / "lv_bindings"
-)
-LVGL_DIR = LV_BINDINGS / "lvgl"
-GENERATED = LV_BINDINGS / "generated" / "lvpy.c"
+LVGL_DIR = ROOT / "lvgl"
+GENERATED = ROOT / "generated" / "lvpy.c"
 
 if not GENERATED.is_file():
     raise SystemExit(
-        f"{GENERATED} not found. Run: {LV_BINDINGS / 'regenerate_lvpy.sh'}"
+        f"{GENERATED} not found. Run: {ROOT / 'scripts/sync_from_lv_bindings.sh'}"
+    )
+
+if not (LVGL_DIR / "lvgl.h").is_file():
+    raise SystemExit(
+        "lvgl submodule missing. Run: git submodule update --init lvgl"
     )
 
 lvgl_sources = [
@@ -30,13 +31,12 @@ lvgl_sources = [
 
 runtime_sources = [
     "lvpy_runtime.c",
-    os.path.relpath(GENERATED, ROOT),
+    "generated/lvpy.c",
 ]
 
 include_dirs = [
-    os.path.relpath(LV_BINDINGS, ROOT),
-    os.path.relpath(LVGL_DIR, ROOT),
-    ".",
+    str(ROOT),
+    str(LVGL_DIR),
 ]
 
 define_macros = [("CMODS_CPYTHON_BUILD", "1")]

@@ -1,0 +1,82 @@
+#!/usr/bin/env bash
+# Sync generated/lvpy.c, lv_conf.h, and the lvgl submodule pin from PyDevices/lv_bindings
+# on GitHub (not the local workspace).
+#
+# Usage:
+#   ./scripts/sync_from_lv_bindings.sh
+#   ./scripts/sync_from_lv_bindings.sh --ref abc1234
+#   LV_BINDINGS_REF=main ./scripts/sync_from_lv_bindings.sh
+#
+# After syncing, commit the updated files and lvgl submodule SHA in this repo.
+
+set -euo pipefail
+
+LV_BINDINGS_REPO="${LV_BINDINGS_REPO:-https://github.com/PyDevices/lv_bindings.git}"
+LV_BINDINGS_REF="${LV_BINDINGS_REF:-main}"
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SOURCE_REPO="$(cd "$SCRIPT_DIR/.." && pwd)"
+
+REF="$LV_BINDINGS_REF"
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --ref)
+            REF=$2
+            shift 2
+            ;;
+        --help | -h)
+            sed -n '2,12p' "$0" | sed 's/^# \?//'
+            exit 0
+            ;;
+        *)
+            echo "Unknown option: $1" >&2
+            exit 1
+            ;;
+    esac
+done
+
+TMP=$(mktemp -d)
+cleanup() { rm -rf "$TMP"; }
+trap cleanup EXIT
+
+echo "Fetching ${LV_BINDINGS_REPO} @ ${REF}..."
+git clone --filter=blob:none --no-checkout "${LV_BINDINGS_REPO}" "${TMP}/lv_bindings"
+git -C "${TMP}/lv_bindings" checkout "${REF}"
+git -C "${TMP}/lv_bindings" submodule update --init lvgl
+
+LVPY_SRC="${TMP}/lv_bindings/generated/lvpy.c"
+LV_CONF_SRC="${TMP}/lv_bindings/lv_conf.h"
+if [[ ! -f "$LVPY_SRC" ]]; then
+    echo "Error: ${LVPY_SRC} not found on ${REF}." >&2
+    echo "Regenerate and commit generated/lvpy.c in lv_bindings first." >&2
+    exit 1
+fi
+if [[ ! -f "$LV_CONF_SRC" ]]; then
+    echo "Error: ${LV_CONF_SRC} not found on ${REF}." >&2
+    exit 1
+fi
+
+LVGL_SHA=$(git -C "${TMP}/lv_bindings/lvgl" rev-parse HEAD)
+
+mkdir -p "${SOURCE_REPO}/generated"
+cp "$LVPY_SRC" "${SOURCE_REPO}/generated/lvpy.c"
+cp "$LV_CONF_SRC" "${SOURCE_REPO}/lv_conf.h"
+
+cd "${SOURCE_REPO}"
+if [[ ! -f .gitmodules ]]; then
+    echo "Error: lvgl submodule not configured in this repo." >&2
+    exit 1
+fi
+
+git submodule update --init lvgl
+git -C lvgl fetch origin "${LVGL_SHA}" 2>/dev/null || git -C lvgl fetch origin
+git -C lvgl checkout "${LVGL_SHA}"
+
+echo "Synced from lv_bindings ${REF}:"
+echo "  generated/lvpy.c"
+echo "  lv_conf.h"
+echo "  lvgl @ ${LVGL_SHA}"
+echo
+echo "Commit when ready:"
+echo "  git add generated/lvpy.c lv_conf.h lvgl"
+echo "  git commit -m \"Sync bindings and LVGL from lv_bindings ${REF}.\""
