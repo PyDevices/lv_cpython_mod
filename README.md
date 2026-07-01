@@ -52,14 +52,23 @@ git submodule update --init lvgl
 
 ## Sync bindings from lv_bindings
 
-When LVGL or the generator changes in [lv_bindings](https://github.com/PyDevices/lv_bindings), regenerate and commit `generated/lvpy.c` there, then:
+When LVGL or the generator changes in [lv_bindings](https://github.com/PyDevices/lv_bindings), regenerate and commit `generated/lvpy.c` there. Pushing to **lv_bindings `main`** (paths: `generated/lvpy.c`, `lv_conf.h`, `lvgl`) automatically triggers **Sync and release** in this repo.
+
+Manual sync:
 
 ```bash
 ./scripts/sync_from_lv_bindings.sh          # default: lv_bindings main on GitHub
 ./scripts/sync_from_lv_bindings.sh --ref v1 # optional branch/tag/SHA
 ```
 
-This copies `generated/lvpy.c`, `lv_conf.h`, and checks out the matching `lvgl` commit.
+Or from anywhere with `gh` (no clone):
+
+```bash
+gh workflow run sync-and-release.yml --repo PyDevices/lv_cpython_mod
+gh workflow run sync-and-release.yml --repo PyDevices/lv_cpython_mod -f lv_bindings_ref=abc1234
+```
+
+This copies `generated/lvpy.c`, `lv_conf.h`, and checks out the matching `lvgl` commit, then tags and publishes to TestPyPI when changes land.
 
 ## Build and install
 

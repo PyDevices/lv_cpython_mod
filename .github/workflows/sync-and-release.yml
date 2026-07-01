@@ -35,15 +35,23 @@ jobs:
           fetch-depth: 0
           submodules: recursive
 
+      - name: Resolve lv_bindings ref
+        id: lv_bindings_ref
+        run: |
+          REF="${{ inputs.lv_bindings_ref }}"
+          if [[ -z "$REF" ]]; then
+            REF="main"
+          fi
+          echo "ref=${REF}" >> "$GITHUB_OUTPUT"
+          echo "Syncing from lv_bindings @ ${REF}"
+
       - name: Sync from lv_bindings
-        env:
-          LV_BINDINGS_REF: ${{ inputs.lv_bindings_ref }}
-        run: ./scripts/sync_from_lv_bindings.sh --ref "${LV_BINDINGS_REF}"
+        run: ./scripts/sync_from_lv_bindings.sh --ref "${{ steps.lv_bindings_ref.outputs.ref }}"
 
       - name: Commit sync
         id: commit
         env:
-          LV_BINDINGS_REF: ${{ inputs.lv_bindings_ref }}
+          LV_BINDINGS_REF: ${{ steps.lv_bindings_ref.outputs.ref }}
         run: |
           set -euo pipefail
           git config user.name 'github-actions[bot]'
