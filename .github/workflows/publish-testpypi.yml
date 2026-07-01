@@ -93,9 +93,10 @@ jobs:
         working-directory: repo
         run: |
           echo "${{ steps.version.outputs.version }}" > VERSION
-          python -m pip install --upgrade pip build
+          python -m pip install --upgrade pip build setuptools wheel
           pip install -e .
           python test_lvgl_cpython.py
+          rm -rf build
           python -m build --wheel --no-isolation
 
       - name: Upload to TestPyPI
