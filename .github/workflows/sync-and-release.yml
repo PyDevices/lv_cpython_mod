@@ -1,0 +1,76 @@
+# Sync generated/lvpy.c, lv_conf.h, and lvgl from PyDevices/lv_bindings on GitHub,
+# commit to main, push the next auto-version tag, and trigger Publish TestPyPI.
+#
+# Run from the GitHub Actions tab (workflow_dispatch) or without cloning this repo:
+#   gh workflow run sync-and-release.yml --repo PyDevices/lv_cpython_mod
+#   gh workflow run sync-and-release.yml --repo PyDevices/lv_cpython_mod -f lv_bindings_ref=abc1234
+#
+# Prerequisite: commit regenerated generated/lvpy.c (and lv_conf.h if changed) to
+# lv_bindings first — sync reads from GitHub, not your local machine.
+
+name: Sync and release
+
+on:
+  workflow_dispatch:
+    inputs:
+      lv_bindings_ref:
+        description: lv_bindings branch, tag, or commit SHA
+        type: string
+        default: main
+      skip_publish:
+        description: Sync and commit only; do not create a release tag
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  sync-and-release:
+    runs-on: ubuntu-latest
+    if: github.repository == 'PyDevices/lv_cpython_mod'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      - name: Sync from lv_bindings
+        env:
+          LV_BINDINGS_REF: ${{ inputs.lv_bindings_ref }}
+        run: ./scripts/sync_from_lv_bindings.sh --ref "${LV_BINDINGS_REF}"
+
+      - name: Commit sync
+        id: commit
+        env:
+          LV_BINDINGS_REF: ${{ inputs.lv_bindings_ref }}
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+
+          if git diff --quiet && git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "Already in sync with lv_bindings ${LV_BINDINGS_REF}."
+          else
+            git add generated/lvpy.c lv_conf.h lvgl
+            git commit -m "Sync bindings and LVGL from lv_bindings ${LV_BINDINGS_REF}."
+            git push origin HEAD:main
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "Committed and pushed sync from lv_bindings ${LV_BINDINGS_REF}."
+          fi
+
+      - name: Create and push release tag
+        if: inputs.skip_publish != true && steps.commit.outputs.changed == 'true'
+        run: |
+          set -euo pipefail
+          git fetch --tags origin
+          ./scripts/publish_release_tag.sh --push
+
+      - name: No release tag
+        if: inputs.skip_publish != true && steps.commit.outputs.changed != 'true'
+        run: echo "No changes after sync — release tag and TestPyPI publish skipped."
+
+      - name: Skipped publish
+        if: inputs.skip_publish == true
+        run: echo "skip_publish=true — no tag pushed; TestPyPI publish not triggered."
