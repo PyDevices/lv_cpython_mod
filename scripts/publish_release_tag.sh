@@ -24,8 +24,7 @@ Create an annotated git tag for the next auto-computed release version:
 
   lvgl_minor       — from lv_bindings tag major.minor, or lvgl/lv_version.h / lvgl.h
   release          — lv_cpython_mod counter on that line (0, 1, 2, …); not lv_bindings patch
-  major            — 0 for TestPyPI testing (set LVCPYTHON_USE_REAL_LVGL_MAJOR=1
-                     to use LVGL_VERSION_MAJOR when ready for real releases)
+  major            — LVGL_VERSION_MAJOR (same as the LVGL API line)
 
 Options:
   --push      Push the tag to origin (triggers the publish-testpypi workflow)

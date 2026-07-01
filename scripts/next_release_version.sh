@@ -12,9 +12,8 @@
 #   LV_BINDINGS_REF=a1971cd ./scripts/next_release_version.sh --verbose
 #
 # Environment:
-#   LV_BINDINGS_REF                 lv_bindings commit, tag, or branch (from sync CI)
-#   LV_BINDINGS_REPO                default https://github.com/PyDevices/lv_bindings.git
-#   LVCPYTHON_USE_REAL_LVGL_MAJOR=1 Use LVGL major from version (else 0 for TestPyPI)
+#   LV_BINDINGS_REF     lv_bindings commit, tag, or branch (from sync CI)
+#   LV_BINDINGS_REPO    default https://github.com/PyDevices/lv_bindings.git
 
 set -euo pipefail
 
@@ -125,11 +124,7 @@ else
     exit 1
 fi
 
-if [[ "${LVCPYTHON_USE_REAL_LVGL_MAJOR:-0}" == "1" ]]; then
-    VERSION_MAJOR=$LVGL_MAJOR
-else
-    VERSION_MAJOR=0
-fi
+VERSION_MAJOR=$LVGL_MAJOR
 VERSION_MINOR=$LVGL_MINOR
 NEXT_RELEASE=$(next_release_patch "$VERSION_MAJOR" "$VERSION_MINOR")
 VERSION="${VERSION_MAJOR}.${VERSION_MINOR}.${NEXT_RELEASE}"
@@ -141,11 +136,7 @@ if [[ "$VERBOSE" -eq 1 ]]; then
     fi
     if [[ -n "${LVGL_MAJOR:-}" ]]; then
         echo "LVGL API line: ${LVGL_MAJOR}.${LVGL_MINOR}"
-    fi
-    if [[ "${LVCPYTHON_USE_REAL_LVGL_MAJOR:-0}" == "1" ]]; then
         echo "Published major: ${VERSION_MAJOR} (from LVGL)"
-    else
-        echo "Published major: 0 (TestPyPI override; LVGL major is ${LVGL_MAJOR})"
     fi
     echo "Published minor: ${VERSION_MINOR} (LVGL minor)"
     if (( NEXT_RELEASE > 0 )); then

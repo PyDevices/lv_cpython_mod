@@ -15,7 +15,7 @@ lv_bindings: Trigger lv_cpython_mod release   (on push to generated/lvpy.c, lv_c
            │
            ▼
 lv_cpython_mod: Sync and release
-  sync files from GitHub → commit main → push tag v0.<minor>.<N>
+  sync files from GitHub → commit main → push tag v<LVGL_major>.<minor>.<N>
            │
            ▼
 lv_cpython_mod: Publish TestPyPI             (on tag push v*.*.* or workflow_dispatch)
@@ -28,15 +28,18 @@ Format: **`X.Y.Z`**
 
 | Part | Source |
 |------|--------|
-| **X.Y** (LVGL line) | lv_bindings release tag at `LV_BINDINGS_REF` (major.minor only), or `lvgl/lv_version.h` / `lvgl.h` |
-| **Z** (release) | **This repo only** — highest existing `v<major>.<minor>.*` tag + 1, starting at **0** |
+| **X** (major) | `LVGL_VERSION_MAJOR` from the LVGL line (via lv_bindings tag or `lvgl` headers) |
+| **Y** (minor) | `LVGL_VERSION_MINOR` — lv_bindings release tag major.minor, or `lvgl/lv_version.h` / `lvgl.h` |
+| **Z** (release) | **This repo only** — highest existing `v<X>.<Y>.*` tag + 1, starting at **0** |
 
-The release counter is **independent of lv_bindings’ binding patch**. Example: lv_bindings `v9.2.3` still maps to LVGL line **9.2** here; the first lv_cpython_mod release on that line is `v0.2.0`, then `v0.2.1` after a local-only change (e.g. `lv_conf.h`) without regenerating in lv_bindings.
+The release counter is **independent of lv_bindings’ binding patch**. Example: lv_bindings `v9.2.3` still maps to LVGL line **9.2** here; the first lv_cpython_mod release on that line is `v9.2.0`, then `v9.2.1` after a local-only change (e.g. `lv_conf.h`) without regenerating in lv_bindings.
 
-| Mode | LVGL line | lv_cpython_mod tags |
-|------|-----------|---------------------|
-| TestPyPI (default) | 9.2 | `v0.2.0`, `v0.2.1`, … |
-| Real LVGL major | 9.2 | `v9.2.0`, `v9.2.1`, … (`LVCPYTHON_USE_REAL_LVGL_MAJOR=1`) |
+| LVGL line | lv_cpython_mod tags |
+|-----------|---------------------|
+| 9.2 | `v9.2.0`, `v9.2.1`, … |
+| 9.5 | `v9.5.0`, `v9.5.1`, … |
+
+Early TestPyPI releases used major **`0`** instead of LVGL’s major (`v0.2.0`, `v0.5.0`, …). New releases use the real LVGL major.
 
 If `LV_BINDINGS_REF` has no release tag, major.minor comes from the local `lvgl` submodule headers.
 
@@ -165,7 +168,7 @@ Preview without tagging:
 | Script | Purpose |
 |--------|---------|
 | `scripts/sync_from_lv_bindings.sh` | Copy `generated/lvpy.c`, `lv_conf.h`; pin `lvgl` from **PyDevices/lv_bindings on GitHub** |
-| `scripts/next_release_version.sh` | Print next `0.<minor>.<N>` version |
+| `scripts/next_release_version.sh` | Print next `<LVGL_major>.<minor>.<N>` version |
 | `scripts/publish_release_tag.sh` | Create annotated tag `vX.Y.Z` and optionally push (triggers publish) |
 
 ## Local wheel builds (cibuildwheel)
@@ -211,7 +214,7 @@ CI publishes **CPython 3.12** wheels for:
 
 ```bash
 pip install -i https://test.pypi.org/simple/ lvgl-cpython
-pip install -i https://test.pypi.org/simple/ lvgl-cpython==0.3.0
+pip install -i https://test.pypi.org/simple/ lvgl-cpython==9.5.0
 ```
 
 Wheels are built with [cibuildwheel](https://cibuildwheel.pypa.io/) (`auditwheel` on Linux, `delvewheel` on Windows). Config lives in `pyproject.toml` under `[tool.cibuildwheel]`.
@@ -230,14 +233,4 @@ TestPyPI rejects re-uploading the same version — each release needs a new tag 
 | Publish fails on Windows only | Check MSVC build logs in the `windows-latest` matrix job; local Windows builds need Visual Studio Build Tools |
 | Publish fails: 403 on TestPyPI | Bad or missing `TESTPYPI_API_TOKEN` |
 | Local cibuildwheel: `FileNotFoundError: 'docker'` | Linux manylinux builds need Docker locally; CI has it. See [Local wheel builds (cibuildwheel)](PUBLISHING.md#local-wheel-builds-cibuildwheel) |
-
-## Switching to real LVGL major in version tags
-
-While testing, versions use major **`0`** instead of LVGL’s **`9`**:
-
-```bash
-LVCPYTHON_USE_REAL_LVGL_MAJOR=1 ./scripts/publish_release_tag.sh --push
-# → e.g. v9.1.4 instead of v0.1.4
-```
-
-The CI auto-version step in `next_release_version.sh` uses the same rule.
+| Publish fails: 400 duplicate version | Tag already uploaded; bump version with a new tag |
