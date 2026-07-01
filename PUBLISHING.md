@@ -53,10 +53,13 @@ Preview the next version:
 | Secret | Required | Purpose |
 |--------|----------|---------|
 | `TESTPYPI_API_TOKEN` | yes | Upload wheels to TestPyPI |
+| `RELEASE_WORKFLOW_TOKEN` | yes for auto-publish from Sync and release | PAT with **`actions:write`** on this repo |
 
 Settings → Secrets and variables → Actions on [PyDevices/lv_cpython_mod](https://github.com/PyDevices/lv_cpython_mod).
 
 Use the same TestPyPI token as [pydisplay](https://github.com/PyDevices/pydisplay) if you already have one.
+
+`RELEASE_WORKFLOW_TOKEN` can be the **same fine-grained PAT** as `LVCPYTHON_MOD_DISPATCH_TOKEN` on lv_bindings (add it to both repos). Sync and release pushes tags with `GITHUB_TOKEN`, which does **not** start Publish TestPyPI on its own; the script dispatches that workflow with this PAT after tagging.
 
 ### lv_bindings secret (automatic releases)
 
@@ -84,7 +87,7 @@ Work only in **lv_bindings**:
 
 Pushing those paths starts [trigger-lv-cpython-mod-release.yml](https://github.com/PyDevices/lv_bindings/blob/main/.github/workflows/trigger-lv-cpython-mod-release.yml), which runs [sync-and-release.yml](.github/workflows/sync-and-release.yml) here with the lv_bindings commit SHA.
 
-If the sync produces changes, this repo commits to `main`, pushes the next tag, and **Publish TestPyPI** runs on that tag.
+If the sync produces changes, this repo commits to `main`, pushes the next tag, and dispatches **Publish TestPyPI** (tag pushes from `GITHUB_TOKEN` do not trigger other workflows).
 
 Monitor:
 
@@ -154,8 +157,8 @@ Preview without tagging:
 
 | Workflow | Trigger | What it does |
 |----------|---------|--------------|
-| [sync-and-release.yml](.github/workflows/sync-and-release.yml) | Manual; called from lv_bindings | Sync from GitHub → commit `main` → push next tag |
-| [publish-testpypi.yml](.github/workflows/publish-testpypi.yml) | Tag push `v*.*.*`; manual | Build Linux wheel, `auditwheel repair`, upload TestPyPI |
+| [sync-and-release.yml](.github/workflows/sync-and-release.yml) | Manual; called from lv_bindings | Sync from GitHub → commit `main` → push next tag → dispatch publish |
+| [publish-testpypi.yml](.github/workflows/publish-testpypi.yml) | Tag push `v*.*.*` (local/manual tags); workflow_dispatch | Build Linux wheel, `auditwheel repair`, upload TestPyPI |
 
 ## Scripts
 
@@ -181,7 +184,8 @@ TestPyPI rejects re-uploading the same version — each release needs a new tag 
 | Symptom | Likely cause |
 |---------|----------------|
 | lv_bindings trigger workflow fails immediately | `LVCPYTHON_MOD_DISPATCH_TOKEN` missing or lacks `actions:write` on this repo |
-| Sync workflow: “Already in sync” | lv_cpython_mod already matches that lv_bindings ref; no tag or publish |
+| Sync succeeded, tag pushed, but no Publish TestPyPI run | Tag was pushed by `GITHUB_TOKEN` in CI — add `RELEASE_WORKFLOW_TOKEN` (see above) or run Publish TestPyPI manually with the version |
+| Sync workflow: “Already in sync” / “No release tag” | lv_cpython_mod already matches that lv_bindings ref; no commit, tag, or publish |
 | Sync workflow: `generated/lvpy.c not found` | lvpy.c not committed to lv_bindings at that ref |
 | Publish fails: `linux_x86_64` unsupported | Old workflow without `auditwheel repair` (fixed in current `publish-testpypi.yml`) |
 | Publish fails: 403 on TestPyPI | Bad or missing `TESTPYPI_API_TOKEN` |

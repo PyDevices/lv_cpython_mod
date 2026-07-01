@@ -90,7 +90,24 @@ echo "Created annotated tag $TAG on $(git rev-parse --short HEAD)"
 
 if [[ "$DO_PUSH" -eq 1 ]]; then
     git push origin "$TAG"
-    echo "Pushed $TAG — publish-testpypi workflow should start shortly."
+    echo "Pushed $TAG."
+
+    # Tag pushes from the default GITHUB_TOKEN do not trigger other workflows
+    # (loop prevention). In CI, dispatch Publish TestPyPI with a PAT.
+    if [[ "${GITHUB_ACTIONS:-}" == "true" ]]; then
+        if [[ -n "${RELEASE_WORKFLOW_TOKEN:-}" ]]; then
+            echo "Dispatching Publish TestPyPI for $VERSION..."
+            GH_TOKEN="$RELEASE_WORKFLOW_TOKEN" gh workflow run publish-testpypi.yml \
+                --repo "${GITHUB_REPOSITORY}" \
+                -f "version=${VERSION}"
+            echo "Publish TestPyPI workflow dispatched for $VERSION."
+        else
+            echo "Warning: RELEASE_WORKFLOW_TOKEN not set — Publish TestPyPI was not dispatched." >&2
+            echo "Run manually: gh workflow run publish-testpypi.yml --repo ${GITHUB_REPOSITORY} -f version=${VERSION}" >&2
+        fi
+    else
+        echo "publish-testpypi workflow should start shortly (tag push from non-CI credentials)."
+    fi
 else
     echo "Push to publish: git push origin $TAG"
 fi
