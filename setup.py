@@ -12,6 +12,7 @@ from setuptools.command.build_ext import build_ext
 ROOT = Path(__file__).resolve().parent
 LVGL_DIR = ROOT / "lvgl"
 GENERATED = ROOT / "generated" / "lvgl_python.c"
+GENERATED_PYI = ROOT / "generated" / "lvgl.pyi"
 
 if not GENERATED.is_file():
     raise SystemExit(
@@ -63,6 +64,21 @@ ext = Extension(
 
 class Win32LinkRspBuildExt(build_ext):
     """MSVC link.exe has an ~8k command-line limit; LVGL needs a response file."""
+
+    def run(self):
+        super().run()
+        self._install_pyi_stubs()
+
+    def _install_pyi_stubs(self) -> None:
+        pyi_src = GENERATED_PYI
+        if not pyi_src.is_file():
+            return
+        for ext in self.extensions:
+            if ext.name != "lvgl":
+                continue
+            ext_path = Path(self.get_ext_fullpath(self.get_ext_fullname(ext.name)))
+            dest = ext_path.with_suffix(".pyi")
+            dest.write_bytes(pyi_src.read_bytes())
 
     def build_extensions(self):
         if sys.platform == "win32":

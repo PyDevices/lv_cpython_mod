@@ -44,14 +44,20 @@ echo "Fetching ${LV_BINDINGS_REPO} @ ${REF}..."
 echo "(using temp clone ${TMP}/lv_bindings — removed on exit)"
 git clone --filter=blob:none --no-checkout "${LV_BINDINGS_REPO}" "${TMP}/lv_bindings"
 
-echo "Checking out generated/lvgl_python.c and lv_conf.h..."
-git -C "${TMP}/lv_bindings" checkout "${REF}" -- generated/lvgl_python.c lv_conf.h
+echo "Checking out generated/lvgl_python.c, generated/lvgl.pyi, and lv_conf.h..."
+git -C "${TMP}/lv_bindings" checkout "${REF}" -- generated/lvgl_python.c generated/lvgl.pyi lv_conf.h
 
 LVPY_SRC="${TMP}/lv_bindings/generated/lvgl_python.c"
+LVPYI_SRC="${TMP}/lv_bindings/generated/lvgl.pyi"
 LV_CONF_SRC="${TMP}/lv_bindings/lv_conf.h"
 if [[ ! -f "$LVPY_SRC" ]]; then
     echo "Error: generated/lvgl_python.c not found on ${REF}." >&2
     echo "Regenerate and commit generated/lvgl_python.c in lv_bindings first." >&2
+    exit 1
+fi
+if [[ ! -f "$LVPYI_SRC" ]]; then
+    echo "Error: generated/lvgl.pyi not found on ${REF}." >&2
+    echo "Regenerate and commit generated/lvgl.pyi in lv_bindings first." >&2
     exit 1
 fi
 if [[ ! -f "$LV_CONF_SRC" ]]; then
@@ -69,6 +75,7 @@ fi
 
 mkdir -p "${SOURCE_REPO}/generated"
 cp "$LVPY_SRC" "${SOURCE_REPO}/generated/lvgl_python.c"
+cp "$LVPYI_SRC" "${SOURCE_REPO}/generated/lvgl.pyi"
 cp "$LV_CONF_SRC" "${SOURCE_REPO}/lv_conf.h"
 
 cd "${SOURCE_REPO}"
@@ -85,9 +92,10 @@ git -C lvgl checkout "${LVGL_SHA}"
 echo
 echo "Synced from lv_bindings ${REF}:"
 echo "  generated/lvgl_python.c"
+echo "  generated/lvgl.pyi"
 echo "  lv_conf.h"
 echo "  lvgl @ ${LVGL_SHA}"
 echo
 echo "Commit when ready:"
-echo "  git add generated/lvgl_python.c lv_conf.h lvgl"
+echo "  git add generated/lvgl_python.c generated/lvgl.pyi lv_conf.h lvgl"
 echo "  git commit -m \"Sync bindings and LVGL from lv_bindings ${REF}.\""
