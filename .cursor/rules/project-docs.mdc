@@ -1,0 +1,39 @@
+---
+description: lv_cpython_mod docs — README, BUILDING, PUBLISHING
+alwaysApply: true
+---
+
+# lv_cpython_mod
+
+Native CPython extension module `lvgl` (no MicroPython runtime). Use these docs:
+
+- **[README.md](README.md)** — what it is, TestPyPI install, usage and API style
+- **[BUILDING.md](BUILDING.md)** — clone, requirements, build from source (`pip install -e .` or `pip.exe`)
+- **[PUBLISHING.md](PUBLISHING.md)** — sync from lv_bindings, releases, TestPyPI CI
+
+## Build / test (quick)
+
+### Unix (WSL) — use `.venv`
+
+```bash
+git submodule update --init lvgl
+python3 -m venv .venv
+.venv/bin/pip install -r requirements.txt
+.venv/bin/pip install -e .    # rebuild after lvpy_runtime.c or generated/lvgl_python.c changes
+
+.venv/bin/python -c "import lvgl as lv; lv.init(); lv.deinit(); print('ok')"
+```
+
+### Windows — **no venv**; use `pip.exe` / `python.exe` from WSL
+
+```bash
+pip.exe install -e "$(wslpath -w /path/to/lv_cpython_mod)"
+python.exe -c "import lvgl as lv; lv.init(); lv.deinit(); print('ok')"
+```
+
+Requires MSVC Build Tools (python.org CPython). Do not use MinGW for this extension.
+
+## Gotchas
+
+- Editable install does **not** auto-recompile on import; rerun `pip install -e .` after C changes.
+- Lint: none configured in this repo.

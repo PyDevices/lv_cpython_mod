@@ -572,7 +572,10 @@ PyObject *mp_get_callbacks(PyObject *obj)
 void lvpy_dealloc_obj(py_lv_obj_t *self)
 {
     if (self->lv_obj) {
-        self->lv_obj->user_data = NULL;
+        if (lv_is_initialized()) {
+            self->lv_obj->user_data = NULL;
+        }
+        self->lv_obj = NULL;
     }
     Py_XDECREF(self->callbacks);
     self->callbacks = NULL;

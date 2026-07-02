@@ -1,11 +1,11 @@
-# Sync generated/lvpy.c, lv_conf.h, and lvgl from PyDevices/lv_bindings on GitHub,
+# Sync generated/lvgl_python.c, lv_conf.h, and lvgl from PyDevices/lv_bindings on GitHub,
 # commit to main, push the next auto-version tag, and trigger Publish TestPyPI.
 #
 # Run from the GitHub Actions tab (workflow_dispatch) or without cloning this repo:
 #   gh workflow run sync-and-release.yml --repo PyDevices/lv_cpython_mod
 #   gh workflow run sync-and-release.yml --repo PyDevices/lv_cpython_mod -f lv_bindings_ref=abc1234
 #
-# Prerequisite: commit regenerated generated/lvpy.c (and lv_conf.h if changed) to
+# Prerequisite: commit regenerated generated/lvgl_python.c (and lv_conf.h if changed) to
 # lv_bindings first — sync reads from GitHub, not your local machine.
 
 name: Sync and release
@@ -61,7 +61,7 @@ jobs:
             echo "changed=false" >> "$GITHUB_OUTPUT"
             echo "Already in sync with lv_bindings ${LV_BINDINGS_REF}."
           else
-            git add generated/lvpy.c lv_conf.h lvgl
+            git add generated/lvgl_python.c lv_conf.h lvgl
             git commit -m "Sync bindings and LVGL from lv_bindings ${LV_BINDINGS_REF}."
             git push origin HEAD:main
             echo "changed=true" >> "$GITHUB_OUTPUT"

@@ -1,4 +1,4 @@
-"""Build the lvgl CPython extension (generated/lvpy.c + LVGL sources)."""
+"""Build the lvgl CPython extension (generated/lvgl_python.c + LVGL sources)."""
 
 from __future__ import annotations
 
@@ -11,7 +11,7 @@ from setuptools.command.build_ext import build_ext
 
 ROOT = Path(__file__).resolve().parent
 LVGL_DIR = ROOT / "lvgl"
-GENERATED = ROOT / "generated" / "lvpy.c"
+GENERATED = ROOT / "generated" / "lvgl_python.c"
 
 if not GENERATED.is_file():
     raise SystemExit(
@@ -31,7 +31,7 @@ lvgl_sources = [
 
 runtime_sources = [
     "lvpy_runtime.c",
-    "generated/lvpy.c",
+    "generated/lvgl_python.c",
 ]
 
 include_dirs = [

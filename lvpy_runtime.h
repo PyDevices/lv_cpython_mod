@@ -114,7 +114,7 @@ PyObject *mp_lv_funcptr(PyObject *wrapper, void *lv_fun, void *lv_callback,
 extern PyTypeObject py_C_Pointer_type;
 extern PyTypeObject py_lv_base_struct_type;
 extern PyTypeObject py_blob_type;
-extern PyTypeObject py_lv_obj_type;  /* defined in generated lvpy.c (phase 5+) */
+extern PyTypeObject py_lv_obj_type;  /* defined in generated lvgl_python.c (phase 5+) */
 
 void py_lv_runtime_init_types(void);
 PyObject *lvpy_create_nesting_obj(void);

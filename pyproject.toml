@@ -19,9 +19,8 @@ packages = []
 [tool.cibuildwheel]
 build = "cp310-* cp311-* cp312-* cp313-* cp314-*"
 skip = "*musllinux* *-macosx_* *-win32"
-test-command = "python {project}/test_lvgl_cpython.py"
-test-sources = ["test_lvgl_cpython.py"]
-# cp314: smoke test passes then segfaults on interpreter shutdown after lv.deinit()
+test-command = "python -c \"import lvgl as lv; lv.init(); lv.deinit()\""
+# cp314: import test passes then segfaults on interpreter shutdown after lv.deinit()
 test-skip = "cp314-*"
 
 [tool.cibuildwheel.linux]

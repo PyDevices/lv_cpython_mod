@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Sync generated/lvpy.c, lv_conf.h, and the lvgl submodule pin from PyDevices/lv_bindings
+# Sync generated/lvgl_python.c, lv_conf.h, and the lvgl submodule pin from PyDevices/lv_bindings
 # on GitHub (not the local workspace).
 #
 # Usage:
@@ -44,14 +44,14 @@ echo "Fetching ${LV_BINDINGS_REPO} @ ${REF}..."
 echo "(using temp clone ${TMP}/lv_bindings — removed on exit)"
 git clone --filter=blob:none --no-checkout "${LV_BINDINGS_REPO}" "${TMP}/lv_bindings"
 
-echo "Checking out generated/lvpy.c and lv_conf.h..."
-git -C "${TMP}/lv_bindings" checkout "${REF}" -- generated/lvpy.c lv_conf.h
+echo "Checking out generated/lvgl_python.c and lv_conf.h..."
+git -C "${TMP}/lv_bindings" checkout "${REF}" -- generated/lvgl_python.c lv_conf.h
 
-LVPY_SRC="${TMP}/lv_bindings/generated/lvpy.c"
+LVPY_SRC="${TMP}/lv_bindings/generated/lvgl_python.c"
 LV_CONF_SRC="${TMP}/lv_bindings/lv_conf.h"
 if [[ ! -f "$LVPY_SRC" ]]; then
-    echo "Error: generated/lvpy.c not found on ${REF}." >&2
-    echo "Regenerate and commit generated/lvpy.c in lv_bindings first." >&2
+    echo "Error: generated/lvgl_python.c not found on ${REF}." >&2
+    echo "Regenerate and commit generated/lvgl_python.c in lv_bindings first." >&2
     exit 1
 fi
 if [[ ! -f "$LV_CONF_SRC" ]]; then
@@ -68,7 +68,7 @@ if [[ -z "$LVGL_SHA" || "$LVGL_SHA" == "lvgl" ]]; then
 fi
 
 mkdir -p "${SOURCE_REPO}/generated"
-cp "$LVPY_SRC" "${SOURCE_REPO}/generated/lvpy.c"
+cp "$LVPY_SRC" "${SOURCE_REPO}/generated/lvgl_python.c"
 cp "$LV_CONF_SRC" "${SOURCE_REPO}/lv_conf.h"
 
 cd "${SOURCE_REPO}"
@@ -84,10 +84,10 @@ git -C lvgl checkout "${LVGL_SHA}"
 
 echo
 echo "Synced from lv_bindings ${REF}:"
-echo "  generated/lvpy.c"
+echo "  generated/lvgl_python.c"
 echo "  lv_conf.h"
 echo "  lvgl @ ${LVGL_SHA}"
 echo
 echo "Commit when ready:"
-echo "  git add generated/lvpy.c lv_conf.h lvgl"
+echo "  git add generated/lvgl_python.c lv_conf.h lvgl"
 echo "  git commit -m \"Sync bindings and LVGL from lv_bindings ${REF}.\""
