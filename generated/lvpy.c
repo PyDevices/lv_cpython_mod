@@ -5,7 +5,7 @@
  *
  * Target: cpython
  * Command line:
- * /home/brad/github/cmods/lv_bindings/gen_lv_bindings.py --target cpython -M lvgl -MP lv -E /tmp/tmp.xgwyp1aLrP lvgl/lvgl.h
+ * /home/brad/github/cmods/lv_bindings/gen_lv_bindings.py --target cpython -M lvgl -MP lv -MD /home/brad/github/cmods/lv_bindings/generated/lvpy.c.json --ir /home/brad/github/cmods/lv_bindings/generated/lv_bindings.json -E /home/brad/github/cmods/lv_bindings/generated/.lvgl.pp lvgl/lvgl.h
  *
  * Preprocessing command:
  * Preprocessing was disabled.
@@ -28,6 +28,7 @@
  */
 
 #include "lvgl/lvgl.h"
+#include "lvgl/src/lvgl_private.h"
 #include "lvgl/src/lvgl_private.h"
 
 
@@ -80184,6 +80185,514 @@ static PyMethodDef py_lv_layout_apply_def = {
 
 
 /*
+ * Struct lv_layout_dsc_t (CPython)
+ */
+
+extern PyMethodDef py_lv_layout_dsc_t_methods[];
+
+static PyObject *py_lv_layout_dsc_t_getattro(PyObject *self, PyObject *name)
+{
+    py_lv_struct_t *inst = (py_lv_struct_t *)self;
+    lv_layout_dsc_t *data = (lv_layout_dsc_t*)inst->data;
+    if (data == NULL) {
+        PyErr_SetString(PyLvReferenceError, "struct data is NULL");
+        return NULL;
+    }
+    const char *attr = PyUnicode_AsUTF8(name);
+    if (attr == NULL) return NULL;
+    if (strcmp(attr, "callbacks") == 0) return mp_read_byref_lv_layout_callbacks_t(data->callbacks);
+    if (strcmp(attr, "user_data") == 0) return ptr_to_mp((void*)data->user_data);
+    for (PyMethodDef *m = py_lv_layout_dsc_t_methods; m->ml_name != NULL; m++) {
+        if (strcmp(attr, m->ml_name) == 0)
+            return PyCFunction_NewEx(m, self, NULL);
+    }
+    return PyObject_GenericGetAttr((PyObject *)self, name);
+}
+
+static int py_lv_layout_dsc_t_setattro(PyObject *self, PyObject *name, PyObject *value)
+{
+    if (value == NULL) {
+        PyErr_SetString(PyExc_AttributeError, "cannot delete struct fields");
+        return -1;
+    }
+    py_lv_struct_t *inst = (py_lv_struct_t *)self;
+    lv_layout_dsc_t *data = (lv_layout_dsc_t*)inst->data;
+    if (data == NULL) {
+        PyErr_SetString(PyLvReferenceError, "struct data is NULL");
+        return -1;
+    }
+    const char *attr = PyUnicode_AsUTF8(name);
+    if (attr == NULL) return -1;
+    int result = -1;
+    if (strcmp(attr, "callbacks") == 0) { data->callbacks = mp_write_lv_layout_callbacks_t(value); result = 0; }
+    if (strcmp(attr, "user_data") == 0) { data->user_data = (void*)mp_to_ptr(value); result = 0; }
+    if (result < 0) {
+        PyErr_Format(PyExc_AttributeError, "'lv_layout_dsc_t' object has no attribute '%s'", attr);
+    }
+    return result;
+}
+
+static PyObject *py_lv_layout_dsc_t_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
+{
+    return make_new_lv_struct(type, args, kwds, sizeof(lv_layout_dsc_t));
+}
+
+static void py_lv_layout_dsc_t_dealloc(py_lv_struct_t *self)
+{
+    py_lv_struct_dealloc(self);
+}
+
+PyTypeObject py_lv_layout_dsc_t_type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    .tp_name = "lvgl.lv_layout_dsc_t",
+    .tp_basicsize = sizeof(py_lv_struct_t),
+    .tp_dealloc = (destructor)py_lv_layout_dsc_t_dealloc,
+    .tp_getattro = (getter)py_lv_layout_dsc_t_getattro,
+    .tp_setattro = (setter)py_lv_layout_dsc_t_setattro,
+    .tp_new = py_lv_layout_dsc_t_new,
+    .tp_base = &py_lv_base_struct_type,
+    .tp_flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,
+};
+
+static inline void* mp_write_ptr_lv_layout_dsc_t(PyObject *self_in)
+{
+    if (!self_in || self_in == Py_None) return NULL;
+    py_lv_struct_t *self = (py_lv_struct_t *)self_in;
+    return (lv_layout_dsc_t*)self->data;
+}
+
+#define mp_write_lv_layout_dsc_t(struct_obj) (*((lv_layout_dsc_t*)mp_write_ptr_lv_layout_dsc_t(struct_obj)))
+
+static inline PyObject *mp_read_ptr_lv_layout_dsc_t(void *field)
+{
+    return lv_to_mp_struct(&py_lv_layout_dsc_t_type, field);
+}
+
+#define mp_read_lv_layout_dsc_t(field) lv_to_mp_struct_own(&py_lv_layout_dsc_t_type, copy_buffer(&field, sizeof(lv_layout_dsc_t)))
+#define mp_read_byref_lv_layout_dsc_t(field) mp_read_ptr_lv_layout_dsc_t(&field)
+
+
+/*
+ * Function NOT generated:
+ * Missing 'user_data' field for callback 'lv_timer_state_t_resume_cb'
+ * lv_timer_handler_resume_cb_t resume_cb
+ */
+    
+
+/*
+ * Struct lv_timer_state_t (CPython)
+ */
+
+extern PyMethodDef py_lv_timer_state_t_methods[];
+
+static PyObject *py_lv_timer_state_t_getattro(PyObject *self, PyObject *name)
+{
+    py_lv_struct_t *inst = (py_lv_struct_t *)self;
+    lv_timer_state_t *data = (lv_timer_state_t*)inst->data;
+    if (data == NULL) {
+        PyErr_SetString(PyLvReferenceError, "struct data is NULL");
+        return NULL;
+    }
+    const char *attr = PyUnicode_AsUTF8(name);
+    if (attr == NULL) return NULL;
+    if (strcmp(attr, "timer_ll") == 0) return mp_read_byref_lv_ll_t(data->timer_ll);
+    if (strcmp(attr, "lv_timer_run") == 0) return convert_to_bool(data->lv_timer_run);
+    if (strcmp(attr, "idle_last") == 0) return mp_obj_new_int_from_uint(data->idle_last);
+    if (strcmp(attr, "timer_deleted") == 0) return convert_to_bool(data->timer_deleted);
+    if (strcmp(attr, "timer_created") == 0) return convert_to_bool(data->timer_created);
+    if (strcmp(attr, "timer_time_until_next") == 0) return mp_obj_new_int_from_uint(data->timer_time_until_next);
+    if (strcmp(attr, "already_running") == 0) return convert_to_bool(data->already_running);
+    if (strcmp(attr, "periodic_last_tick") == 0) return mp_obj_new_int_from_uint(data->periodic_last_tick);
+    if (strcmp(attr, "busy_time") == 0) return mp_obj_new_int_from_uint(data->busy_time);
+    if (strcmp(attr, "idle_period_start") == 0) return mp_obj_new_int_from_uint(data->idle_period_start);
+    if (strcmp(attr, "run_cnt") == 0) return mp_obj_new_int_from_uint(data->run_cnt);
+    if (strcmp(attr, "resume_cb") == 0) return mp_lv_funcptr(NULL, data->resume_cb, NULL, "lv_timer_state_t_resume_cb", NULL);
+    if (strcmp(attr, "resume_data") == 0) return ptr_to_mp((void*)data->resume_data);
+    for (PyMethodDef *m = py_lv_timer_state_t_methods; m->ml_name != NULL; m++) {
+        if (strcmp(attr, m->ml_name) == 0)
+            return PyCFunction_NewEx(m, self, NULL);
+    }
+    return PyObject_GenericGetAttr((PyObject *)self, name);
+}
+
+static int py_lv_timer_state_t_setattro(PyObject *self, PyObject *name, PyObject *value)
+{
+    if (value == NULL) {
+        PyErr_SetString(PyExc_AttributeError, "cannot delete struct fields");
+        return -1;
+    }
+    py_lv_struct_t *inst = (py_lv_struct_t *)self;
+    lv_timer_state_t *data = (lv_timer_state_t*)inst->data;
+    if (data == NULL) {
+        PyErr_SetString(PyLvReferenceError, "struct data is NULL");
+        return -1;
+    }
+    const char *attr = PyUnicode_AsUTF8(name);
+    if (attr == NULL) return -1;
+    int result = -1;
+    if (strcmp(attr, "timer_ll") == 0) { data->timer_ll = mp_write_lv_ll_t(value); result = 0; }
+    if (strcmp(attr, "lv_timer_run") == 0) { data->lv_timer_run = mp_obj_is_true(value); result = 0; }
+    if (strcmp(attr, "idle_last") == 0) { data->idle_last = (uint8_t)mp_obj_get_int(value); result = 0; }
+    if (strcmp(attr, "timer_deleted") == 0) { data->timer_deleted = mp_obj_is_true(value); result = 0; }
+    if (strcmp(attr, "timer_created") == 0) { data->timer_created = mp_obj_is_true(value); result = 0; }
+    if (strcmp(attr, "timer_time_until_next") == 0) { data->timer_time_until_next = (uint32_t)mp_obj_get_int(value); result = 0; }
+    if (strcmp(attr, "already_running") == 0) { data->already_running = mp_obj_is_true(value); result = 0; }
+    if (strcmp(attr, "periodic_last_tick") == 0) { data->periodic_last_tick = (uint32_t)mp_obj_get_int(value); result = 0; }
+    if (strcmp(attr, "busy_time") == 0) { data->busy_time = (uint32_t)mp_obj_get_int(value); result = 0; }
+    if (strcmp(attr, "idle_period_start") == 0) { data->idle_period_start = (uint32_t)mp_obj_get_int(value); result = 0; }
+    if (strcmp(attr, "run_cnt") == 0) { data->run_cnt = (uint32_t)mp_obj_get_int(value); result = 0; }
+    if (strcmp(attr, "resume_cb") == 0) { data->resume_cb = mp_lv_callback(value, NULL, "lv_timer_state_t_resume_cb", NULL, NULL, NULL, NULL); result = 0; }
+    if (strcmp(attr, "resume_data") == 0) { data->resume_data = (void*)mp_to_ptr(value); result = 0; }
+    if (result < 0) {
+        PyErr_Format(PyExc_AttributeError, "'lv_timer_state_t' object has no attribute '%s'", attr);
+    }
+    return result;
+}
+
+static PyObject *py_lv_timer_state_t_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
+{
+    return make_new_lv_struct(type, args, kwds, sizeof(lv_timer_state_t));
+}
+
+static void py_lv_timer_state_t_dealloc(py_lv_struct_t *self)
+{
+    py_lv_struct_dealloc(self);
+}
+
+PyTypeObject py_lv_timer_state_t_type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    .tp_name = "lvgl.lv_timer_state_t",
+    .tp_basicsize = sizeof(py_lv_struct_t),
+    .tp_dealloc = (destructor)py_lv_timer_state_t_dealloc,
+    .tp_getattro = (getter)py_lv_timer_state_t_getattro,
+    .tp_setattro = (setter)py_lv_timer_state_t_setattro,
+    .tp_new = py_lv_timer_state_t_new,
+    .tp_base = &py_lv_base_struct_type,
+    .tp_flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,
+};
+
+static inline void* mp_write_ptr_lv_timer_state_t(PyObject *self_in)
+{
+    if (!self_in || self_in == Py_None) return NULL;
+    py_lv_struct_t *self = (py_lv_struct_t *)self_in;
+    return (lv_timer_state_t*)self->data;
+}
+
+#define mp_write_lv_timer_state_t(struct_obj) (*((lv_timer_state_t*)mp_write_ptr_lv_timer_state_t(struct_obj)))
+
+static inline PyObject *mp_read_ptr_lv_timer_state_t(void *field)
+{
+    return lv_to_mp_struct(&py_lv_timer_state_t_type, field);
+}
+
+#define mp_read_lv_timer_state_t(field) lv_to_mp_struct_own(&py_lv_timer_state_t_type, copy_buffer(&field, sizeof(lv_timer_state_t)))
+#define mp_read_byref_lv_timer_state_t(field) mp_read_ptr_lv_timer_state_t(&field)
+
+
+/*
+ * Struct lv_anim_state_t (CPython)
+ */
+
+extern PyMethodDef py_lv_anim_state_t_methods[];
+
+static PyObject *py_lv_anim_state_t_getattro(PyObject *self, PyObject *name)
+{
+    py_lv_struct_t *inst = (py_lv_struct_t *)self;
+    lv_anim_state_t *data = (lv_anim_state_t*)inst->data;
+    if (data == NULL) {
+        PyErr_SetString(PyLvReferenceError, "struct data is NULL");
+        return NULL;
+    }
+    const char *attr = PyUnicode_AsUTF8(name);
+    if (attr == NULL) return NULL;
+    if (strcmp(attr, "anim_list_changed") == 0) return convert_to_bool(data->anim_list_changed);
+    if (strcmp(attr, "anim_run_round") == 0) return convert_to_bool(data->anim_run_round);
+    if (strcmp(attr, "anim_vsync_registered") == 0) return convert_to_bool(data->anim_vsync_registered);
+    if (strcmp(attr, "timer") == 0) return mp_read_ptr_lv_timer_t((void*)data->timer);
+    if (strcmp(attr, "anim_ll") == 0) return mp_read_byref_lv_ll_t(data->anim_ll);
+    for (PyMethodDef *m = py_lv_anim_state_t_methods; m->ml_name != NULL; m++) {
+        if (strcmp(attr, m->ml_name) == 0)
+            return PyCFunction_NewEx(m, self, NULL);
+    }
+    return PyObject_GenericGetAttr((PyObject *)self, name);
+}
+
+static int py_lv_anim_state_t_setattro(PyObject *self, PyObject *name, PyObject *value)
+{
+    if (value == NULL) {
+        PyErr_SetString(PyExc_AttributeError, "cannot delete struct fields");
+        return -1;
+    }
+    py_lv_struct_t *inst = (py_lv_struct_t *)self;
+    lv_anim_state_t *data = (lv_anim_state_t*)inst->data;
+    if (data == NULL) {
+        PyErr_SetString(PyLvReferenceError, "struct data is NULL");
+        return -1;
+    }
+    const char *attr = PyUnicode_AsUTF8(name);
+    if (attr == NULL) return -1;
+    int result = -1;
+    if (strcmp(attr, "anim_list_changed") == 0) { data->anim_list_changed = mp_obj_is_true(value); result = 0; }
+    if (strcmp(attr, "anim_run_round") == 0) { data->anim_run_round = mp_obj_is_true(value); result = 0; }
+    if (strcmp(attr, "anim_vsync_registered") == 0) { data->anim_vsync_registered = mp_obj_is_true(value); result = 0; }
+    if (strcmp(attr, "timer") == 0) { data->timer = (void*)mp_write_ptr_lv_timer_t(value); result = 0; }
+    if (strcmp(attr, "anim_ll") == 0) { data->anim_ll = mp_write_lv_ll_t(value); result = 0; }
+    if (result < 0) {
+        PyErr_Format(PyExc_AttributeError, "'lv_anim_state_t' object has no attribute '%s'", attr);
+    }
+    return result;
+}
+
+static PyObject *py_lv_anim_state_t_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
+{
+    return make_new_lv_struct(type, args, kwds, sizeof(lv_anim_state_t));
+}
+
+static void py_lv_anim_state_t_dealloc(py_lv_struct_t *self)
+{
+    py_lv_struct_dealloc(self);
+}
+
+PyTypeObject py_lv_anim_state_t_type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    .tp_name = "lvgl.lv_anim_state_t",
+    .tp_basicsize = sizeof(py_lv_struct_t),
+    .tp_dealloc = (destructor)py_lv_anim_state_t_dealloc,
+    .tp_getattro = (getter)py_lv_anim_state_t_getattro,
+    .tp_setattro = (setter)py_lv_anim_state_t_setattro,
+    .tp_new = py_lv_anim_state_t_new,
+    .tp_base = &py_lv_base_struct_type,
+    .tp_flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,
+};
+
+static inline void* mp_write_ptr_lv_anim_state_t(PyObject *self_in)
+{
+    if (!self_in || self_in == Py_None) return NULL;
+    py_lv_struct_t *self = (py_lv_struct_t *)self_in;
+    return (lv_anim_state_t*)self->data;
+}
+
+#define mp_write_lv_anim_state_t(struct_obj) (*((lv_anim_state_t*)mp_write_ptr_lv_anim_state_t(struct_obj)))
+
+static inline PyObject *mp_read_ptr_lv_anim_state_t(void *field)
+{
+    return lv_to_mp_struct(&py_lv_anim_state_t_type, field);
+}
+
+#define mp_read_lv_anim_state_t(field) lv_to_mp_struct_own(&py_lv_anim_state_t_type, copy_buffer(&field, sizeof(lv_anim_state_t)))
+#define mp_read_byref_lv_anim_state_t(field) mp_read_ptr_lv_anim_state_t(&field)
+
+
+/*
+ * Function NOT generated:
+ * Missing 'user_data' field for callback 'lv_tick_state_t_tick_get_cb'
+ * lv_tick_get_cb_t tick_get_cb
+ */
+    
+
+/*
+ * Function NOT generated:
+ * Missing 'user_data' field for callback 'lv_tick_state_t_delay_cb'
+ * lv_delay_cb_t delay_cb
+ */
+    
+
+/*
+ * Struct lv_tick_state_t (CPython)
+ */
+
+extern PyMethodDef py_lv_tick_state_t_methods[];
+
+static PyObject *py_lv_tick_state_t_getattro(PyObject *self, PyObject *name)
+{
+    py_lv_struct_t *inst = (py_lv_struct_t *)self;
+    lv_tick_state_t *data = (lv_tick_state_t*)inst->data;
+    if (data == NULL) {
+        PyErr_SetString(PyLvReferenceError, "struct data is NULL");
+        return NULL;
+    }
+    const char *attr = PyUnicode_AsUTF8(name);
+    if (attr == NULL) return NULL;
+    if (strcmp(attr, "sys_time") == 0) return mp_obj_new_int_from_uint(data->sys_time);
+    if (strcmp(attr, "sys_irq_flag") == 0) return mp_obj_new_int_from_uint(data->sys_irq_flag);
+    if (strcmp(attr, "tick_get_cb") == 0) return mp_lv_funcptr(NULL, data->tick_get_cb, NULL, "lv_tick_state_t_tick_get_cb", NULL);
+    if (strcmp(attr, "delay_cb") == 0) return mp_lv_funcptr(NULL, data->delay_cb, NULL, "lv_tick_state_t_delay_cb", NULL);
+    for (PyMethodDef *m = py_lv_tick_state_t_methods; m->ml_name != NULL; m++) {
+        if (strcmp(attr, m->ml_name) == 0)
+            return PyCFunction_NewEx(m, self, NULL);
+    }
+    return PyObject_GenericGetAttr((PyObject *)self, name);
+}
+
+static int py_lv_tick_state_t_setattro(PyObject *self, PyObject *name, PyObject *value)
+{
+    if (value == NULL) {
+        PyErr_SetString(PyExc_AttributeError, "cannot delete struct fields");
+        return -1;
+    }
+    py_lv_struct_t *inst = (py_lv_struct_t *)self;
+    lv_tick_state_t *data = (lv_tick_state_t*)inst->data;
+    if (data == NULL) {
+        PyErr_SetString(PyLvReferenceError, "struct data is NULL");
+        return -1;
+    }
+    const char *attr = PyUnicode_AsUTF8(name);
+    if (attr == NULL) return -1;
+    int result = -1;
+    if (strcmp(attr, "sys_time") == 0) { data->sys_time = (uint32_t)mp_obj_get_int(value); result = 0; }
+    if (strcmp(attr, "sys_irq_flag") == 0) { data->sys_irq_flag = (uint8_t)mp_obj_get_int(value); result = 0; }
+    if (strcmp(attr, "tick_get_cb") == 0) { data->tick_get_cb = mp_lv_callback(value, NULL, "lv_tick_state_t_tick_get_cb", NULL, NULL, NULL, NULL); result = 0; }
+    if (strcmp(attr, "delay_cb") == 0) { data->delay_cb = mp_lv_callback(value, NULL, "lv_tick_state_t_delay_cb", NULL, NULL, NULL, NULL); result = 0; }
+    if (result < 0) {
+        PyErr_Format(PyExc_AttributeError, "'lv_tick_state_t' object has no attribute '%s'", attr);
+    }
+    return result;
+}
+
+static PyObject *py_lv_tick_state_t_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
+{
+    return make_new_lv_struct(type, args, kwds, sizeof(lv_tick_state_t));
+}
+
+static void py_lv_tick_state_t_dealloc(py_lv_struct_t *self)
+{
+    py_lv_struct_dealloc(self);
+}
+
+PyTypeObject py_lv_tick_state_t_type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    .tp_name = "lvgl.lv_tick_state_t",
+    .tp_basicsize = sizeof(py_lv_struct_t),
+    .tp_dealloc = (destructor)py_lv_tick_state_t_dealloc,
+    .tp_getattro = (getter)py_lv_tick_state_t_getattro,
+    .tp_setattro = (setter)py_lv_tick_state_t_setattro,
+    .tp_new = py_lv_tick_state_t_new,
+    .tp_base = &py_lv_base_struct_type,
+    .tp_flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,
+};
+
+static inline void* mp_write_ptr_lv_tick_state_t(PyObject *self_in)
+{
+    if (!self_in || self_in == Py_None) return NULL;
+    py_lv_struct_t *self = (py_lv_struct_t *)self_in;
+    return (lv_tick_state_t*)self->data;
+}
+
+#define mp_write_lv_tick_state_t(struct_obj) (*((lv_tick_state_t*)mp_write_ptr_lv_tick_state_t(struct_obj)))
+
+static inline PyObject *mp_read_ptr_lv_tick_state_t(void *field)
+{
+    return lv_to_mp_struct(&py_lv_tick_state_t_type, field);
+}
+
+#define mp_read_lv_tick_state_t(field) lv_to_mp_struct_own(&py_lv_tick_state_t_type, copy_buffer(&field, sizeof(lv_tick_state_t)))
+#define mp_read_byref_lv_tick_state_t(field) mp_read_ptr_lv_tick_state_t(&field)
+
+
+/*
+ * Struct lv_draw_global_info_t (CPython)
+ */
+
+extern PyMethodDef py_lv_draw_global_info_t_methods[];
+
+static PyObject *py_lv_draw_global_info_t_getattro(PyObject *self, PyObject *name)
+{
+    py_lv_struct_t *inst = (py_lv_struct_t *)self;
+    lv_draw_global_info_t *data = (lv_draw_global_info_t*)inst->data;
+    if (data == NULL) {
+        PyErr_SetString(PyLvReferenceError, "struct data is NULL");
+        return NULL;
+    }
+    const char *attr = PyUnicode_AsUTF8(name);
+    if (attr == NULL) return NULL;
+    if (strcmp(attr, "unit_head") == 0) return mp_read_ptr_lv_draw_unit_t((void*)data->unit_head);
+    if (strcmp(attr, "unit_cnt") == 0) return mp_obj_new_int_from_uint(data->unit_cnt);
+    if (strcmp(attr, "used_memory_for_layers") == 0) return mp_obj_new_int_from_uint(data->used_memory_for_layers);
+    if (strcmp(attr, "dispatch_req") == 0) return mp_obj_new_int(data->dispatch_req);
+    if (strcmp(attr, "circle_cache_mutex") == 0) return mp_obj_new_int(data->circle_cache_mutex);
+    if (strcmp(attr, "task_running") == 0) return convert_to_bool(data->task_running);
+    for (PyMethodDef *m = py_lv_draw_global_info_t_methods; m->ml_name != NULL; m++) {
+        if (strcmp(attr, m->ml_name) == 0)
+            return PyCFunction_NewEx(m, self, NULL);
+    }
+    return PyObject_GenericGetAttr((PyObject *)self, name);
+}
+
+static int py_lv_draw_global_info_t_setattro(PyObject *self, PyObject *name, PyObject *value)
+{
+    if (value == NULL) {
+        PyErr_SetString(PyExc_AttributeError, "cannot delete struct fields");
+        return -1;
+    }
+    py_lv_struct_t *inst = (py_lv_struct_t *)self;
+    lv_draw_global_info_t *data = (lv_draw_global_info_t*)inst->data;
+    if (data == NULL) {
+        PyErr_SetString(PyLvReferenceError, "struct data is NULL");
+        return -1;
+    }
+    const char *attr = PyUnicode_AsUTF8(name);
+    if (attr == NULL) return -1;
+    int result = -1;
+    if (strcmp(attr, "unit_head") == 0) { data->unit_head = (void*)mp_write_ptr_lv_draw_unit_t(value); result = 0; }
+    if (strcmp(attr, "unit_cnt") == 0) { data->unit_cnt = (uint32_t)mp_obj_get_int(value); result = 0; }
+    if (strcmp(attr, "used_memory_for_layers") == 0) { data->used_memory_for_layers = (uint32_t)mp_obj_get_int(value); result = 0; }
+    if (strcmp(attr, "dispatch_req") == 0) { data->dispatch_req = (int)mp_obj_get_int(value); result = 0; }
+    if (strcmp(attr, "circle_cache_mutex") == 0) { data->circle_cache_mutex = (int)mp_obj_get_int(value); result = 0; }
+    if (strcmp(attr, "task_running") == 0) { data->task_running = mp_obj_is_true(value); result = 0; }
+    if (result < 0) {
+        PyErr_Format(PyExc_AttributeError, "'lv_draw_global_info_t' object has no attribute '%s'", attr);
+    }
+    return result;
+}
+
+static PyObject *py_lv_draw_global_info_t_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
+{
+    return make_new_lv_struct(type, args, kwds, sizeof(lv_draw_global_info_t));
+}
+
+static void py_lv_draw_global_info_t_dealloc(py_lv_struct_t *self)
+{
+    py_lv_struct_dealloc(self);
+}
+
+PyTypeObject py_lv_draw_global_info_t_type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    .tp_name = "lvgl.lv_draw_global_info_t",
+    .tp_basicsize = sizeof(py_lv_struct_t),
+    .tp_dealloc = (destructor)py_lv_draw_global_info_t_dealloc,
+    .tp_getattro = (getter)py_lv_draw_global_info_t_getattro,
+    .tp_setattro = (setter)py_lv_draw_global_info_t_setattro,
+    .tp_new = py_lv_draw_global_info_t_new,
+    .tp_base = &py_lv_base_struct_type,
+    .tp_flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,
+};
+
+static inline void* mp_write_ptr_lv_draw_global_info_t(PyObject *self_in)
+{
+    if (!self_in || self_in == Py_None) return NULL;
+    py_lv_struct_t *self = (py_lv_struct_t *)self_in;
+    return (lv_draw_global_info_t*)self->data;
+}
+
+#define mp_write_lv_draw_global_info_t(struct_obj) (*((lv_draw_global_info_t*)mp_write_ptr_lv_draw_global_info_t(struct_obj)))
+
+static inline PyObject *mp_read_ptr_lv_draw_global_info_t(void *field)
+{
+    return lv_to_mp_struct(&py_lv_draw_global_info_t_type, field);
+}
+
+#define mp_read_lv_draw_global_info_t(field) lv_to_mp_struct_own(&py_lv_draw_global_info_t_type, copy_buffer(&field, sizeof(lv_draw_global_info_t)))
+#define mp_read_byref_lv_draw_global_info_t(field) mp_read_ptr_lv_draw_global_info_t(&field)
+
+
+/*
+ * Function NOT generated:
+ * Missing conversion to lv_draw_sw_mask_radius_circle_dsc_arr_t when generating struct lv_global_t.sw_circle_cache
+ * lv_global_t *lv_global_default(void)
+ */
+    
+
+/*
  * lvgl extension definition for:
  * void lv_indev_scroll_handler(lv_indev_t *indev)
  */
@@ -103446,2088 +103955,18 @@ PyMethodDef py_lv_color_hsv_t_methods[] = {{NULL}};
 PyMethodDef py_lv_indev_data_t_methods[] = {{NULL}};
 PyMethodDef py_lv_hit_test_info_t_methods[] = {{NULL}};
 PyMethodDef py_lv_draw_sw_blend_dsc_t_methods[] = {{NULL}};
+PyMethodDef py_lv_layout_dsc_t_methods[] = {{NULL}};
+PyMethodDef py_lv_timer_state_t_methods[] = {{NULL}};
+PyMethodDef py_lv_anim_state_t_methods[] = {{NULL}};
+PyMethodDef py_lv_tick_state_t_methods[] = {{NULL}};
+PyMethodDef py_lv_draw_global_info_t_methods[] = {{NULL}};
 
 /*
  * Functions not generated:
- * lv_memzero
- * lv_streq
- * lv_sqr
- * lv_array_size
- * lv_array_capacity
- * lv_array_is_empty
- * lv_array_is_full
- * lv_array_clear
- * lv_array_front
- * lv_array_back
- * lv_area_copy
- * lv_color_is_in_range
- * lv_color16_to_color
- * lv_color_swap_16
- * lv_draw_buf_has_flag
- * lv_draw_buf_set_flag
- * lv_draw_buf_clear_flag
- * lv_swap_bytes_32
- * lv_swap_bytes_16
- * lv_bidi_calculate_align
- * lv_style_is_const
- * lv_style_get_prop_inlined
- * lv_style_get_prop_group
- * lv_style_set_size
- * lv_style_set_pad_all
- * lv_style_set_pad_hor
- * lv_style_set_pad_ver
- * lv_style_set_pad_gap
- * lv_style_set_margin_hor
- * lv_style_set_margin_ver
- * lv_style_set_margin_all
- * lv_style_set_transform_scale
- * lv_style_prop_has_flag
- * lv_obj_style_get_selector_state
- * lv_obj_style_get_selector_part
- * lv_obj_get_style_width
- * lv_obj_get_style_min_width
- * lv_obj_get_style_max_width
- * lv_obj_get_style_height
- * lv_obj_get_style_min_height
- * lv_obj_get_style_max_height
- * lv_obj_get_style_length
- * lv_obj_get_style_x
- * lv_obj_get_style_y
- * lv_obj_get_style_align
- * lv_obj_get_style_transform_width
- * lv_obj_get_style_transform_height
- * lv_obj_get_style_translate_x
- * lv_obj_get_style_translate_y
- * lv_obj_get_style_translate_radial
- * lv_obj_get_style_transform_scale_x
- * lv_obj_get_style_transform_scale_y
- * lv_obj_get_style_transform_rotation
- * lv_obj_get_style_transform_pivot_x
- * lv_obj_get_style_transform_pivot_y
- * lv_obj_get_style_transform_skew_x
- * lv_obj_get_style_transform_skew_y
- * lv_obj_get_style_pad_top
- * lv_obj_get_style_pad_bottom
- * lv_obj_get_style_pad_left
- * lv_obj_get_style_pad_right
- * lv_obj_get_style_pad_row
- * lv_obj_get_style_pad_column
- * lv_obj_get_style_pad_radial
- * lv_obj_get_style_margin_top
- * lv_obj_get_style_margin_bottom
- * lv_obj_get_style_margin_left
- * lv_obj_get_style_margin_right
- * lv_obj_get_style_bg_color
- * lv_obj_get_style_bg_color_filtered
- * lv_obj_get_style_bg_opa
- * lv_obj_get_style_bg_grad_color
- * lv_obj_get_style_bg_grad_color_filtered
- * lv_obj_get_style_bg_grad_dir
- * lv_obj_get_style_bg_main_stop
- * lv_obj_get_style_bg_grad_stop
- * lv_obj_get_style_bg_main_opa
- * lv_obj_get_style_bg_grad_opa
- * lv_obj_get_style_bg_grad
- * lv_obj_get_style_bg_image_src
- * lv_obj_get_style_bg_image_opa
- * lv_obj_get_style_bg_image_recolor
- * lv_obj_get_style_bg_image_recolor_filtered
- * lv_obj_get_style_bg_image_recolor_opa
- * lv_obj_get_style_bg_image_tiled
- * lv_obj_get_style_border_color
- * lv_obj_get_style_border_color_filtered
- * lv_obj_get_style_border_opa
- * lv_obj_get_style_border_width
- * lv_obj_get_style_border_side
- * lv_obj_get_style_border_post
- * lv_obj_get_style_outline_width
- * lv_obj_get_style_outline_color
- * lv_obj_get_style_outline_color_filtered
- * lv_obj_get_style_outline_opa
- * lv_obj_get_style_outline_pad
- * lv_obj_get_style_shadow_width
- * lv_obj_get_style_shadow_offset_x
- * lv_obj_get_style_shadow_offset_y
- * lv_obj_get_style_shadow_spread
- * lv_obj_get_style_shadow_color
- * lv_obj_get_style_shadow_color_filtered
- * lv_obj_get_style_shadow_opa
- * lv_obj_get_style_image_opa
- * lv_obj_get_style_image_recolor
- * lv_obj_get_style_image_recolor_filtered
- * lv_obj_get_style_image_recolor_opa
- * lv_obj_get_style_image_colorkey
- * lv_obj_get_style_line_width
- * lv_obj_get_style_line_dash_width
- * lv_obj_get_style_line_dash_gap
- * lv_obj_get_style_line_rounded
- * lv_obj_get_style_line_color
- * lv_obj_get_style_line_color_filtered
- * lv_obj_get_style_line_opa
- * lv_obj_get_style_arc_width
- * lv_obj_get_style_arc_rounded
- * lv_obj_get_style_arc_color
- * lv_obj_get_style_arc_color_filtered
- * lv_obj_get_style_arc_opa
- * lv_obj_get_style_arc_image_src
- * lv_obj_get_style_text_color
- * lv_obj_get_style_text_color_filtered
- * lv_obj_get_style_text_opa
- * lv_obj_get_style_text_font
- * lv_obj_get_style_text_letter_space
- * lv_obj_get_style_text_line_space
- * lv_obj_get_style_text_decor
- * lv_obj_get_style_text_align
- * lv_obj_get_style_text_outline_stroke_color
- * lv_obj_get_style_text_outline_stroke_color_filtered
- * lv_obj_get_style_text_outline_stroke_width
- * lv_obj_get_style_text_outline_stroke_opa
- * lv_obj_get_style_blur_radius
- * lv_obj_get_style_blur_backdrop
- * lv_obj_get_style_blur_quality
- * lv_obj_get_style_drop_shadow_radius
- * lv_obj_get_style_drop_shadow_offset_x
- * lv_obj_get_style_drop_shadow_offset_y
- * lv_obj_get_style_drop_shadow_color
- * lv_obj_get_style_drop_shadow_color_filtered
- * lv_obj_get_style_drop_shadow_opa
- * lv_obj_get_style_drop_shadow_quality
- * lv_obj_get_style_radius
- * lv_obj_get_style_radial_offset
- * lv_obj_get_style_clip_corner
- * lv_obj_get_style_opa
- * lv_obj_get_style_opa_layered
- * lv_obj_get_style_color_filter_dsc
- * lv_obj_get_style_color_filter_opa
- * lv_obj_get_style_recolor
- * lv_obj_get_style_recolor_opa
- * lv_obj_get_style_anim
- * lv_obj_get_style_anim_duration
- * lv_obj_get_style_transition
- * lv_obj_get_style_blend_mode
- * lv_obj_get_style_layout
- * lv_obj_get_style_base_dir
- * lv_obj_get_style_bitmap_mask_src
- * lv_obj_get_style_rotary_sensitivity
- * lv_obj_get_style_flex_flow
- * lv_obj_get_style_flex_main_place
- * lv_obj_get_style_flex_cross_place
- * lv_obj_get_style_flex_track_place
- * lv_obj_get_style_flex_grow
- * lv_obj_get_style_grid_column_dsc_array
- * lv_obj_get_style_grid_column_align
- * lv_obj_get_style_grid_row_dsc_array
- * lv_obj_get_style_grid_row_align
- * lv_obj_get_style_grid_cell_column_pos
- * lv_obj_get_style_grid_cell_x_align
- * lv_obj_get_style_grid_cell_column_span
- * lv_obj_get_style_grid_cell_row_pos
- * lv_obj_get_style_grid_cell_y_align
- * lv_obj_get_style_grid_cell_row_span
- * lv_obj_set_style_pad_all
- * lv_obj_set_style_pad_hor
- * lv_obj_set_style_pad_ver
- * lv_obj_set_style_margin_all
- * lv_obj_set_style_margin_hor
- * lv_obj_set_style_margin_ver
- * lv_obj_set_style_pad_gap
- * lv_obj_set_style_size
- * lv_obj_set_style_transform_scale
- * lv_obj_get_style_space_left
- * lv_obj_get_style_space_right
- * lv_obj_get_style_space_top
- * lv_obj_get_style_space_bottom
- * lv_obj_get_style_transform_scale_x_safe
- * lv_obj_get_style_transform_scale_y_safe
- * lv_task_handler
- * lv_obj_move_foreground
- * lv_obj_move_background
- * lv_thread_init
- * lv_thread_delete
- * lv_mutex_init
- * lv_mutex_lock
- * lv_mutex_lock_isr
- * lv_mutex_unlock
- * lv_mutex_delete
- * lv_thread_sync_init
- * lv_thread_sync_wait
- * lv_thread_sync_signal
- * lv_thread_sync_signal_isr
- * lv_thread_sync_delete
- * lv_text_is_break_char
- * lv_text_is_a_word
- * lv_text_is_marker
- * lv_version_major
- * lv_version_minor
- * lv_version_patch
- * lv_version_info
- * lv_init
- * lv_deinit
- * lv_is_initialized
- * lv_memcpy
- * lv_memset
- * lv_memmove
- * lv_memcmp
- * lv_strlen
- * lv_strnlen
- * lv_strlcpy
- * lv_strncpy
- * lv_strcpy
- * lv_strcmp
- * lv_strncmp
- * lv_strdup
- * lv_strndup
- * lv_strcat
- * lv_strncat
- * lv_strchr
- * lv_mem_init
- * lv_mem_deinit
- * lv_mem_add_pool
- * lv_mem_remove_pool
- * lv_malloc
- * lv_calloc
- * lv_zalloc
- * lv_malloc_zeroed
- * lv_free
- * lv_realloc
- * lv_reallocf
- * lv_malloc_core
- * lv_free_core
- * lv_realloc_core
- * lv_mem_monitor_core
- * lv_mem_test_core
- * lv_mem_test
- * lv_mem_monitor
- * lv_snprintf
- * lv_tick_inc
- * lv_tick_get
- * lv_tick_elaps
- * lv_tick_diff
- * lv_delay_ms
- * lv_delay_set_cb
- * lv_tick_set_cb
- * lv_tick_get_cb
- * lv_ll_init
- * lv_ll_ins_head
- * lv_ll_ins_prev
- * lv_ll_ins_tail
- * lv_ll_remove
- * lv_ll_clear_custom
- * lv_ll_clear
- * lv_ll_chg_list
- * lv_ll_get_head
- * lv_ll_get_tail
- * lv_ll_get_next
- * lv_ll_get_prev
- * lv_ll_get_len
- * lv_ll_move_before
- * lv_ll_is_empty
- * lv_timer_handler
- * lv_timer_handler_run_in_period
- * lv_timer_periodic_handler
- * lv_timer_handler_set_resume_cb
- * lv_timer_create_basic
- * lv_timer_create
- * lv_timer_delete
- * lv_timer_pause
- * lv_timer_resume
- * lv_timer_set_cb
- * lv_timer_set_period
- * lv_timer_ready
- * lv_timer_set_repeat_count
- * lv_timer_set_auto_delete
- * lv_timer_set_user_data
- * lv_timer_reset
- * lv_timer_enable
- * lv_timer_get_idle
- * lv_timer_get_time_until_next
- * lv_timer_get_next
- * lv_timer_get_user_data
- * lv_timer_get_paused
- * lv_trigo_sin
- * lv_trigo_cos
- * lv_cubic_bezier
- * lv_bezier3
- * lv_atan2
- * lv_sqrt
- * lv_sqrt32
- * lv_pow
- * lv_map
- * lv_rand_set_seed
- * lv_rand
- * lv_array_init
- * lv_array_init_from_buf
- * lv_array_resize
- * lv_array_deinit
- * lv_array_copy
- * lv_array_shrink
- * lv_array_remove
- * lv_array_remove_unordered
- * lv_array_erase
- * lv_array_concat
- * lv_array_push_back
- * lv_array_assign
- * lv_array_at
- * lv_async_call
- * lv_async_call_cancel
- * lv_anim_init
- * lv_anim_set_var
- * lv_anim_set_exec_cb
- * lv_anim_set_duration
- * lv_anim_set_delay
- * lv_anim_resume
- * lv_anim_pause
- * lv_anim_pause_for
- * lv_anim_is_paused
- * lv_anim_set_values
- * lv_anim_set_custom_exec_cb
- * lv_anim_set_path_cb
- * lv_anim_set_start_cb
- * lv_anim_set_get_value_cb
- * lv_anim_set_completed_cb
- * lv_anim_set_deleted_cb
- * lv_anim_set_reverse_duration
- * lv_anim_set_reverse_time
- * lv_anim_set_reverse_delay
- * lv_anim_set_repeat_count
- * lv_anim_set_repeat_delay
- * lv_anim_set_early_apply
- * lv_anim_set_user_data
- * lv_anim_set_bezier3_param
- * lv_anim_start
- * lv_anim_get_delay
- * lv_anim_get_playtime
- * lv_anim_get_time
- * lv_anim_get_repeat_count
- * lv_anim_get_user_data
- * lv_anim_delete
- * lv_anim_delete_all
- * lv_anim_get
- * lv_anim_get_timer
- * lv_anim_custom_delete
- * lv_anim_custom_get
- * lv_anim_count_running
- * lv_anim_speed
- * lv_anim_speed_clamped
- * lv_anim_resolve_speed
- * lv_anim_speed_to_time
- * lv_anim_refr_now
- * lv_anim_path_linear
- * lv_anim_path_ease_in
- * lv_anim_path_ease_out
- * lv_anim_path_ease_in_out
- * lv_anim_path_overshoot
- * lv_anim_path_bounce
- * lv_anim_path_step
- * lv_anim_path_custom_bezier3
- * lv_anim_timeline_create
- * lv_anim_timeline_delete
- * lv_anim_timeline_add
- * lv_anim_timeline_start
- * lv_anim_timeline_pause
- * lv_anim_timeline_set_reverse
- * lv_anim_timeline_set_delay
- * lv_anim_timeline_set_repeat_count
- * lv_anim_timeline_set_repeat_delay
- * lv_anim_timeline_set_progress
- * lv_anim_timeline_set_user_data
- * lv_anim_timeline_get_playtime
- * lv_anim_timeline_get_reverse
- * lv_anim_timeline_get_delay
- * lv_anim_timeline_get_progress
- * lv_anim_timeline_get_repeat_count
- * lv_anim_timeline_get_repeat_delay
- * lv_anim_timeline_get_user_data
- * lv_anim_timeline_merge
- * lv_rb_init
- * lv_rb_insert
- * lv_rb_find
- * lv_rb_remove_node
- * lv_rb_remove
- * lv_rb_drop_node
- * lv_rb_drop
- * lv_rb_minimum
- * lv_rb_maximum
- * lv_rb_minimum_from
- * lv_rb_maximum_from
- * lv_rb_destroy
- * lv_area_set
- * lv_area_get_width
- * lv_area_get_height
- * lv_area_set_width
- * lv_area_set_height
- * lv_area_get_size
- * lv_area_increase
- * lv_area_move
- * lv_area_align
- * lv_point_transform
- * lv_point_array_transform
- * lv_point_from_precise
- * lv_point_to_precise
- * lv_point_set
- * lv_point_precise_set
- * lv_point_swap
- * lv_point_precise_swap
- * lv_pct
- * lv_pct_to_px
- * lv_color_format_get_bpp
- * lv_color_format_get_size
- * lv_color_format_has_alpha
- * lv_color_to_32
- * lv_color_to_int
- * lv_color_eq
- * lv_color32_eq
- * lv_color_hex
- * lv_color_make
- * lv_color32_make
- * lv_color_hex3
- * lv_color_to_u16
- * lv_color_to_u32
- * lv_color_16_16_mix
- * lv_color_lighten
- * lv_color_darken
- * lv_color_hsv_to_rgb
- * lv_color_rgb_to_hsv
- * lv_color_to_hsv
- * lv_color_white
- * lv_color_black
- * lv_color_premultiply
- * lv_color16_premultiply
- * lv_color_luminance
- * lv_color16_luminance
- * lv_color24_luminance
- * lv_color32_luminance
- * lv_palette_main
- * lv_palette_lighten
- * lv_palette_darken
- * lv_color_mix
- * lv_color_mix32
- * lv_color_mix32_premultiplied
- * lv_color_brightness
- * lv_color_filter_dsc_init
- * lv_color_over32
- * lv_draw_buf_init_with_default_handlers
- * lv_draw_buf_handlers_init
- * lv_draw_buf_get_handlers
- * lv_draw_buf_get_font_handlers
- * lv_draw_buf_get_image_handlers
- * lv_draw_buf_align
- * lv_draw_buf_align_ex
- * lv_draw_buf_invalidate_cache
- * lv_draw_buf_flush_cache
- * lv_draw_buf_width_to_stride
- * lv_draw_buf_width_to_stride_ex
- * lv_draw_buf_clear
- * lv_draw_buf_create
- * lv_draw_buf_create_ex
- * lv_draw_buf_dup
- * lv_draw_buf_dup_ex
- * lv_draw_buf_init
- * lv_draw_buf_reshape
- * lv_draw_buf_destroy
- * lv_draw_buf_copy
- * lv_draw_buf_goto_xy
- * lv_draw_buf_adjust_stride
- * lv_draw_buf_premultiply
- * lv_draw_buf_from_image
- * lv_draw_buf_to_image
- * lv_draw_buf_set_palette
- * lv_image_buf_set_palette
- * lv_image_buf_free
- * lv_utils_bsearch
- * lv_draw_buf_save_to_file
- * lv_iter_create
- * lv_iter_get_context
- * lv_iter_destroy
- * lv_iter_next
- * lv_iter_make_peekable
- * lv_iter_peek
- * lv_iter_peek_advance
- * lv_iter_peek_reset
- * lv_iter_inspect
- * lv_circle_buf_create
- * lv_circle_buf_create_from_buf
- * lv_circle_buf_create_from_array
- * lv_circle_buf_resize
- * lv_circle_buf_destroy
- * lv_circle_buf_size
- * lv_circle_buf_capacity
- * lv_circle_buf_remain
- * lv_circle_buf_is_empty
- * lv_circle_buf_is_full
- * lv_circle_buf_reset
- * lv_circle_buf_head
- * lv_circle_buf_tail
- * lv_circle_buf_read
- * lv_circle_buf_write
- * lv_circle_buf_fill
- * lv_circle_buf_skip
- * lv_circle_buf_peek
- * lv_circle_buf_peek_at
- * lv_tree_node_create
- * lv_tree_node_delete
- * lv_tree_walk
- * lv_lock
- * lv_lock_isr
- * lv_unlock
- * lv_sleep_ms
- * lv_font_get_glyph_bitmap
- * lv_font_get_glyph_static_bitmap
- * lv_font_get_glyph_dsc
- * lv_font_glyph_release_draw_data
- * lv_font_get_glyph_width
- * lv_font_get_line_height
- * lv_font_set_kerning
- * lv_font_get_default
- * lv_font_info_is_equal
- * lv_font_has_static_bitmap
- * lv_text_get_size
- * lv_grad_init_stops
- * lv_grad_horizontal_init
- * lv_grad_vertical_init
- * lv_grad_linear_init
- * lv_grad_radial_init
- * lv_grad_radial_set_focal
- * lv_grad_conical_init
- * lv_layout_create
- * lv_layout_register
- * lv_flex_init
- * lv_obj_set_flex_flow
- * lv_obj_set_flex_align
- * lv_obj_set_flex_grow
- * lv_grid_init
- * lv_obj_set_grid_dsc_array
- * lv_obj_set_grid_align
- * lv_obj_set_grid_cell
- * lv_grid_fr
- * lv_style_init
- * lv_style_reset
- * lv_style_copy
- * lv_style_merge
- * lv_style_register_prop
- * lv_style_get_num_custom_props
- * lv_style_remove_prop
- * lv_style_set_prop
- * lv_style_get_prop
- * lv_style_transition_dsc_init
- * lv_style_prop_get_default
- * lv_style_is_empty
- * lv_style_prop_lookup_flags
- * lv_style_set_width
- * lv_style_set_min_width
- * lv_style_set_max_width
- * lv_style_set_height
- * lv_style_set_min_height
- * lv_style_set_max_height
- * lv_style_set_length
- * lv_style_set_x
- * lv_style_set_y
- * lv_style_set_align
- * lv_style_set_transform_width
- * lv_style_set_transform_height
- * lv_style_set_translate_x
- * lv_style_set_translate_y
- * lv_style_set_translate_radial
- * lv_style_set_transform_scale_x
- * lv_style_set_transform_scale_y
- * lv_style_set_transform_rotation
- * lv_style_set_transform_pivot_x
- * lv_style_set_transform_pivot_y
- * lv_style_set_transform_skew_x
- * lv_style_set_transform_skew_y
- * lv_style_set_pad_top
- * lv_style_set_pad_bottom
- * lv_style_set_pad_left
- * lv_style_set_pad_right
- * lv_style_set_pad_row
- * lv_style_set_pad_column
- * lv_style_set_pad_radial
- * lv_style_set_margin_top
- * lv_style_set_margin_bottom
- * lv_style_set_margin_left
- * lv_style_set_margin_right
- * lv_style_set_bg_color
- * lv_style_set_bg_opa
- * lv_style_set_bg_grad_color
- * lv_style_set_bg_grad_dir
- * lv_style_set_bg_main_stop
- * lv_style_set_bg_grad_stop
- * lv_style_set_bg_main_opa
- * lv_style_set_bg_grad_opa
- * lv_style_set_bg_grad
- * lv_style_set_bg_image_src
- * lv_style_set_bg_image_opa
- * lv_style_set_bg_image_recolor
- * lv_style_set_bg_image_recolor_opa
- * lv_style_set_bg_image_tiled
- * lv_style_set_border_color
- * lv_style_set_border_opa
- * lv_style_set_border_width
- * lv_style_set_border_side
- * lv_style_set_border_post
- * lv_style_set_outline_width
- * lv_style_set_outline_color
- * lv_style_set_outline_opa
- * lv_style_set_outline_pad
- * lv_style_set_shadow_width
- * lv_style_set_shadow_offset_x
- * lv_style_set_shadow_offset_y
- * lv_style_set_shadow_spread
- * lv_style_set_shadow_color
- * lv_style_set_shadow_opa
- * lv_style_set_image_opa
- * lv_style_set_image_recolor
- * lv_style_set_image_recolor_opa
- * lv_style_set_image_colorkey
- * lv_style_set_line_width
- * lv_style_set_line_dash_width
- * lv_style_set_line_dash_gap
- * lv_style_set_line_rounded
- * lv_style_set_line_color
- * lv_style_set_line_opa
- * lv_style_set_arc_width
- * lv_style_set_arc_rounded
- * lv_style_set_arc_color
- * lv_style_set_arc_opa
- * lv_style_set_arc_image_src
- * lv_style_set_text_color
- * lv_style_set_text_opa
- * lv_style_set_text_font
- * lv_style_set_text_letter_space
- * lv_style_set_text_line_space
- * lv_style_set_text_decor
- * lv_style_set_text_align
- * lv_style_set_text_outline_stroke_color
- * lv_style_set_text_outline_stroke_width
- * lv_style_set_text_outline_stroke_opa
- * lv_style_set_blur_radius
- * lv_style_set_blur_backdrop
- * lv_style_set_blur_quality
- * lv_style_set_drop_shadow_radius
- * lv_style_set_drop_shadow_offset_x
- * lv_style_set_drop_shadow_offset_y
- * lv_style_set_drop_shadow_color
- * lv_style_set_drop_shadow_opa
- * lv_style_set_drop_shadow_quality
- * lv_style_set_radius
- * lv_style_set_radial_offset
- * lv_style_set_clip_corner
- * lv_style_set_opa
- * lv_style_set_opa_layered
- * lv_style_set_color_filter_dsc
- * lv_style_set_color_filter_opa
- * lv_style_set_recolor
- * lv_style_set_recolor_opa
- * lv_style_set_anim
- * lv_style_set_anim_duration
- * lv_style_set_transition
- * lv_style_set_blend_mode
- * lv_style_set_layout
- * lv_style_set_base_dir
- * lv_style_set_bitmap_mask_src
- * lv_style_set_rotary_sensitivity
- * lv_style_set_flex_flow
- * lv_style_set_flex_main_place
- * lv_style_set_flex_cross_place
- * lv_style_set_flex_track_place
- * lv_style_set_flex_grow
- * lv_style_set_grid_column_dsc_array
- * lv_style_set_grid_column_align
- * lv_style_set_grid_row_dsc_array
- * lv_style_set_grid_row_align
- * lv_style_set_grid_cell_column_pos
- * lv_style_set_grid_cell_x_align
- * lv_style_set_grid_cell_column_span
- * lv_style_set_grid_cell_row_pos
- * lv_style_set_grid_cell_y_align
- * lv_style_set_grid_cell_row_span
- * lv_event_send
- * lv_event_add
- * lv_event_remove_dsc
- * lv_event_get_count
- * lv_event_get_dsc
- * lv_event_dsc_get_cb
- * lv_event_dsc_get_user_data
- * lv_event_remove
- * lv_event_remove_all
- * lv_event_get_target
- * lv_event_get_current_target
- * lv_event_get_code
- * lv_event_get_param
- * lv_event_get_user_data
- * lv_event_stop_bubbling
- * lv_event_stop_trickling
- * lv_event_stop_processing
- * lv_event_free_user_data_cb
- * lv_event_register_id
- * lv_event_code_get_name
- * lv_display_create
- * lv_display_delete
- * lv_display_set_default
- * lv_display_get_default
- * lv_display_get_next
- * lv_display_set_resolution
- * lv_display_set_physical_resolution
- * lv_display_set_offset
- * lv_display_set_rotation
- * lv_display_set_matrix_rotation
- * lv_display_set_dpi
- * lv_display_get_horizontal_resolution
- * lv_display_get_vertical_resolution
- * lv_display_get_original_horizontal_resolution
- * lv_display_get_original_vertical_resolution
- * lv_display_get_physical_horizontal_resolution
- * lv_display_get_physical_vertical_resolution
- * lv_display_get_offset_x
- * lv_display_get_offset_y
- * lv_display_get_rotation
- * lv_display_get_matrix_rotation
- * lv_display_get_dpi
- * lv_display_set_buffers
- * lv_display_set_buffers_with_stride
- * lv_display_set_draw_buffers
- * lv_display_set_3rd_draw_buffer
- * lv_display_set_render_mode
- * lv_display_set_flush_cb
- * lv_display_set_flush_wait_cb
- * lv_display_set_color_format
- * lv_display_get_color_format
- * lv_display_set_tile_cnt
- * lv_display_get_tile_cnt
- * lv_display_set_antialiasing
- * lv_display_get_antialiasing
- * lv_display_flush_ready
- * lv_display_flush_is_last
- * lv_display_is_double_buffered
- * lv_display_get_render_mode
- * lv_display_get_screen_active
- * lv_display_get_screen_prev
- * lv_display_get_screen_loading
- * lv_display_get_layer_top
- * lv_display_get_layer_sys
- * lv_display_get_layer_bottom
- * lv_screen_load
- * lv_screen_load_anim
- * lv_screen_active
- * lv_layer_top
- * lv_layer_sys
- * lv_layer_bottom
- * lv_display_add_event_cb
- * lv_display_get_event_count
- * lv_display_get_event_dsc
- * lv_display_delete_event
- * lv_display_remove_event_cb_with_user_data
- * lv_display_send_event
- * lv_event_get_invalidated_area
- * lv_display_set_theme
- * lv_display_get_theme
- * lv_display_get_inactive_time
- * lv_display_trigger_activity
- * lv_display_enable_invalidation
- * lv_display_is_invalidation_enabled
- * lv_display_get_refr_timer
- * lv_display_delete_refr_timer
- * lv_display_register_vsync_event
- * lv_display_unregister_vsync_event
- * lv_display_send_vsync_event
- * lv_display_set_user_data
- * lv_display_set_driver_data
- * lv_display_get_user_data
- * lv_display_get_driver_data
- * lv_display_get_buf_active
- * lv_display_rotate_area
- * lv_display_rotate_point
- * lv_display_get_draw_buf_size
- * lv_display_get_invalidated_draw_buf_size
- * lv_dpx
- * lv_display_dpx
- * lv_obj_delete
- * lv_obj_clean
- * lv_obj_delete_delayed
- * lv_obj_delete_anim_completed_cb
- * lv_obj_delete_async
- * lv_obj_set_parent
- * lv_obj_swap
- * lv_obj_move_to_index
- * lv_obj_get_screen
- * lv_obj_get_display
- * lv_obj_get_parent
- * lv_obj_get_child
- * lv_obj_get_child_by_type
- * lv_obj_get_sibling
- * lv_obj_get_sibling_by_type
- * lv_obj_get_child_count
- * lv_obj_get_child_count_by_type
- * lv_obj_get_index
- * lv_obj_get_index_by_type
- * lv_obj_tree_walk
- * lv_obj_dump_tree
- * lv_obj_set_pos
- * lv_obj_set_x
- * lv_obj_set_y
- * lv_obj_set_size
- * lv_obj_refr_size
- * lv_obj_set_width
- * lv_obj_set_height
- * lv_obj_set_content_width
- * lv_obj_set_content_height
- * lv_obj_set_layout
- * lv_obj_is_layout_positioned
- * lv_obj_mark_layout_as_dirty
- * lv_obj_update_layout
- * lv_obj_set_align
- * lv_obj_align
- * lv_obj_align_to
- * lv_obj_center
- * lv_obj_set_transform
- * lv_obj_reset_transform
- * lv_obj_get_coords
- * lv_obj_get_x
- * lv_obj_get_x2
- * lv_obj_get_y
- * lv_obj_get_y2
- * lv_obj_get_x_aligned
- * lv_obj_get_y_aligned
- * lv_obj_get_width
- * lv_obj_get_height
- * lv_obj_get_content_width
- * lv_obj_get_content_height
- * lv_obj_get_content_coords
- * lv_obj_get_self_width
- * lv_obj_get_self_height
- * lv_obj_get_style_clamped_width
- * lv_obj_get_style_clamped_height
- * lv_obj_is_width_min
- * lv_obj_is_height_min
- * lv_obj_is_width_max
- * lv_obj_is_height_max
- * lv_obj_refresh_self_size
- * lv_obj_refr_pos
- * lv_obj_move_to
- * lv_obj_move_children_by
- * lv_obj_get_transform
- * lv_obj_transform_point
- * lv_obj_transform_point_array
- * lv_obj_get_transformed_area
- * lv_obj_invalidate_area
- * lv_obj_invalidate
- * lv_obj_area_is_visible
- * lv_obj_is_visible
- * lv_obj_set_ext_click_area
- * lv_obj_get_click_area
- * lv_obj_hit_test
- * lv_clamp_width
- * lv_clamp_height
- * lv_obj_calc_dynamic_width
- * lv_obj_calc_dynamic_height
- * lv_obj_set_scrollbar_mode
- * lv_obj_set_scroll_dir
- * lv_obj_set_scroll_snap_x
- * lv_obj_set_scroll_snap_y
- * lv_obj_get_scrollbar_mode
- * lv_obj_get_scroll_dir
- * lv_obj_get_scroll_snap_x
- * lv_obj_get_scroll_snap_y
- * lv_obj_get_scroll_x
- * lv_obj_get_scroll_y
- * lv_obj_get_scroll_top
- * lv_obj_get_scroll_bottom
- * lv_obj_get_scroll_left
- * lv_obj_get_scroll_right
- * lv_obj_get_scroll_end
- * lv_obj_scroll_by
- * lv_obj_scroll_by_bounded
- * lv_obj_scroll_to
- * lv_obj_scroll_to_x
- * lv_obj_scroll_to_y
- * lv_obj_scroll_to_view
- * lv_obj_scroll_to_view_recursive
- * lv_obj_is_scrolling
- * lv_obj_stop_scroll_anim
- * lv_obj_update_snap
- * lv_obj_get_scrollbar_area
- * lv_obj_scrollbar_invalidate
- * lv_obj_readjust_scroll
- * lv_obj_add_style
- * lv_obj_replace_style
- * lv_obj_remove_style
- * lv_obj_remove_theme
- * lv_obj_remove_style_all
- * lv_obj_report_style_change
- * lv_obj_refresh_style
- * lv_obj_style_set_disabled
- * lv_obj_style_get_disabled
- * lv_obj_enable_style_refresh
- * lv_obj_get_style_prop
- * lv_obj_has_style_prop
- * lv_obj_set_local_style_prop
- * lv_obj_get_local_style_prop
- * lv_obj_remove_local_style_prop
- * lv_obj_style_apply_color_filter
- * lv_obj_fade_in
- * lv_obj_fade_out
- * lv_obj_set_style_width
- * lv_obj_set_style_min_width
- * lv_obj_set_style_max_width
- * lv_obj_set_style_height
- * lv_obj_set_style_min_height
- * lv_obj_set_style_max_height
- * lv_obj_set_style_length
- * lv_obj_set_style_x
- * lv_obj_set_style_y
- * lv_obj_set_style_align
- * lv_obj_set_style_transform_width
- * lv_obj_set_style_transform_height
- * lv_obj_set_style_translate_x
- * lv_obj_set_style_translate_y
- * lv_obj_set_style_translate_radial
- * lv_obj_set_style_transform_scale_x
- * lv_obj_set_style_transform_scale_y
- * lv_obj_set_style_transform_rotation
- * lv_obj_set_style_transform_pivot_x
- * lv_obj_set_style_transform_pivot_y
- * lv_obj_set_style_transform_skew_x
- * lv_obj_set_style_transform_skew_y
- * lv_obj_set_style_pad_top
- * lv_obj_set_style_pad_bottom
- * lv_obj_set_style_pad_left
- * lv_obj_set_style_pad_right
- * lv_obj_set_style_pad_row
- * lv_obj_set_style_pad_column
- * lv_obj_set_style_pad_radial
- * lv_obj_set_style_margin_top
- * lv_obj_set_style_margin_bottom
- * lv_obj_set_style_margin_left
- * lv_obj_set_style_margin_right
- * lv_obj_set_style_bg_color
- * lv_obj_set_style_bg_opa
- * lv_obj_set_style_bg_grad_color
- * lv_obj_set_style_bg_grad_dir
- * lv_obj_set_style_bg_main_stop
- * lv_obj_set_style_bg_grad_stop
- * lv_obj_set_style_bg_main_opa
- * lv_obj_set_style_bg_grad_opa
- * lv_obj_set_style_bg_grad
- * lv_obj_set_style_bg_image_src
- * lv_obj_set_style_bg_image_opa
- * lv_obj_set_style_bg_image_recolor
- * lv_obj_set_style_bg_image_recolor_opa
- * lv_obj_set_style_bg_image_tiled
- * lv_obj_set_style_border_color
- * lv_obj_set_style_border_opa
- * lv_obj_set_style_border_width
- * lv_obj_set_style_border_side
- * lv_obj_set_style_border_post
- * lv_obj_set_style_outline_width
- * lv_obj_set_style_outline_color
- * lv_obj_set_style_outline_opa
- * lv_obj_set_style_outline_pad
- * lv_obj_set_style_shadow_width
- * lv_obj_set_style_shadow_offset_x
- * lv_obj_set_style_shadow_offset_y
- * lv_obj_set_style_shadow_spread
- * lv_obj_set_style_shadow_color
- * lv_obj_set_style_shadow_opa
- * lv_obj_set_style_image_opa
- * lv_obj_set_style_image_recolor
- * lv_obj_set_style_image_recolor_opa
- * lv_obj_set_style_image_colorkey
- * lv_obj_set_style_line_width
- * lv_obj_set_style_line_dash_width
- * lv_obj_set_style_line_dash_gap
- * lv_obj_set_style_line_rounded
- * lv_obj_set_style_line_color
- * lv_obj_set_style_line_opa
- * lv_obj_set_style_arc_width
- * lv_obj_set_style_arc_rounded
- * lv_obj_set_style_arc_color
- * lv_obj_set_style_arc_opa
- * lv_obj_set_style_arc_image_src
- * lv_obj_set_style_text_color
- * lv_obj_set_style_text_opa
- * lv_obj_set_style_text_font
- * lv_obj_set_style_text_letter_space
- * lv_obj_set_style_text_line_space
- * lv_obj_set_style_text_decor
- * lv_obj_set_style_text_align
- * lv_obj_set_style_text_outline_stroke_color
- * lv_obj_set_style_text_outline_stroke_width
- * lv_obj_set_style_text_outline_stroke_opa
- * lv_obj_set_style_blur_radius
- * lv_obj_set_style_blur_backdrop
- * lv_obj_set_style_blur_quality
- * lv_obj_set_style_drop_shadow_radius
- * lv_obj_set_style_drop_shadow_offset_x
- * lv_obj_set_style_drop_shadow_offset_y
- * lv_obj_set_style_drop_shadow_color
- * lv_obj_set_style_drop_shadow_opa
- * lv_obj_set_style_drop_shadow_quality
- * lv_obj_set_style_radius
- * lv_obj_set_style_radial_offset
- * lv_obj_set_style_clip_corner
- * lv_obj_set_style_opa
- * lv_obj_set_style_opa_layered
- * lv_obj_set_style_color_filter_dsc
- * lv_obj_set_style_color_filter_opa
- * lv_obj_set_style_recolor
- * lv_obj_set_style_recolor_opa
- * lv_obj_set_style_anim
- * lv_obj_set_style_anim_duration
- * lv_obj_set_style_transition
- * lv_obj_set_style_blend_mode
- * lv_obj_set_style_layout
- * lv_obj_set_style_base_dir
- * lv_obj_set_style_bitmap_mask_src
- * lv_obj_set_style_rotary_sensitivity
- * lv_obj_set_style_flex_flow
- * lv_obj_set_style_flex_main_place
- * lv_obj_set_style_flex_cross_place
- * lv_obj_set_style_flex_track_place
- * lv_obj_set_style_flex_grow
- * lv_obj_set_style_grid_column_dsc_array
- * lv_obj_set_style_grid_column_align
- * lv_obj_set_style_grid_row_dsc_array
- * lv_obj_set_style_grid_row_align
- * lv_obj_set_style_grid_cell_column_pos
- * lv_obj_set_style_grid_cell_x_align
- * lv_obj_set_style_grid_cell_column_span
- * lv_obj_set_style_grid_cell_row_pos
- * lv_obj_set_style_grid_cell_y_align
- * lv_obj_set_style_grid_cell_row_span
- * lv_obj_calculate_style_text_align
- * lv_obj_get_style_opa_recursive
- * lv_obj_style_apply_recolor
- * lv_obj_get_style_recolor_recursive
- * lv_obj_bind_style
- * lv_obj_bind_style_prop
- * lv_fs_drv_init
- * lv_fs_drv_register
- * lv_fs_get_drv
- * lv_fs_remove_drive
- * lv_fs_is_ready
- * lv_fs_open
- * lv_fs_make_path_from_buffer
- * lv_fs_get_buffer_from_path
- * lv_fs_close
- * lv_fs_read
- * lv_fs_write
- * lv_fs_seek
- * lv_fs_tell
- * lv_fs_get_size
- * lv_fs_path_get_size
- * lv_fs_load_to_buf
- * lv_fs_load_with_alloc
- * lv_fs_dir_open
- * lv_fs_dir_read
- * lv_fs_dir_close
- * lv_fs_get_letters
- * lv_fs_get_ext
- * lv_fs_up
- * lv_fs_get_last
- * lv_fs_path_join
- * lv_image_decoder_get_info
- * lv_image_decoder_open
- * lv_image_decoder_get_area
- * lv_image_decoder_close
- * lv_image_decoder_create
- * lv_image_decoder_delete
- * lv_image_decoder_get_next
- * lv_image_decoder_set_info_cb
- * lv_image_decoder_set_open_cb
- * lv_image_decoder_set_get_area_cb
- * lv_image_decoder_set_close_cb
- * lv_image_decoder_add_to_cache
- * lv_image_decoder_post_process
- * lv_draw_init
- * lv_draw_deinit
- * lv_draw_create_unit
- * lv_draw_add_task
- * lv_draw_finalize_task_creation
- * lv_draw_dispatch
- * lv_draw_dispatch_layer
- * lv_draw_dispatch_wait_for_request
- * lv_draw_wait_for_finish
- * lv_draw_dispatch_request
- * lv_draw_get_unit_count
- * lv_draw_get_available_task
- * lv_draw_get_next_available_task
- * lv_draw_get_dependent_count
- * lv_draw_unit_send_event
- * lv_layer_init
- * lv_layer_reset
- * lv_draw_layer_create
- * lv_draw_layer_init
- * lv_draw_layer_alloc_buf
- * lv_draw_layer_go_to_xy
- * lv_draw_task_get_type
- * lv_draw_task_get_draw_dsc
- * lv_draw_task_get_area
- * lv_draw_layer_create_drop_shadow
- * lv_draw_layer_finish_drop_shadow
- * lv_draw_rect_dsc_init
- * lv_draw_fill_dsc_init
- * lv_draw_task_get_fill_dsc
- * lv_draw_fill
- * lv_draw_border_dsc_init
- * lv_draw_task_get_border_dsc
- * lv_draw_border
- * lv_draw_box_shadow_dsc_init
- * lv_draw_task_get_box_shadow_dsc
- * lv_draw_box_shadow
- * lv_draw_rect
- * lv_draw_letter_dsc_init
- * lv_draw_label_dsc_init
- * lv_draw_task_get_label_dsc
- * lv_draw_glyph_dsc_init
- * lv_draw_label
- * lv_draw_character
- * lv_draw_letter
- * lv_draw_label_iterate_characters
- * lv_draw_unit_draw_letter
- * lv_draw_image_dsc_init
- * lv_draw_task_get_image_dsc
- * lv_draw_image
- * lv_draw_layer
- * lv_image_src_get_type
- * lv_draw_line_dsc_init
- * lv_draw_task_get_line_dsc
- * lv_draw_line
- * lv_draw_line_iterate
- * lv_draw_arc_dsc_init
- * lv_draw_task_get_arc_dsc
- * lv_draw_arc
- * lv_draw_arc_get_area
- * lv_draw_triangle_dsc_init
- * lv_draw_task_get_triangle_dsc
- * lv_draw_triangle
- * lv_draw_blur_dsc_init
- * lv_draw_task_get_blur_dsc
- * lv_draw_blur
- * lv_obj_init_draw_rect_dsc
- * lv_obj_init_draw_label_dsc
- * lv_obj_init_draw_image_dsc
- * lv_obj_init_draw_line_dsc
- * lv_obj_init_draw_arc_dsc
- * lv_obj_init_draw_blur_dsc
- * lv_obj_calculate_ext_draw_size
- * lv_obj_refresh_ext_draw_size
- * lv_obj_class_create_obj
- * lv_obj_class_init_obj
- * lv_obj_is_editable
- * lv_obj_is_group_def
- * lv_group_create
- * lv_group_delete
- * lv_group_set_default
- * lv_group_get_default
- * lv_group_add_obj
- * lv_group_swap_obj
- * lv_group_remove_obj
- * lv_group_remove_all_objs
- * lv_group_focus_obj
- * lv_group_focus_next
- * lv_group_focus_prev
- * lv_group_focus_freeze
- * lv_group_send_data
- * lv_group_set_focus_cb
- * lv_group_set_edge_cb
- * lv_group_set_refocus_policy
- * lv_group_set_editing
- * lv_group_set_wrap
- * lv_group_get_focused
- * lv_group_get_focus_cb
- * lv_group_get_edge_cb
- * lv_group_get_editing
- * lv_group_get_wrap
- * lv_group_get_obj_count
- * lv_group_get_obj_by_index
- * lv_group_get_count
- * lv_group_by_index
- * lv_group_set_user_data
- * lv_group_get_user_data
- * lv_indev_create
- * lv_indev_delete
- * lv_indev_get_next
- * lv_indev_read
- * lv_indev_read_timer_cb
- * lv_indev_enable
- * lv_indev_active
- * lv_indev_set_type
- * lv_indev_set_read_cb
- * lv_indev_set_user_data
- * lv_indev_set_driver_data
- * lv_indev_set_display
- * lv_indev_set_long_press_time
- * lv_indev_set_long_press_repeat_time
- * lv_indev_set_scroll_limit
- * lv_indev_set_scroll_throw
- * lv_indev_set_gesture_min_velocity
- * lv_indev_set_gesture_min_distance
- * lv_indev_get_type
- * lv_indev_get_read_cb
- * lv_indev_get_state
- * lv_indev_get_group
- * lv_indev_get_display
- * lv_indev_get_user_data
- * lv_indev_get_driver_data
- * lv_indev_get_press_moved
- * lv_indev_reset
- * lv_indev_stop_processing
- * lv_indev_reset_long_press
- * lv_indev_set_cursor
- * lv_indev_set_group
- * lv_indev_set_button_points
- * lv_indev_get_point
- * lv_indev_get_gesture_dir
- * lv_indev_get_key
- * lv_indev_get_short_click_streak
- * lv_indev_get_scroll_dir
- * lv_indev_get_scroll_obj
- * lv_indev_get_vect
- * lv_indev_get_cursor
- * lv_indev_wait_release
- * lv_indev_get_active_obj
- * lv_indev_get_read_timer
- * lv_indev_set_mode
- * lv_indev_get_mode
- * lv_indev_search_obj
- * lv_indev_add_event_cb
- * lv_indev_get_event_count
- * lv_indev_get_event_dsc
- * lv_indev_remove_event
- * lv_indev_remove_event_cb_with_user_data
- * lv_indev_send_event
- * lv_indev_set_key_remap_cb
- * lv_obj_send_event
- * lv_obj_event_base
- * lv_event_get_current_target_obj
- * lv_event_get_target_obj
- * lv_obj_add_event_cb
- * lv_obj_get_event_count
- * lv_obj_get_event_dsc
- * lv_obj_remove_event
- * lv_obj_remove_event_dsc
- * lv_obj_remove_event_cb
- * lv_obj_remove_event_cb_with_user_data
- * lv_event_get_indev
- * lv_event_get_layer
- * lv_event_get_old_size
- * lv_event_get_key
- * lv_event_get_rotary_diff
- * lv_event_get_scroll_anim
- * lv_event_set_ext_draw_size
- * lv_event_get_self_size_info
- * lv_event_get_hit_test_info
- * lv_event_get_cover_area
- * lv_event_set_cover_res
- * lv_event_get_draw_task
- * lv_event_get_prev_state
- * lv_obj_add_flag
- * lv_obj_remove_flag
- * lv_obj_set_flag
- * lv_obj_add_state
- * lv_obj_remove_state
- * lv_obj_set_state
- * lv_obj_set_user_data
- * lv_obj_set_radio_button
- * lv_obj_has_flag
- * lv_obj_has_flag_any
- * lv_obj_get_state
- * lv_obj_has_state
- * lv_obj_is_radio_button
- * lv_obj_get_group
- * lv_obj_get_user_data
- * lv_obj_allocate_spec_attr
- * lv_obj_check_type
- * lv_obj_has_class
- * lv_obj_get_class
- * lv_obj_is_valid
- * lv_obj_null_on_delete
- * lv_obj_add_screen_load_event
- * lv_obj_add_screen_create_event
- * lv_obj_add_play_timeline_event
- * lv_refr_now
- * lv_obj_redraw
- * lv_display_refr_timer
- * lv_subject_init_int
- * lv_subject_set_int
- * lv_subject_get_int
- * lv_subject_get_previous_int
- * lv_subject_set_min_value_int
- * lv_subject_set_max_value_int
- * lv_subject_init_string
- * lv_subject_copy_string
- * lv_subject_snprintf
- * lv_subject_get_string
- * lv_subject_get_previous_string
- * lv_subject_init_pointer
- * lv_subject_set_pointer
- * lv_subject_get_pointer
- * lv_subject_get_previous_pointer
- * lv_subject_init_color
- * lv_subject_set_color
- * lv_subject_get_color
- * lv_subject_get_previous_color
- * lv_subject_init_group
- * lv_subject_deinit
- * lv_subject_get_group_element
- * lv_subject_add_observer
- * lv_subject_add_observer_obj
- * lv_subject_add_observer_with_target
- * lv_observer_remove
- * lv_obj_remove_from_subject
- * lv_observer_get_target
- * lv_observer_get_target_obj
- * lv_observer_get_user_data
- * lv_subject_notify
- * lv_obj_add_subject_increment_event
- * lv_obj_set_subject_increment_event_min_value
- * lv_obj_set_subject_increment_event_max_value
- * lv_obj_set_subject_increment_event_rollover
- * lv_obj_add_subject_toggle_event
- * lv_obj_add_subject_set_int_event
- * lv_obj_add_subject_set_string_event
- * lv_obj_bind_flag_if_eq
- * lv_obj_bind_flag_if_not_eq
- * lv_obj_bind_flag_if_gt
- * lv_obj_bind_flag_if_ge
- * lv_obj_bind_flag_if_lt
- * lv_obj_bind_flag_if_le
- * lv_obj_bind_state_if_eq
- * lv_obj_bind_state_if_not_eq
- * lv_obj_bind_state_if_gt
- * lv_obj_bind_state_if_ge
- * lv_obj_bind_state_if_lt
- * lv_obj_bind_state_if_le
- * lv_obj_bind_checked
- * lv_binfont_create
- * lv_binfont_create_from_buffer
- * lv_binfont_destroy
- * lv_font_get_bitmap_fmt_txt
- * lv_font_get_glyph_dsc_fmt_txt
- * lv_imgfont_create
- * lv_imgfont_destroy
- * lv_image_set_src
- * lv_image_set_offset_x
- * lv_image_set_offset_y
- * lv_image_set_rotation
- * lv_image_set_pivot
- * lv_image_set_pivot_x
- * lv_image_set_pivot_y
- * lv_image_set_scale
- * lv_image_set_scale_x
- * lv_image_set_scale_y
- * lv_image_set_blend_mode
- * lv_image_set_antialias
- * lv_image_set_inner_align
- * lv_image_set_bitmap_map_src
- * lv_image_get_src
- * lv_image_get_offset_x
- * lv_image_get_offset_y
- * lv_image_get_rotation
- * lv_image_get_pivot
- * lv_image_get_scale
- * lv_image_get_scale_x
- * lv_image_get_scale_y
- * lv_image_get_src_width
- * lv_image_get_src_height
- * lv_image_get_transformed_width
- * lv_image_get_transformed_height
- * lv_image_get_blend_mode
- * lv_image_get_antialias
- * lv_image_get_inner_align
- * lv_image_get_bitmap_map_src
- * lv_image_bind_src
- * lv_animimg_set_src
- * lv_animimg_set_src_reverse
- * lv_animimg_start
- * lv_animimg_delete
- * lv_animimg_set_duration
- * lv_animimg_set_repeat_count
- * lv_animimg_set_reverse_duration
- * lv_animimg_set_reverse_delay
- * lv_animimg_set_start_cb
- * lv_animimg_set_completed_cb
- * lv_animimg_get_src_count
- * lv_animimg_get_duration
- * lv_animimg_get_repeat_count
- * lv_animimg_get_anim
- * lv_arc_set_start_angle
- * lv_arc_set_end_angle
- * lv_arc_set_angles
- * lv_arc_set_bg_start_angle
- * lv_arc_set_bg_end_angle
- * lv_arc_set_bg_angles
- * lv_arc_set_rotation
- * lv_arc_set_mode
- * lv_arc_set_value
- * lv_arc_set_range
- * lv_arc_set_min_value
- * lv_arc_set_max_value
- * lv_arc_set_change_rate
- * lv_arc_set_knob_offset
- * lv_arc_get_angle_start
- * lv_arc_get_angle_end
- * lv_arc_get_bg_angle_start
- * lv_arc_get_bg_angle_end
- * lv_arc_get_value
- * lv_arc_get_min_value
- * lv_arc_get_max_value
- * lv_arc_get_mode
- * lv_arc_get_rotation
- * lv_arc_get_knob_offset
- * lv_arc_get_change_rate
- * lv_arc_bind_value
- * lv_arc_align_obj_to_angle
- * lv_arc_rotate_obj_to_angle
- * lv_arclabel_set_text
- * lv_arclabel_set_text_fmt
- * lv_arclabel_set_text_static
- * lv_arclabel_set_angle_start
- * lv_arclabel_set_angle_size
- * lv_arclabel_set_offset
- * lv_arclabel_set_dir
- * lv_arclabel_set_recolor
- * lv_arclabel_set_radius
- * lv_arclabel_set_center_offset_x
- * lv_arclabel_set_center_offset_y
- * lv_arclabel_set_text_vertical_align
- * lv_arclabel_set_text_horizontal_align
- * lv_arclabel_set_overflow
- * lv_arclabel_set_end_overlap
- * lv_arclabel_get_angle_start
- * lv_arclabel_get_angle_size
- * lv_arclabel_get_dir
- * lv_arclabel_get_recolor
- * lv_arclabel_get_radius
- * lv_arclabel_get_center_offset_x
- * lv_arclabel_get_center_offset_y
- * lv_arclabel_get_text_vertical_align
- * lv_arclabel_get_text_horizontal_align
- * lv_arclabel_get_overflow
- * lv_arclabel_get_end_overlap
- * lv_arclabel_get_text_angle
- * lv_label_set_text
- * lv_label_set_text_fmt
- * lv_label_set_text_static
- * lv_label_set_long_mode
- * lv_label_set_text_selection_start
- * lv_label_set_text_selection_end
- * lv_label_set_recolor
- * lv_label_get_text
- * lv_label_get_long_mode
- * lv_label_get_letter_pos
- * lv_label_get_letter_on
- * lv_label_is_char_under_pos
- * lv_label_get_text_selection_start
- * lv_label_get_text_selection_end
- * lv_label_get_recolor
- * lv_label_bind_text
- * lv_label_ins_text
- * lv_label_cut_text
- * lv_bar_set_value
- * lv_bar_set_start_value
- * lv_bar_set_range
- * lv_bar_set_min_value
- * lv_bar_set_max_value
- * lv_bar_set_mode
- * lv_bar_set_orientation
- * lv_bar_get_value
- * lv_bar_get_start_value
- * lv_bar_get_min_value
- * lv_bar_get_max_value
- * lv_bar_get_mode
- * lv_bar_get_orientation
- * lv_bar_is_symmetrical
- * lv_bar_bind_value
- * lv_buttonmatrix_set_map
- * lv_buttonmatrix_set_ctrl_map
- * lv_buttonmatrix_set_selected_button
- * lv_buttonmatrix_set_button_ctrl
- * lv_buttonmatrix_clear_button_ctrl
- * lv_buttonmatrix_set_button_ctrl_all
- * lv_buttonmatrix_clear_button_ctrl_all
- * lv_buttonmatrix_set_button_width
- * lv_buttonmatrix_set_one_checked
- * lv_buttonmatrix_get_selected_button
- * lv_buttonmatrix_get_button_text
- * lv_buttonmatrix_has_button_ctrl
- * lv_buttonmatrix_get_one_checked
- * lv_calendar_set_today_date
- * lv_calendar_set_today_year
- * lv_calendar_set_today_month
- * lv_calendar_set_today_day
- * lv_calendar_set_month_shown
- * lv_calendar_set_shown_year
- * lv_calendar_set_shown_month
- * lv_calendar_set_highlighted_dates
- * lv_calendar_set_day_names
- * lv_calendar_get_btnmatrix
- * lv_calendar_get_today_date
- * lv_calendar_get_showed_date
- * lv_calendar_get_highlighted_dates
- * lv_calendar_get_highlighted_dates_num
- * lv_calendar_get_pressed_date
- * lv_calendar_add_header_arrow
- * lv_calendar_add_header_dropdown
- * lv_calendar_header_dropdown_set_year_list
- * lv_canvas_set_buffer
- * lv_canvas_set_draw_buf
- * lv_canvas_set_px
- * lv_canvas_set_palette
- * lv_canvas_get_draw_buf
- * lv_canvas_get_px
- * lv_canvas_get_image
- * lv_canvas_get_buf
- * lv_canvas_copy_buf
- * lv_canvas_fill_bg
- * lv_canvas_init_layer
- * lv_canvas_finish_layer
- * lv_canvas_buf_size
- * lv_chart_set_type
- * lv_chart_set_point_count
- * lv_chart_set_axis_range
- * lv_chart_set_axis_min_value
- * lv_chart_set_axis_max_value
- * lv_chart_set_update_mode
- * lv_chart_set_div_line_count
- * lv_chart_set_hor_div_line_count
- * lv_chart_set_ver_div_line_count
- * lv_chart_get_type
- * lv_chart_get_point_count
- * lv_chart_get_update_mode
- * lv_chart_get_hor_div_line_count
- * lv_chart_get_ver_div_line_count
- * lv_chart_get_x_start_point
- * lv_chart_get_point_pos_by_id
- * lv_chart_refresh
- * lv_chart_add_series
- * lv_chart_remove_series
- * lv_chart_hide_series
- * lv_chart_set_series_color
- * lv_chart_get_series_color
- * lv_chart_set_x_start_point
- * lv_chart_get_series_next
- * lv_chart_add_cursor
- * lv_chart_remove_cursor
- * lv_chart_set_cursor_pos
- * lv_chart_set_cursor_pos_x
- * lv_chart_set_cursor_pos_y
- * lv_chart_set_cursor_point
- * lv_chart_get_cursor_point
- * lv_chart_set_all_values
- * lv_chart_set_next_value
- * lv_chart_set_next_value2
- * lv_chart_set_series_values
- * lv_chart_set_series_values2
- * lv_chart_set_series_value_by_id
- * lv_chart_set_series_value_by_id2
- * lv_chart_set_series_ext_y_array
- * lv_chart_set_series_ext_x_array
- * lv_chart_get_series_y_array
- * lv_chart_get_series_x_array
- * lv_chart_get_pressed_point
- * lv_chart_get_first_point_center_offset
- * lv_checkbox_set_text
- * lv_checkbox_set_text_static
- * lv_checkbox_get_text
- * lv_dropdown_set_text
- * lv_dropdown_set_text_static
- * lv_dropdown_set_options
- * lv_dropdown_set_options_static
- * lv_dropdown_add_option
- * lv_dropdown_clear_options
- * lv_dropdown_set_selected
- * lv_dropdown_set_dir
- * lv_dropdown_set_symbol
- * lv_dropdown_set_selected_highlight
- * lv_dropdown_get_list
- * lv_dropdown_get_text
- * lv_dropdown_get_options
- * lv_dropdown_get_selected
- * lv_dropdown_get_option_count
- * lv_dropdown_get_selected_str
- * lv_dropdown_get_option_index
- * lv_dropdown_get_symbol
- * lv_dropdown_get_selected_highlight
- * lv_dropdown_get_dir
- * lv_dropdown_open
- * lv_dropdown_close
- * lv_dropdown_is_open
- * lv_dropdown_bind_value
- * lv_gif_set_color_format
- * lv_gif_set_src
- * lv_gif_restart
- * lv_gif_pause
- * lv_gif_resume
- * lv_gif_is_loaded
- * lv_gif_get_loop_count
- * lv_gif_set_loop_count
- * lv_gif_set_auto_pause_invisible
- * lv_gif_get_size
- * lv_gif_get_frame_count
- * lv_gif_get_current_frame_index
- * lv_imagebutton_set_src
- * lv_imagebutton_set_src_left
- * lv_imagebutton_set_src_right
- * lv_imagebutton_set_src_mid
- * lv_imagebutton_set_state
- * lv_imagebutton_get_src_left
- * lv_imagebutton_get_src_middle
- * lv_imagebutton_get_src_right
- * lv_keyboard_set_textarea
- * lv_keyboard_set_mode
- * lv_keyboard_set_popovers
- * lv_keyboard_set_map
- * lv_keyboard_get_textarea
- * lv_keyboard_get_mode
- * lv_keyboard_get_popovers
- * lv_keyboard_get_selected_button
- * lv_keyboard_get_button_text
- * lv_keyboard_def_event_cb
- * lv_led_set_color
- * lv_led_set_brightness
- * lv_led_on
- * lv_led_off
- * lv_led_toggle
- * lv_led_get_brightness
- * lv_led_get_color
- * lv_line_set_points
- * lv_line_set_points_mutable
- * lv_line_set_y_invert
- * lv_line_get_points
- * lv_line_get_point_count
- * lv_line_is_point_array_mutable
- * lv_line_get_points_mutable
- * lv_line_get_y_invert
- * lv_list_add_text
- * lv_list_add_button
- * lv_list_get_button_text
- * lv_list_set_button_text
- * lv_menu_set_page
- * lv_menu_set_page_title
- * lv_menu_set_page_title_static
- * lv_menu_set_sidebar_page
- * lv_menu_set_mode_header
- * lv_menu_set_mode_root_back_button
- * lv_menu_set_load_page_event
- * lv_menu_get_cur_main_page
- * lv_menu_get_cur_sidebar_page
- * lv_menu_get_main_header
- * lv_menu_get_main_header_back_button
- * lv_menu_get_sidebar_header
- * lv_menu_get_sidebar_header_back_button
- * lv_menu_back_button_is_root
- * lv_menu_get_mode_header
- * lv_menu_get_mode_root_back_button
- * lv_menu_clear_history
- * lv_msgbox_add_title
- * lv_msgbox_add_header_button
- * lv_msgbox_add_text
- * lv_msgbox_add_text_fmt
- * lv_msgbox_add_footer_button
- * lv_msgbox_add_close_button
- * lv_msgbox_get_header
- * lv_msgbox_get_footer
- * lv_msgbox_get_content
- * lv_msgbox_get_title
- * lv_msgbox_close
- * lv_msgbox_close_async
- * lv_roller_set_options
- * lv_roller_set_selected
- * lv_roller_set_selected_str
- * lv_roller_set_visible_row_count
- * lv_roller_get_selected
- * lv_roller_get_selected_str
- * lv_roller_get_options
- * lv_roller_get_option_count
- * lv_roller_get_option_str
- * lv_roller_bind_value
- * lv_scale_set_mode
- * lv_scale_set_total_tick_count
- * lv_scale_set_major_tick_every
- * lv_scale_set_label_show
- * lv_scale_set_range
- * lv_scale_set_min_value
- * lv_scale_set_max_value
- * lv_scale_set_angle_range
- * lv_scale_set_rotation
- * lv_scale_set_line_needle_value
- * lv_scale_set_image_needle_value
- * lv_scale_set_text_src
- * lv_scale_set_post_draw
- * lv_scale_set_draw_ticks_on_top
- * lv_scale_add_section
- * lv_scale_section_set_range
- * lv_scale_set_section_range
- * lv_scale_set_section_min_value
- * lv_scale_set_section_max_value
- * lv_scale_section_set_style
- * lv_scale_set_section_style_main
- * lv_scale_set_section_style_indicator
- * lv_scale_set_section_style_items
- * lv_scale_get_mode
- * lv_scale_get_total_tick_count
- * lv_scale_get_major_tick_every
- * lv_scale_get_rotation
- * lv_scale_get_label_show
- * lv_scale_get_angle_range
- * lv_scale_get_range_min_value
- * lv_scale_get_range_max_value
- * lv_scale_bind_section_min_value
- * lv_scale_bind_section_max_value
- * lv_slider_set_value
- * lv_slider_set_start_value
- * lv_slider_set_range
- * lv_slider_set_min_value
- * lv_slider_set_max_value
- * lv_slider_set_mode
- * lv_slider_set_orientation
- * lv_slider_get_value
- * lv_slider_get_left_value
- * lv_slider_get_min_value
- * lv_slider_get_max_value
- * lv_slider_is_dragged
- * lv_slider_get_mode
- * lv_slider_get_orientation
- * lv_slider_is_symmetrical
- * lv_slider_bind_value
- * lv_span_stack_init
- * lv_span_stack_deinit
- * lv_spangroup_add_span
- * lv_spangroup_delete_span
- * lv_span_set_text
- * lv_span_set_text_fmt
- * lv_span_set_text_static
- * lv_spangroup_set_span_text
- * lv_spangroup_set_span_text_static
- * lv_spangroup_set_span_text_fmt
- * lv_span_set_text_static
- * lv_spangroup_set_span_style
- * lv_spangroup_set_align
- * lv_spangroup_set_overflow
- * lv_spangroup_set_indent
- * lv_spangroup_set_mode
- * lv_spangroup_set_max_lines
- * lv_span_get_style
- * lv_span_get_text
- * lv_spangroup_get_child
- * lv_spangroup_get_span_count
- * lv_spangroup_get_align
- * lv_spangroup_get_overflow
- * lv_spangroup_get_indent
- * lv_spangroup_get_mode
- * lv_spangroup_get_max_lines
- * lv_spangroup_get_max_line_height
- * lv_spangroup_get_expand_width
- * lv_spangroup_get_expand_height
- * lv_spangroup_get_span_coords
- * lv_spangroup_get_span_by_point
- * lv_spangroup_refresh
- * lv_spangroup_bind_span_text
- * lv_textarea_add_char
- * lv_textarea_add_text
- * lv_textarea_delete_char
- * lv_textarea_delete_char_forward
- * lv_textarea_set_text
- * lv_textarea_set_placeholder_text
- * lv_textarea_set_cursor_pos
- * lv_textarea_set_cursor_click_pos
- * lv_textarea_set_password_mode
- * lv_textarea_set_password_bullet
- * lv_textarea_set_one_line
- * lv_textarea_set_accepted_chars
- * lv_textarea_set_accepted_chars_static
- * lv_textarea_set_max_length
- * lv_textarea_set_insert_replace
- * lv_textarea_set_text_selection
- * lv_textarea_set_password_show_time
- * lv_textarea_set_align
- * lv_textarea_get_text
- * lv_textarea_get_placeholder_text
- * lv_textarea_get_label
- * lv_textarea_get_cursor_pos
- * lv_textarea_get_cursor_click_pos
- * lv_textarea_get_password_mode
- * lv_textarea_get_password_bullet
- * lv_textarea_get_one_line
- * lv_textarea_get_accepted_chars
- * lv_textarea_get_max_length
- * lv_textarea_text_is_selected
- * lv_textarea_get_text_selection
- * lv_textarea_get_password_show_time
- * lv_textarea_get_current_char
- * lv_textarea_clear_selection
- * lv_textarea_cursor_right
- * lv_textarea_cursor_left
- * lv_textarea_cursor_down
- * lv_textarea_cursor_up
- * lv_spinbox_set_value
- * lv_spinbox_set_rollover
- * lv_spinbox_set_digit_format
- * lv_spinbox_set_digit_count
- * lv_spinbox_set_dec_point_pos
- * lv_spinbox_set_step
- * lv_spinbox_set_range
- * lv_spinbox_set_min_value
- * lv_spinbox_set_max_value
- * lv_spinbox_set_cursor_pos
- * lv_spinbox_set_digit_step_direction
- * lv_spinbox_get_rollover
- * lv_spinbox_get_value
- * lv_spinbox_get_step
- * lv_spinbox_get_digit_count
- * lv_spinbox_get_dec_point_pos
- * lv_spinbox_get_min_value
- * lv_spinbox_get_max_value
- * lv_spinbox_get_digit_step_direction
- * lv_spinbox_step_next
- * lv_spinbox_step_prev
- * lv_spinbox_increment
- * lv_spinbox_decrement
- * lv_spinbox_bind_value
- * lv_spinner_set_anim_params
- * lv_spinner_set_anim_duration
- * lv_spinner_set_arc_sweep
- * lv_spinner_get_anim_duration
- * lv_spinner_get_arc_sweep
- * lv_switch_set_orientation
- * lv_switch_get_orientation
- * lv_table_set_cell_value
- * lv_table_set_cell_value_fmt
- * lv_table_set_row_count
- * lv_table_set_column_count
- * lv_table_set_column_width
- * lv_table_set_cell_ctrl
- * lv_table_clear_cell_ctrl
- * lv_table_set_cell_user_data
- * lv_table_set_selected_cell
- * lv_table_get_cell_value
- * lv_table_get_row_count
- * lv_table_get_column_count
- * lv_table_get_column_width
- * lv_table_has_cell_ctrl
- * lv_table_get_selected_cell
- * lv_table_get_cell_user_data
- * lv_tabview_add_tab
- * lv_tabview_set_tab_text
- * lv_tabview_set_active
- * lv_tabview_set_tab_bar_position
- * lv_tabview_set_tab_bar_size
- * lv_tabview_get_tab_count
- * lv_tabview_get_tab_active
- * lv_tabview_get_tab_button
- * lv_tabview_get_content
- * lv_tabview_get_tab_bar
- * lv_tabview_get_tab_bar_position
- * lv_tileview_add_tile
- * lv_tileview_set_tile
- * lv_tileview_set_tile_by_index
- * lv_tileview_get_tile_active
- * lv_win_add_title
- * lv_win_add_button
- * lv_win_get_header
- * lv_win_get_content
- * lv_barcode_set_dark_color
- * lv_barcode_set_light_color
- * lv_barcode_set_scale
- * lv_barcode_set_direction
- * lv_barcode_set_tiled
- * lv_barcode_set_encoding
- * lv_barcode_update
- * lv_barcode_get_dark_color
- * lv_barcode_get_light_color
- * lv_barcode_get_scale
- * lv_barcode_get_encoding
- * lv_bin_decoder_init
- * lv_bin_decoder_info
- * lv_bin_decoder_get_area
- * lv_bin_decoder_open
- * lv_bin_decoder_close
- * lv_fs_memfs_init
- * lv_lodepng_init
- * lv_lodepng_deinit
- * lv_qrcode_set_size
- * lv_qrcode_set_dark_color
- * lv_qrcode_set_light_color
- * lv_qrcode_update
- * lv_qrcode_set_data
- * lv_qrcode_set_quiet_zone
- * lv_draw_sw_i1_to_argb8888
- * lv_draw_sw_rgb565_swap
- * lv_draw_sw_i1_invert
- * lv_draw_sw_i1_convert_to_vtiled
- * lv_draw_sw_rotate
- * lv_snapshot_take
- * lv_snapshot_create_draw_buf
- * lv_snapshot_reshape_draw_buf
- * lv_snapshot_take_to_draw_buf
- * lv_snapshot_free
- * lv_snapshot_take_to_buf
- * lv_theme_create
- * lv_theme_copy
- * lv_theme_get_from_obj
- * lv_theme_apply
- * lv_theme_set_parent
- * lv_theme_set_apply_cb
- * lv_theme_get_font_small
- * lv_theme_get_font_normal
- * lv_theme_get_font_large
- * lv_theme_get_color_primary
- * lv_theme_get_color_secondary
- * lv_theme_delete
- * lv_theme_default_init
- * lv_theme_default_is_inited
- * lv_theme_default_get
- * lv_theme_default_deinit
- * lv_draw_mask_rect_dsc_init
- * lv_draw_task_get_mask_rect_dsc
- * lv_draw_mask_rect
- * lv_draw_sw_mask_init
- * lv_draw_sw_mask_deinit
- * lv_draw_sw_mask_apply
- * lv_draw_sw_mask_free_param
- * lv_draw_sw_mask_line_points_init
- * lv_draw_sw_mask_line_angle_init
- * lv_draw_sw_mask_angle_init
- * lv_draw_sw_mask_radius_init
- * lv_draw_sw_mask_fade_init
- * lv_draw_sw_mask_map_init
- * lv_draw_sw_blend
- * lv_draw_sw_init
- * lv_draw_sw_deinit
- * lv_draw_sw_fill
- * lv_draw_sw_border
- * lv_draw_sw_box_shadow
- * lv_draw_sw_image
- * lv_draw_sw_letter
- * lv_draw_sw_label
- * lv_draw_sw_arc
- * lv_draw_sw_line
- * lv_draw_sw_layer
- * lv_draw_sw_triangle
- * lv_draw_sw_blur
- * lv_draw_sw_mask_rect
- * lv_draw_sw_transform
- * lv_draw_sw_register_blend_handler
- * lv_draw_sw_unregister_blend_handler
- * lv_draw_sw_get_blend_handler
- * lv_os_init
- * lv_os_get_idle_percent
- * lv_timer_core_init
- * lv_timer_core_deinit
- * lv_anim_core_init
- * lv_anim_core_deinit
- * lv_anim_enable_vsync_mode
- * lv_draw_buf_init_handlers
- * lv_cache_entry_get_size
- * lv_cache_entry_get_ref
- * lv_cache_entry_get_node_size
- * lv_cache_entry_is_invalid
- * lv_cache_entry_get_data
- * lv_cache_entry_get_cache
- * lv_cache_entry_get_entry
- * lv_cache_entry_alloc
- * lv_cache_entry_init
- * lv_cache_entry_delete
- * lv_image_header_cache_init
- * lv_image_header_cache_resize
- * lv_image_header_cache_drop
- * lv_image_header_cache_is_enabled
- * lv_image_header_cache_iter_create
- * lv_image_header_cache_dump
- * lv_image_cache_init
- * lv_image_cache_resize
- * lv_image_cache_drop
- * lv_image_cache_is_enabled
- * lv_image_cache_iter_create
- * lv_image_cache_dump
- * lv_cache_create
- * lv_cache_destroy
- * lv_cache_acquire
- * lv_cache_acquire_or_create
- * lv_cache_add
- * lv_cache_release
- * lv_cache_reserve
- * lv_cache_drop
- * lv_cache_drop_all
- * lv_cache_evict_one
- * lv_cache_set_max_size
- * lv_cache_get_max_size
- * lv_cache_get_size
- * lv_cache_get_free_size
- * lv_cache_is_enabled
- * lv_cache_set_compare_cb
- * lv_cache_set_create_cb
- * lv_cache_set_free_cb
- * lv_cache_set_name
- * lv_cache_get_name
- * lv_cache_iter_create
- * lv_draw_sw_mask_cleanup
- * lv_layout_init
- * lv_layout_deinit
- * lv_layout_get_min_size
- * lv_layout_apply
- * lv_indev_scroll_handler
- * lv_indev_scroll_throw_handler
- * lv_indev_scroll_throw_predict
- * lv_indev_scroll_get_snap_dist
- * lv_indev_find_scroll_obj
- * lv_text_attributes_init
- * lv_text_get_size_attributes
- * lv_text_get_width
- * lv_text_is_cmd
- * lv_text_get_next_line
- * lv_text_ins
- * lv_text_cut
- * lv_text_encoded_letter_next_2
- * lv_cache_entry_reset_ref
- * lv_cache_entry_inc_ref
- * lv_cache_entry_dec_ref
- * lv_cache_entry_set_node_size
- * lv_cache_entry_set_cache
- * lv_cache_entry_acquire_data
- * lv_cache_entry_release_data
- * lv_cache_entry_set_flag
- * lv_cache_entry_remove_flag
- * lv_cache_entry_has_flag
- * lv_draw_image_normal_helper
- * lv_draw_image_tiled_helper
- * lv_image_buf_get_transformed_area
- * lv_image_decoder_init
- * lv_image_decoder_deinit
- * lv_refr_init
- * lv_refr_deinit
- * lv_inv_area
- * lv_refr_get_disp_refreshing
- * lv_refr_set_disp_refreshing
- * lv_refr_get_top_obj
- * lv_obj_refr
- * lv_obj_style_init
- * lv_obj_style_deinit
- * lv_obj_style_create_transition
- * lv_obj_style_state_compare
- * lv_obj_update_layer_type
- * lv_obj_scroll_by_raw
- * lv_obj_get_ext_draw_size
- * lv_obj_get_layer_type
- * lv_obj_destruct
- * lv_group_init
- * lv_group_deinit
- * lv_area_set_pos
- * lv_area_intersect
- * lv_area_diff
- * lv_area_join
- * lv_area_is_point_on
- * lv_area_is_on
- * lv_area_is_in
- * lv_area_is_out
- * lv_area_is_equal
- * lv_fs_init
- * lv_fs_deinit
- * lv_event_push
- * lv_event_pop
- * lv_event_push_and_send
- * lv_event_mark_deleted
+ * mp_lv_init_gc
+ * mp_lv_deinit_gc
+ * lv_tjpgd_init
+ * lv_tjpgd_deinit
  *
  */
 
@@ -106683,6 +105122,27 @@ static lv_key_t lv_indev_t_key_remap_cb_callback(lv_indev_t *arg0, lv_key_t arg1
  */
     
 
+/*
+ * Function NOT generated:
+ * Callback: user_data NOT FOUND! void lv_timer_handler_resume_cb_t(void *data)
+ * void lv_timer_handler_resume_cb_t(void *data)
+ */
+    
+
+/*
+ * Function NOT generated:
+ * Callback: user_data NOT FOUND! uint32_t lv_tick_get_cb_t(void)
+ * uint32_t lv_tick_get_cb_t(void)
+ */
+    
+
+/*
+ * Function NOT generated:
+ * Callback: user_data NOT FOUND! void lv_delay_cb_t(uint32_t ms)
+ * void lv_delay_cb_t(uint32_t ms)
+ */
+    
+
 py_lv_obj_type_t *py_lv_obj_types[] = {
     &py_lv_obj_mapping,
     &py_lv_image_mapping,
@@ -107454,6 +105914,31 @@ PyMODINIT_FUNC PyInit_lvgl(void)
     lv_struct_expose_size(&py_lv_draw_sw_blend_dsc_t_type);
     Py_INCREF((PyObject *)&py_lv_draw_sw_blend_dsc_t_type);
     if (PyModule_AddObject(m, "draw_sw_blend_dsc_t", (PyObject *)&py_lv_draw_sw_blend_dsc_t_type) < 0) return NULL;
+    if (PyType_Ready(&py_lv_layout_dsc_t_type) < 0) return NULL;
+    lv_struct_register_size(&py_lv_layout_dsc_t_type, sizeof(lv_layout_dsc_t));
+    lv_struct_expose_size(&py_lv_layout_dsc_t_type);
+    Py_INCREF((PyObject *)&py_lv_layout_dsc_t_type);
+    if (PyModule_AddObject(m, "layout_dsc_t", (PyObject *)&py_lv_layout_dsc_t_type) < 0) return NULL;
+    if (PyType_Ready(&py_lv_timer_state_t_type) < 0) return NULL;
+    lv_struct_register_size(&py_lv_timer_state_t_type, sizeof(lv_timer_state_t));
+    lv_struct_expose_size(&py_lv_timer_state_t_type);
+    Py_INCREF((PyObject *)&py_lv_timer_state_t_type);
+    if (PyModule_AddObject(m, "timer_state_t", (PyObject *)&py_lv_timer_state_t_type) < 0) return NULL;
+    if (PyType_Ready(&py_lv_anim_state_t_type) < 0) return NULL;
+    lv_struct_register_size(&py_lv_anim_state_t_type, sizeof(lv_anim_state_t));
+    lv_struct_expose_size(&py_lv_anim_state_t_type);
+    Py_INCREF((PyObject *)&py_lv_anim_state_t_type);
+    if (PyModule_AddObject(m, "anim_state_t", (PyObject *)&py_lv_anim_state_t_type) < 0) return NULL;
+    if (PyType_Ready(&py_lv_tick_state_t_type) < 0) return NULL;
+    lv_struct_register_size(&py_lv_tick_state_t_type, sizeof(lv_tick_state_t));
+    lv_struct_expose_size(&py_lv_tick_state_t_type);
+    Py_INCREF((PyObject *)&py_lv_tick_state_t_type);
+    if (PyModule_AddObject(m, "tick_state_t", (PyObject *)&py_lv_tick_state_t_type) < 0) return NULL;
+    if (PyType_Ready(&py_lv_draw_global_info_t_type) < 0) return NULL;
+    lv_struct_register_size(&py_lv_draw_global_info_t_type, sizeof(lv_draw_global_info_t));
+    lv_struct_expose_size(&py_lv_draw_global_info_t_type);
+    Py_INCREF((PyObject *)&py_lv_draw_global_info_t_type);
+    if (PyModule_AddObject(m, "draw_global_info_t", (PyObject *)&py_lv_draw_global_info_t_type) < 0) return NULL;
     if (PyType_Ready(&py_lv_obj_type) < 0) return NULL;
     { if (PyType_Ready(&py_lv_LV_OBJ_TREE_WALK_type) < 0) return NULL; PyObject *_enum_ns = (PyObject *)PyType_GenericNew(&py_lv_LV_OBJ_TREE_WALK_type, NULL, NULL); if (_enum_ns == NULL) return NULL; if (((PyTypeObject *)&py_lv_obj_type)->tp_dict && PyDict_SetItemString(((PyTypeObject *)&py_lv_obj_type)->tp_dict, "TREE_WALK", _enum_ns) < 0) { Py_DECREF(_enum_ns); return NULL; } Py_DECREF(_enum_ns); }
     { if (PyType_Ready(&py_lv_LV_OBJ_POINT_TRANSFORM_FLAG_type) < 0) return NULL; PyObject *_enum_ns = (PyObject *)PyType_GenericNew(&py_lv_LV_OBJ_POINT_TRANSFORM_FLAG_type, NULL, NULL); if (_enum_ns == NULL) return NULL; if (((PyTypeObject *)&py_lv_obj_type)->tp_dict && PyDict_SetItemString(((PyTypeObject *)&py_lv_obj_type)->tp_dict, "POINT_TRANSFORM_FLAG", _enum_ns) < 0) { Py_DECREF(_enum_ns); return NULL; } Py_DECREF(_enum_ns); }
@@ -107639,166 +106124,7 @@ PyMODINIT_FUNC PyInit_lvgl(void)
     { PyObject *fn = PyCFunction_New(&py_lv_style_set_margin_all_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "style_set_margin_all", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_style_set_transform_scale_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "style_set_transform_scale", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_style_prop_has_flag_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "style_prop_has_flag", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_style_get_selector_state_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_style_get_selector_state", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_style_get_selector_part_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_style_get_selector_part", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_width_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_width", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_min_width_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_min_width", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_max_width_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_max_width", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_height_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_height", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_min_height_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_min_height", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_max_height_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_max_height", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_length_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_length", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_x_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_x", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_y_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_y", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_align_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_align", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_transform_width_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_transform_width", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_transform_height_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_transform_height", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_translate_x_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_translate_x", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_translate_y_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_translate_y", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_translate_radial_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_translate_radial", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_transform_scale_x_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_transform_scale_x", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_transform_scale_y_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_transform_scale_y", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_transform_rotation_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_transform_rotation", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_transform_pivot_x_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_transform_pivot_x", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_transform_pivot_y_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_transform_pivot_y", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_transform_skew_x_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_transform_skew_x", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_transform_skew_y_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_transform_skew_y", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_pad_top_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_pad_top", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_pad_bottom_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_pad_bottom", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_pad_left_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_pad_left", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_pad_right_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_pad_right", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_pad_row_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_pad_row", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_pad_column_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_pad_column", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_pad_radial_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_pad_radial", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_margin_top_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_margin_top", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_margin_bottom_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_margin_bottom", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_margin_left_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_margin_left", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_margin_right_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_margin_right", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_bg_color_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_bg_color", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_bg_color_filtered_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_bg_color_filtered", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_bg_opa_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_bg_opa", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_bg_grad_color_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_bg_grad_color", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_bg_grad_color_filtered_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_bg_grad_color_filtered", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_bg_grad_dir_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_bg_grad_dir", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_bg_main_stop_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_bg_main_stop", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_bg_grad_stop_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_bg_grad_stop", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_bg_main_opa_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_bg_main_opa", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_bg_grad_opa_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_bg_grad_opa", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_bg_grad_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_bg_grad", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_bg_image_src_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_bg_image_src", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_bg_image_opa_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_bg_image_opa", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_bg_image_recolor_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_bg_image_recolor", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_bg_image_recolor_filtered_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_bg_image_recolor_filtered", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_bg_image_recolor_opa_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_bg_image_recolor_opa", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_bg_image_tiled_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_bg_image_tiled", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_border_color_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_border_color", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_border_color_filtered_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_border_color_filtered", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_border_opa_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_border_opa", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_border_width_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_border_width", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_border_side_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_border_side", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_border_post_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_border_post", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_outline_width_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_outline_width", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_outline_color_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_outline_color", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_outline_color_filtered_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_outline_color_filtered", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_outline_opa_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_outline_opa", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_outline_pad_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_outline_pad", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_shadow_width_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_shadow_width", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_shadow_offset_x_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_shadow_offset_x", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_shadow_offset_y_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_shadow_offset_y", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_shadow_spread_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_shadow_spread", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_shadow_color_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_shadow_color", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_shadow_color_filtered_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_shadow_color_filtered", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_shadow_opa_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_shadow_opa", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_image_opa_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_image_opa", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_image_recolor_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_image_recolor", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_image_recolor_filtered_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_image_recolor_filtered", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_image_recolor_opa_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_image_recolor_opa", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_image_colorkey_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_image_colorkey", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_line_width_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_line_width", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_line_dash_width_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_line_dash_width", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_line_dash_gap_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_line_dash_gap", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_line_rounded_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_line_rounded", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_line_color_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_line_color", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_line_color_filtered_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_line_color_filtered", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_line_opa_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_line_opa", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_arc_width_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_arc_width", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_arc_rounded_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_arc_rounded", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_arc_color_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_arc_color", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_arc_color_filtered_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_arc_color_filtered", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_arc_opa_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_arc_opa", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_arc_image_src_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_arc_image_src", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_text_color_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_text_color", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_text_color_filtered_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_text_color_filtered", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_text_opa_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_text_opa", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_text_font_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_text_font", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_text_letter_space_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_text_letter_space", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_text_line_space_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_text_line_space", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_text_decor_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_text_decor", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_text_align_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_text_align", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_text_outline_stroke_color_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_text_outline_stroke_color", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_text_outline_stroke_color_filtered_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_text_outline_stroke_color_filtered", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_text_outline_stroke_width_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_text_outline_stroke_width", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_text_outline_stroke_opa_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_text_outline_stroke_opa", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_blur_radius_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_blur_radius", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_blur_backdrop_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_blur_backdrop", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_blur_quality_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_blur_quality", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_drop_shadow_radius_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_drop_shadow_radius", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_drop_shadow_offset_x_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_drop_shadow_offset_x", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_drop_shadow_offset_y_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_drop_shadow_offset_y", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_drop_shadow_color_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_drop_shadow_color", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_drop_shadow_color_filtered_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_drop_shadow_color_filtered", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_drop_shadow_opa_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_drop_shadow_opa", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_drop_shadow_quality_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_drop_shadow_quality", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_radius_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_radius", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_radial_offset_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_radial_offset", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_clip_corner_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_clip_corner", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_opa_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_opa", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_opa_layered_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_opa_layered", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_color_filter_dsc_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_color_filter_dsc", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_color_filter_opa_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_color_filter_opa", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_recolor_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_recolor", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_recolor_opa_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_recolor_opa", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_anim_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_anim", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_anim_duration_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_anim_duration", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_transition_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_transition", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_blend_mode_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_blend_mode", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_layout_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_layout", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_base_dir_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_base_dir", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_bitmap_mask_src_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_bitmap_mask_src", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_rotary_sensitivity_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_rotary_sensitivity", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_flex_flow_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_flex_flow", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_flex_main_place_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_flex_main_place", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_flex_cross_place_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_flex_cross_place", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_flex_track_place_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_flex_track_place", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_flex_grow_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_flex_grow", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_grid_column_dsc_array_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_grid_column_dsc_array", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_grid_column_align_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_grid_column_align", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_grid_row_dsc_array_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_grid_row_dsc_array", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_grid_row_align_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_grid_row_align", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_grid_cell_column_pos_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_grid_cell_column_pos", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_grid_cell_x_align_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_grid_cell_x_align", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_grid_cell_column_span_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_grid_cell_column_span", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_grid_cell_row_pos_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_grid_cell_row_pos", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_grid_cell_y_align_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_grid_cell_y_align", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_grid_cell_row_span_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_grid_cell_row_span", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_pad_all_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_pad_all", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_pad_hor_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_pad_hor", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_pad_ver_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_pad_ver", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_margin_all_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_margin_all", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_margin_hor_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_margin_hor", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_margin_ver_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_margin_ver", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_pad_gap_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_pad_gap", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_size_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_size", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_transform_scale_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_transform_scale", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_space_left_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_space_left", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_space_right_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_space_right", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_space_top_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_space_top", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_space_bottom_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_space_bottom", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_transform_scale_x_safe_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_transform_scale_x_safe", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_transform_scale_y_safe_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_transform_scale_y_safe", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_task_handler_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "task_handler", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_move_foreground_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_move_foreground", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_move_background_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_move_background", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_thread_init_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "thread_init", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_thread_delete_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "thread_delete", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_mutex_init_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "mutex_init", fn) < 0) return NULL; }
@@ -108089,8 +106415,6 @@ PyMODINIT_FUNC PyInit_lvgl(void)
     { PyObject *fn = PyCFunction_New(&py_lv_draw_buf_from_image_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "draw_buf_from_image", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_draw_buf_to_image_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "draw_buf_to_image", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_draw_buf_set_palette_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "draw_buf_set_palette", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_buf_set_palette_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_buf_set_palette", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_buf_free_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_buf_free", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_utils_bsearch_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "utils_bsearch", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_draw_buf_save_to_file_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "draw_buf_save_to_file", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_iter_create_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "iter_create", fn) < 0) return NULL; }
@@ -108149,13 +106473,7 @@ PyMODINIT_FUNC PyInit_lvgl(void)
     { PyObject *fn = PyCFunction_New(&py_lv_layout_create_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "layout_create", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_layout_register_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "layout_register", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_flex_init_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "flex_init", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_flex_flow_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_flex_flow", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_flex_align_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_flex_align", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_flex_grow_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_flex_grow", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_grid_init_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "grid_init", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_grid_dsc_array_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_grid_dsc_array", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_grid_align_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_grid_align", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_grid_cell_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_grid_cell", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_grid_fr_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "grid_fr", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_style_init_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "style_init", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_style_reset_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "style_reset", fn) < 0) return NULL; }
@@ -108398,265 +106716,8 @@ PyMODINIT_FUNC PyInit_lvgl(void)
     { PyObject *fn = PyCFunction_New(&py_lv_display_get_invalidated_draw_buf_size_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "display_get_invalidated_draw_buf_size", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_dpx_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "dpx", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_display_dpx_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "display_dpx", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_delete_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_delete", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_clean_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_clean", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_delete_delayed_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_delete_delayed", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_delete_anim_completed_cb_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_delete_anim_completed_cb", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_delete_async_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_delete_async", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_parent_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_parent", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_swap_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_swap", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_move_to_index_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_move_to_index", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_screen_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_screen", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_display_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_display", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_parent_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_parent", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_child_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_child", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_child_by_type_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_child_by_type", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_sibling_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_sibling", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_sibling_by_type_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_sibling_by_type", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_child_count_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_child_count", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_child_count_by_type_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_child_count_by_type", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_index_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_index", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_index_by_type_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_index_by_type", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_tree_walk_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_tree_walk", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_dump_tree_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_dump_tree", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_pos_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_pos", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_x_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_x", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_y_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_y", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_size_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_size", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_refr_size_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_refr_size", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_width_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_width", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_height_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_height", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_content_width_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_content_width", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_content_height_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_content_height", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_layout_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_layout", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_is_layout_positioned_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_is_layout_positioned", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_mark_layout_as_dirty_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_mark_layout_as_dirty", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_update_layout_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_update_layout", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_align_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_align", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_align_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_align", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_align_to_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_align_to", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_center_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_center", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_transform_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_transform", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_reset_transform_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_reset_transform", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_coords_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_coords", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_x_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_x", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_x2_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_x2", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_y_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_y", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_y2_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_y2", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_x_aligned_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_x_aligned", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_y_aligned_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_y_aligned", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_width_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_width", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_height_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_height", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_content_width_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_content_width", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_content_height_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_content_height", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_content_coords_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_content_coords", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_self_width_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_self_width", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_self_height_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_self_height", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_clamped_width_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_clamped_width", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_clamped_height_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_clamped_height", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_is_width_min_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_is_width_min", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_is_height_min_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_is_height_min", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_is_width_max_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_is_width_max", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_is_height_max_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_is_height_max", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_refresh_self_size_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_refresh_self_size", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_refr_pos_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_refr_pos", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_move_to_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_move_to", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_move_children_by_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_move_children_by", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_transform_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_transform", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_transform_point_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_transform_point", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_transform_point_array_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_transform_point_array", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_transformed_area_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_transformed_area", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_invalidate_area_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_invalidate_area", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_invalidate_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_invalidate", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_area_is_visible_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_area_is_visible", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_is_visible_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_is_visible", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_ext_click_area_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_ext_click_area", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_click_area_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_click_area", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_hit_test_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_hit_test", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_clamp_width_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "clamp_width", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_clamp_height_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "clamp_height", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_calc_dynamic_width_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_calc_dynamic_width", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_calc_dynamic_height_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_calc_dynamic_height", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_scrollbar_mode_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_scrollbar_mode", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_scroll_dir_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_scroll_dir", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_scroll_snap_x_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_scroll_snap_x", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_scroll_snap_y_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_scroll_snap_y", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_scrollbar_mode_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_scrollbar_mode", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_scroll_dir_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_scroll_dir", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_scroll_snap_x_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_scroll_snap_x", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_scroll_snap_y_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_scroll_snap_y", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_scroll_x_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_scroll_x", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_scroll_y_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_scroll_y", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_scroll_top_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_scroll_top", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_scroll_bottom_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_scroll_bottom", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_scroll_left_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_scroll_left", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_scroll_right_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_scroll_right", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_scroll_end_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_scroll_end", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_scroll_by_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_scroll_by", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_scroll_by_bounded_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_scroll_by_bounded", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_scroll_to_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_scroll_to", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_scroll_to_x_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_scroll_to_x", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_scroll_to_y_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_scroll_to_y", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_scroll_to_view_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_scroll_to_view", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_scroll_to_view_recursive_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_scroll_to_view_recursive", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_is_scrolling_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_is_scrolling", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_stop_scroll_anim_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_stop_scroll_anim", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_update_snap_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_update_snap", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_scrollbar_area_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_scrollbar_area", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_scrollbar_invalidate_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_scrollbar_invalidate", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_readjust_scroll_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_readjust_scroll", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_add_style_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_add_style", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_replace_style_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_replace_style", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_remove_style_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_remove_style", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_remove_theme_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_remove_theme", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_remove_style_all_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_remove_style_all", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_report_style_change_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_report_style_change", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_refresh_style_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_refresh_style", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_style_set_disabled_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_style_set_disabled", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_style_get_disabled_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_style_get_disabled", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_enable_style_refresh_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_enable_style_refresh", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_prop_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_prop", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_has_style_prop_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_has_style_prop", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_local_style_prop_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_local_style_prop", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_local_style_prop_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_local_style_prop", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_remove_local_style_prop_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_remove_local_style_prop", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_style_apply_color_filter_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_style_apply_color_filter", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_fade_in_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_fade_in", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_fade_out_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_fade_out", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_width_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_width", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_min_width_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_min_width", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_max_width_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_max_width", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_height_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_height", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_min_height_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_min_height", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_max_height_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_max_height", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_length_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_length", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_x_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_x", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_y_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_y", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_align_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_align", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_transform_width_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_transform_width", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_transform_height_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_transform_height", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_translate_x_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_translate_x", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_translate_y_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_translate_y", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_translate_radial_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_translate_radial", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_transform_scale_x_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_transform_scale_x", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_transform_scale_y_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_transform_scale_y", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_transform_rotation_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_transform_rotation", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_transform_pivot_x_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_transform_pivot_x", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_transform_pivot_y_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_transform_pivot_y", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_transform_skew_x_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_transform_skew_x", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_transform_skew_y_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_transform_skew_y", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_pad_top_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_pad_top", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_pad_bottom_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_pad_bottom", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_pad_left_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_pad_left", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_pad_right_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_pad_right", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_pad_row_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_pad_row", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_pad_column_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_pad_column", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_pad_radial_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_pad_radial", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_margin_top_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_margin_top", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_margin_bottom_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_margin_bottom", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_margin_left_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_margin_left", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_margin_right_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_margin_right", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_bg_color_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_bg_color", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_bg_opa_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_bg_opa", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_bg_grad_color_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_bg_grad_color", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_bg_grad_dir_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_bg_grad_dir", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_bg_main_stop_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_bg_main_stop", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_bg_grad_stop_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_bg_grad_stop", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_bg_main_opa_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_bg_main_opa", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_bg_grad_opa_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_bg_grad_opa", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_bg_grad_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_bg_grad", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_bg_image_src_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_bg_image_src", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_bg_image_opa_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_bg_image_opa", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_bg_image_recolor_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_bg_image_recolor", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_bg_image_recolor_opa_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_bg_image_recolor_opa", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_bg_image_tiled_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_bg_image_tiled", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_border_color_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_border_color", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_border_opa_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_border_opa", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_border_width_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_border_width", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_border_side_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_border_side", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_border_post_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_border_post", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_outline_width_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_outline_width", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_outline_color_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_outline_color", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_outline_opa_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_outline_opa", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_outline_pad_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_outline_pad", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_shadow_width_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_shadow_width", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_shadow_offset_x_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_shadow_offset_x", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_shadow_offset_y_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_shadow_offset_y", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_shadow_spread_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_shadow_spread", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_shadow_color_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_shadow_color", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_shadow_opa_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_shadow_opa", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_image_opa_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_image_opa", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_image_recolor_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_image_recolor", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_image_recolor_opa_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_image_recolor_opa", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_image_colorkey_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_image_colorkey", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_line_width_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_line_width", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_line_dash_width_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_line_dash_width", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_line_dash_gap_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_line_dash_gap", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_line_rounded_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_line_rounded", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_line_color_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_line_color", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_line_opa_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_line_opa", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_arc_width_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_arc_width", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_arc_rounded_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_arc_rounded", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_arc_color_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_arc_color", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_arc_opa_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_arc_opa", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_arc_image_src_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_arc_image_src", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_text_color_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_text_color", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_text_opa_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_text_opa", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_text_font_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_text_font", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_text_letter_space_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_text_letter_space", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_text_line_space_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_text_line_space", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_text_decor_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_text_decor", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_text_align_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_text_align", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_text_outline_stroke_color_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_text_outline_stroke_color", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_text_outline_stroke_width_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_text_outline_stroke_width", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_text_outline_stroke_opa_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_text_outline_stroke_opa", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_blur_radius_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_blur_radius", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_blur_backdrop_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_blur_backdrop", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_blur_quality_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_blur_quality", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_drop_shadow_radius_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_drop_shadow_radius", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_drop_shadow_offset_x_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_drop_shadow_offset_x", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_drop_shadow_offset_y_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_drop_shadow_offset_y", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_drop_shadow_color_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_drop_shadow_color", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_drop_shadow_opa_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_drop_shadow_opa", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_drop_shadow_quality_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_drop_shadow_quality", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_radius_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_radius", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_radial_offset_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_radial_offset", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_clip_corner_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_clip_corner", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_opa_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_opa", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_opa_layered_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_opa_layered", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_color_filter_dsc_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_color_filter_dsc", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_color_filter_opa_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_color_filter_opa", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_recolor_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_recolor", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_recolor_opa_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_recolor_opa", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_anim_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_anim", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_anim_duration_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_anim_duration", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_transition_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_transition", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_blend_mode_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_blend_mode", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_layout_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_layout", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_base_dir_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_base_dir", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_bitmap_mask_src_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_bitmap_mask_src", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_rotary_sensitivity_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_rotary_sensitivity", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_flex_flow_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_flex_flow", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_flex_main_place_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_flex_main_place", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_flex_cross_place_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_flex_cross_place", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_flex_track_place_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_flex_track_place", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_flex_grow_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_flex_grow", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_grid_column_dsc_array_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_grid_column_dsc_array", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_grid_column_align_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_grid_column_align", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_grid_row_dsc_array_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_grid_row_dsc_array", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_grid_row_align_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_grid_row_align", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_grid_cell_column_pos_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_grid_cell_column_pos", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_grid_cell_x_align_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_grid_cell_x_align", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_grid_cell_column_span_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_grid_cell_column_span", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_grid_cell_row_pos_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_grid_cell_row_pos", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_grid_cell_y_align_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_grid_cell_y_align", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_style_grid_cell_row_span_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_style_grid_cell_row_span", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_calculate_style_text_align_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_calculate_style_text_align", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_opa_recursive_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_opa_recursive", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_style_apply_recolor_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_style_apply_recolor", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_style_recolor_recursive_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_style_recolor_recursive", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_bind_style_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_bind_style", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_bind_style_prop_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_bind_style_prop", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_fs_drv_init_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "fs_drv_init", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_fs_drv_register_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "fs_drv_register", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_fs_get_drv_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "fs_get_drv", fn) < 0) return NULL; }
@@ -108682,19 +106743,6 @@ PyMODINIT_FUNC PyInit_lvgl(void)
     { PyObject *fn = PyCFunction_New(&py_lv_fs_up_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "fs_up", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_fs_get_last_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "fs_get_last", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_fs_path_join_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "fs_path_join", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_decoder_get_info_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_decoder_get_info", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_decoder_open_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_decoder_open", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_decoder_get_area_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_decoder_get_area", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_decoder_close_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_decoder_close", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_decoder_create_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_decoder_create", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_decoder_delete_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_decoder_delete", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_decoder_get_next_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_decoder_get_next", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_decoder_set_info_cb_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_decoder_set_info_cb", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_decoder_set_open_cb_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_decoder_set_open_cb", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_decoder_set_get_area_cb_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_decoder_set_get_area_cb", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_decoder_set_close_cb_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_decoder_set_close_cb", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_decoder_add_to_cache_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_decoder_add_to_cache", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_decoder_post_process_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_decoder_post_process", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_draw_init_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "draw_init", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_draw_deinit_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "draw_deinit", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_draw_create_unit_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "draw_create_unit", fn) < 0) return NULL; }
@@ -108745,7 +106793,6 @@ PyMODINIT_FUNC PyInit_lvgl(void)
     { PyObject *fn = PyCFunction_New(&py_lv_draw_task_get_image_dsc_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "draw_task_get_image_dsc", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_draw_image_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "draw_image", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_draw_layer_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "draw_layer", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_src_get_type_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_src_get_type", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_draw_line_dsc_init_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "draw_line_dsc_init", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_draw_task_get_line_dsc_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "draw_task_get_line_dsc", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_draw_line_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "draw_line", fn) < 0) return NULL; }
@@ -108760,18 +106807,6 @@ PyMODINIT_FUNC PyInit_lvgl(void)
     { PyObject *fn = PyCFunction_New(&py_lv_draw_blur_dsc_init_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "draw_blur_dsc_init", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_draw_task_get_blur_dsc_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "draw_task_get_blur_dsc", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_draw_blur_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "draw_blur", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_init_draw_rect_dsc_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_init_draw_rect_dsc", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_init_draw_label_dsc_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_init_draw_label_dsc", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_init_draw_image_dsc_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_init_draw_image_dsc", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_init_draw_line_dsc_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_init_draw_line_dsc", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_init_draw_arc_dsc_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_init_draw_arc_dsc", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_init_draw_blur_dsc_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_init_draw_blur_dsc", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_calculate_ext_draw_size_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_calculate_ext_draw_size", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_refresh_ext_draw_size_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_refresh_ext_draw_size", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_class_create_obj_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_class_create_obj", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_class_init_obj_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_class_init_obj", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_is_editable_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_is_editable", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_is_group_def_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_is_group_def", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_group_create_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "group_create", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_group_delete_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "group_delete", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_group_set_default_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "group_set_default", fn) < 0) return NULL; }
@@ -108854,17 +106889,8 @@ PyMODINIT_FUNC PyInit_lvgl(void)
     { PyObject *fn = PyCFunction_New(&py_lv_indev_remove_event_cb_with_user_data_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "indev_remove_event_cb_with_user_data", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_indev_send_event_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "indev_send_event", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_indev_set_key_remap_cb_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "indev_set_key_remap_cb", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_send_event_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_send_event", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_event_base_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_event_base", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_event_get_current_target_obj_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "event_get_current_target_obj", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_event_get_target_obj_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "event_get_target_obj", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_add_event_cb_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_add_event_cb", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_event_count_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_event_count", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_event_dsc_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_event_dsc", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_remove_event_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_remove_event", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_remove_event_dsc_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_remove_event_dsc", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_remove_event_cb_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_remove_event_cb", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_remove_event_cb_with_user_data_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_remove_event_cb_with_user_data", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_event_get_indev_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "event_get_indev", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_event_get_layer_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "event_get_layer", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_event_get_old_size_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "event_get_old_size", fn) < 0) return NULL; }
@@ -108878,32 +106904,7 @@ PyMODINIT_FUNC PyInit_lvgl(void)
     { PyObject *fn = PyCFunction_New(&py_lv_event_set_cover_res_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "event_set_cover_res", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_event_get_draw_task_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "event_get_draw_task", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_event_get_prev_state_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "event_get_prev_state", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_add_flag_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_add_flag", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_remove_flag_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_remove_flag", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_flag_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_flag", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_add_state_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_add_state", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_remove_state_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_remove_state", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_state_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_state", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_user_data_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_user_data", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_radio_button_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_radio_button", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_has_flag_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_has_flag", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_has_flag_any_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_has_flag_any", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_state_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_state", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_has_state_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_has_state", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_is_radio_button_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_is_radio_button", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_group_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_group", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_user_data_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_user_data", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_allocate_spec_attr_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_allocate_spec_attr", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_check_type_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_check_type", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_has_class_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_has_class", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_class_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_class", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_is_valid_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_is_valid", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_null_on_delete_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_null_on_delete", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_add_screen_load_event_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_add_screen_load_event", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_add_screen_create_event_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_add_screen_create_event", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_add_play_timeline_event_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_add_play_timeline_event", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_refr_now_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "refr_now", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_redraw_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_redraw", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_display_refr_timer_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "display_refr_timer", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_subject_init_int_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "subject_init_int", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_subject_set_int_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "subject_set_int", fn) < 0) return NULL; }
@@ -108931,31 +106932,10 @@ PyMODINIT_FUNC PyInit_lvgl(void)
     { PyObject *fn = PyCFunction_New(&py_lv_subject_add_observer_obj_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "subject_add_observer_obj", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_subject_add_observer_with_target_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "subject_add_observer_with_target", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_observer_remove_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "observer_remove", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_remove_from_subject_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_remove_from_subject", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_observer_get_target_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "observer_get_target", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_observer_get_target_obj_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "observer_get_target_obj", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_observer_get_user_data_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "observer_get_user_data", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_subject_notify_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "subject_notify", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_add_subject_increment_event_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_add_subject_increment_event", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_subject_increment_event_min_value_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_subject_increment_event_min_value", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_subject_increment_event_max_value_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_subject_increment_event_max_value", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_set_subject_increment_event_rollover_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_set_subject_increment_event_rollover", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_add_subject_toggle_event_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_add_subject_toggle_event", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_add_subject_set_int_event_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_add_subject_set_int_event", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_add_subject_set_string_event_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_add_subject_set_string_event", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_bind_flag_if_eq_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_bind_flag_if_eq", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_bind_flag_if_not_eq_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_bind_flag_if_not_eq", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_bind_flag_if_gt_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_bind_flag_if_gt", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_bind_flag_if_ge_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_bind_flag_if_ge", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_bind_flag_if_lt_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_bind_flag_if_lt", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_bind_flag_if_le_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_bind_flag_if_le", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_bind_state_if_eq_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_bind_state_if_eq", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_bind_state_if_not_eq_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_bind_state_if_not_eq", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_bind_state_if_gt_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_bind_state_if_gt", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_bind_state_if_ge_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_bind_state_if_ge", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_bind_state_if_lt_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_bind_state_if_lt", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_bind_state_if_le_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_bind_state_if_le", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_bind_checked_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_bind_checked", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_binfont_create_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "binfont_create", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_binfont_create_from_buffer_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "binfont_create_from_buffer", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_binfont_destroy_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "binfont_destroy", fn) < 0) return NULL; }
@@ -108963,538 +106943,14 @@ PyMODINIT_FUNC PyInit_lvgl(void)
     { PyObject *fn = PyCFunction_New(&py_lv_font_get_glyph_dsc_fmt_txt_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "font_get_glyph_dsc_fmt_txt", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_imgfont_create_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "imgfont_create", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_imgfont_destroy_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "imgfont_destroy", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_set_src_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_set_src", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_set_offset_x_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_set_offset_x", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_set_offset_y_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_set_offset_y", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_set_rotation_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_set_rotation", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_set_pivot_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_set_pivot", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_set_pivot_x_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_set_pivot_x", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_set_pivot_y_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_set_pivot_y", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_set_scale_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_set_scale", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_set_scale_x_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_set_scale_x", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_set_scale_y_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_set_scale_y", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_set_blend_mode_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_set_blend_mode", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_set_antialias_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_set_antialias", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_set_inner_align_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_set_inner_align", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_set_bitmap_map_src_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_set_bitmap_map_src", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_get_src_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_get_src", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_get_offset_x_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_get_offset_x", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_get_offset_y_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_get_offset_y", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_get_rotation_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_get_rotation", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_get_pivot_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_get_pivot", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_get_scale_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_get_scale", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_get_scale_x_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_get_scale_x", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_get_scale_y_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_get_scale_y", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_get_src_width_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_get_src_width", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_get_src_height_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_get_src_height", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_get_transformed_width_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_get_transformed_width", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_get_transformed_height_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_get_transformed_height", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_get_blend_mode_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_get_blend_mode", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_get_antialias_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_get_antialias", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_get_inner_align_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_get_inner_align", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_get_bitmap_map_src_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_get_bitmap_map_src", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_bind_src_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_bind_src", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_animimg_set_src_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "animimg_set_src", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_animimg_set_src_reverse_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "animimg_set_src_reverse", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_animimg_start_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "animimg_start", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_animimg_delete_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "animimg_delete", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_animimg_set_duration_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "animimg_set_duration", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_animimg_set_repeat_count_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "animimg_set_repeat_count", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_animimg_set_reverse_duration_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "animimg_set_reverse_duration", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_animimg_set_reverse_delay_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "animimg_set_reverse_delay", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_animimg_set_start_cb_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "animimg_set_start_cb", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_animimg_set_completed_cb_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "animimg_set_completed_cb", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_animimg_get_src_count_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "animimg_get_src_count", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_animimg_get_duration_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "animimg_get_duration", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_animimg_get_repeat_count_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "animimg_get_repeat_count", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_animimg_get_anim_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "animimg_get_anim", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arc_set_start_angle_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arc_set_start_angle", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arc_set_end_angle_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arc_set_end_angle", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arc_set_angles_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arc_set_angles", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arc_set_bg_start_angle_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arc_set_bg_start_angle", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arc_set_bg_end_angle_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arc_set_bg_end_angle", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arc_set_bg_angles_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arc_set_bg_angles", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arc_set_rotation_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arc_set_rotation", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arc_set_mode_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arc_set_mode", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arc_set_value_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arc_set_value", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arc_set_range_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arc_set_range", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arc_set_min_value_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arc_set_min_value", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arc_set_max_value_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arc_set_max_value", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arc_set_change_rate_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arc_set_change_rate", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arc_set_knob_offset_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arc_set_knob_offset", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arc_get_angle_start_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arc_get_angle_start", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arc_get_angle_end_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arc_get_angle_end", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arc_get_bg_angle_start_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arc_get_bg_angle_start", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arc_get_bg_angle_end_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arc_get_bg_angle_end", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arc_get_value_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arc_get_value", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arc_get_min_value_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arc_get_min_value", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arc_get_max_value_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arc_get_max_value", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arc_get_mode_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arc_get_mode", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arc_get_rotation_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arc_get_rotation", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arc_get_knob_offset_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arc_get_knob_offset", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arc_get_change_rate_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arc_get_change_rate", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arc_bind_value_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arc_bind_value", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arc_align_obj_to_angle_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arc_align_obj_to_angle", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arc_rotate_obj_to_angle_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arc_rotate_obj_to_angle", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arclabel_set_text_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arclabel_set_text", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arclabel_set_text_fmt_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arclabel_set_text_fmt", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arclabel_set_text_static_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arclabel_set_text_static", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arclabel_set_angle_start_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arclabel_set_angle_start", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arclabel_set_angle_size_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arclabel_set_angle_size", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arclabel_set_offset_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arclabel_set_offset", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arclabel_set_dir_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arclabel_set_dir", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arclabel_set_recolor_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arclabel_set_recolor", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arclabel_set_radius_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arclabel_set_radius", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arclabel_set_center_offset_x_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arclabel_set_center_offset_x", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arclabel_set_center_offset_y_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arclabel_set_center_offset_y", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arclabel_set_text_vertical_align_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arclabel_set_text_vertical_align", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arclabel_set_text_horizontal_align_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arclabel_set_text_horizontal_align", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arclabel_set_overflow_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arclabel_set_overflow", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arclabel_set_end_overlap_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arclabel_set_end_overlap", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arclabel_get_angle_start_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arclabel_get_angle_start", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arclabel_get_angle_size_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arclabel_get_angle_size", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arclabel_get_dir_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arclabel_get_dir", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arclabel_get_recolor_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arclabel_get_recolor", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arclabel_get_radius_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arclabel_get_radius", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arclabel_get_center_offset_x_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arclabel_get_center_offset_x", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arclabel_get_center_offset_y_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arclabel_get_center_offset_y", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arclabel_get_text_vertical_align_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arclabel_get_text_vertical_align", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arclabel_get_text_horizontal_align_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arclabel_get_text_horizontal_align", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arclabel_get_overflow_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arclabel_get_overflow", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arclabel_get_end_overlap_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arclabel_get_end_overlap", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_arclabel_get_text_angle_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "arclabel_get_text_angle", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_label_set_text_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "label_set_text", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_label_set_text_fmt_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "label_set_text_fmt", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_label_set_text_static_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "label_set_text_static", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_label_set_long_mode_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "label_set_long_mode", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_label_set_text_selection_start_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "label_set_text_selection_start", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_label_set_text_selection_end_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "label_set_text_selection_end", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_label_set_recolor_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "label_set_recolor", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_label_get_text_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "label_get_text", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_label_get_long_mode_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "label_get_long_mode", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_label_get_letter_pos_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "label_get_letter_pos", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_label_get_letter_on_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "label_get_letter_on", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_label_is_char_under_pos_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "label_is_char_under_pos", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_label_get_text_selection_start_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "label_get_text_selection_start", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_label_get_text_selection_end_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "label_get_text_selection_end", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_label_get_recolor_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "label_get_recolor", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_label_bind_text_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "label_bind_text", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_label_ins_text_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "label_ins_text", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_label_cut_text_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "label_cut_text", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_bar_set_value_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "bar_set_value", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_bar_set_start_value_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "bar_set_start_value", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_bar_set_range_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "bar_set_range", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_bar_set_min_value_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "bar_set_min_value", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_bar_set_max_value_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "bar_set_max_value", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_bar_set_mode_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "bar_set_mode", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_bar_set_orientation_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "bar_set_orientation", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_bar_get_value_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "bar_get_value", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_bar_get_start_value_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "bar_get_start_value", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_bar_get_min_value_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "bar_get_min_value", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_bar_get_max_value_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "bar_get_max_value", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_bar_get_mode_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "bar_get_mode", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_bar_get_orientation_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "bar_get_orientation", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_bar_is_symmetrical_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "bar_is_symmetrical", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_bar_bind_value_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "bar_bind_value", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_buttonmatrix_set_map_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "buttonmatrix_set_map", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_buttonmatrix_set_ctrl_map_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "buttonmatrix_set_ctrl_map", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_buttonmatrix_set_selected_button_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "buttonmatrix_set_selected_button", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_buttonmatrix_set_button_ctrl_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "buttonmatrix_set_button_ctrl", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_buttonmatrix_clear_button_ctrl_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "buttonmatrix_clear_button_ctrl", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_buttonmatrix_set_button_ctrl_all_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "buttonmatrix_set_button_ctrl_all", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_buttonmatrix_clear_button_ctrl_all_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "buttonmatrix_clear_button_ctrl_all", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_buttonmatrix_set_button_width_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "buttonmatrix_set_button_width", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_buttonmatrix_set_one_checked_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "buttonmatrix_set_one_checked", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_buttonmatrix_get_selected_button_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "buttonmatrix_get_selected_button", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_buttonmatrix_get_button_text_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "buttonmatrix_get_button_text", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_buttonmatrix_has_button_ctrl_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "buttonmatrix_has_button_ctrl", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_buttonmatrix_get_one_checked_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "buttonmatrix_get_one_checked", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_calendar_set_today_date_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "calendar_set_today_date", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_calendar_set_today_year_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "calendar_set_today_year", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_calendar_set_today_month_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "calendar_set_today_month", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_calendar_set_today_day_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "calendar_set_today_day", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_calendar_set_month_shown_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "calendar_set_month_shown", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_calendar_set_shown_year_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "calendar_set_shown_year", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_calendar_set_shown_month_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "calendar_set_shown_month", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_calendar_set_highlighted_dates_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "calendar_set_highlighted_dates", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_calendar_set_day_names_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "calendar_set_day_names", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_calendar_get_btnmatrix_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "calendar_get_btnmatrix", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_calendar_get_today_date_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "calendar_get_today_date", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_calendar_get_showed_date_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "calendar_get_showed_date", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_calendar_get_highlighted_dates_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "calendar_get_highlighted_dates", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_calendar_get_highlighted_dates_num_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "calendar_get_highlighted_dates_num", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_calendar_get_pressed_date_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "calendar_get_pressed_date", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_calendar_add_header_arrow_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "calendar_add_header_arrow", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_calendar_add_header_dropdown_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "calendar_add_header_dropdown", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_calendar_header_dropdown_set_year_list_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "calendar_header_dropdown_set_year_list", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_canvas_set_buffer_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "canvas_set_buffer", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_canvas_set_draw_buf_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "canvas_set_draw_buf", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_canvas_set_px_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "canvas_set_px", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_canvas_set_palette_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "canvas_set_palette", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_canvas_get_draw_buf_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "canvas_get_draw_buf", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_canvas_get_px_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "canvas_get_px", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_canvas_get_image_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "canvas_get_image", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_canvas_get_buf_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "canvas_get_buf", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_canvas_copy_buf_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "canvas_copy_buf", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_canvas_fill_bg_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "canvas_fill_bg", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_canvas_init_layer_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "canvas_init_layer", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_canvas_finish_layer_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "canvas_finish_layer", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_canvas_buf_size_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "canvas_buf_size", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_chart_set_type_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "chart_set_type", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_chart_set_point_count_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "chart_set_point_count", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_chart_set_axis_range_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "chart_set_axis_range", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_chart_set_axis_min_value_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "chart_set_axis_min_value", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_chart_set_axis_max_value_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "chart_set_axis_max_value", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_chart_set_update_mode_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "chart_set_update_mode", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_chart_set_div_line_count_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "chart_set_div_line_count", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_chart_set_hor_div_line_count_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "chart_set_hor_div_line_count", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_chart_set_ver_div_line_count_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "chart_set_ver_div_line_count", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_chart_get_type_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "chart_get_type", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_chart_get_point_count_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "chart_get_point_count", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_chart_get_update_mode_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "chart_get_update_mode", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_chart_get_hor_div_line_count_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "chart_get_hor_div_line_count", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_chart_get_ver_div_line_count_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "chart_get_ver_div_line_count", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_chart_get_x_start_point_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "chart_get_x_start_point", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_chart_get_point_pos_by_id_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "chart_get_point_pos_by_id", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_chart_refresh_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "chart_refresh", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_chart_add_series_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "chart_add_series", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_chart_remove_series_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "chart_remove_series", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_chart_hide_series_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "chart_hide_series", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_chart_set_series_color_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "chart_set_series_color", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_chart_get_series_color_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "chart_get_series_color", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_chart_set_x_start_point_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "chart_set_x_start_point", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_chart_get_series_next_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "chart_get_series_next", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_chart_add_cursor_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "chart_add_cursor", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_chart_remove_cursor_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "chart_remove_cursor", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_chart_set_cursor_pos_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "chart_set_cursor_pos", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_chart_set_cursor_pos_x_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "chart_set_cursor_pos_x", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_chart_set_cursor_pos_y_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "chart_set_cursor_pos_y", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_chart_set_cursor_point_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "chart_set_cursor_point", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_chart_get_cursor_point_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "chart_get_cursor_point", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_chart_set_all_values_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "chart_set_all_values", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_chart_set_next_value_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "chart_set_next_value", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_chart_set_next_value2_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "chart_set_next_value2", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_chart_set_series_values_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "chart_set_series_values", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_chart_set_series_values2_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "chart_set_series_values2", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_chart_set_series_value_by_id_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "chart_set_series_value_by_id", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_chart_set_series_value_by_id2_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "chart_set_series_value_by_id2", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_chart_set_series_ext_y_array_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "chart_set_series_ext_y_array", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_chart_set_series_ext_x_array_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "chart_set_series_ext_x_array", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_chart_get_series_y_array_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "chart_get_series_y_array", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_chart_get_series_x_array_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "chart_get_series_x_array", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_chart_get_pressed_point_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "chart_get_pressed_point", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_chart_get_first_point_center_offset_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "chart_get_first_point_center_offset", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_checkbox_set_text_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "checkbox_set_text", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_checkbox_set_text_static_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "checkbox_set_text_static", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_checkbox_get_text_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "checkbox_get_text", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_dropdown_set_text_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "dropdown_set_text", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_dropdown_set_text_static_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "dropdown_set_text_static", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_dropdown_set_options_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "dropdown_set_options", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_dropdown_set_options_static_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "dropdown_set_options_static", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_dropdown_add_option_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "dropdown_add_option", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_dropdown_clear_options_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "dropdown_clear_options", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_dropdown_set_selected_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "dropdown_set_selected", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_dropdown_set_dir_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "dropdown_set_dir", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_dropdown_set_symbol_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "dropdown_set_symbol", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_dropdown_set_selected_highlight_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "dropdown_set_selected_highlight", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_dropdown_get_list_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "dropdown_get_list", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_dropdown_get_text_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "dropdown_get_text", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_dropdown_get_options_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "dropdown_get_options", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_dropdown_get_selected_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "dropdown_get_selected", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_dropdown_get_option_count_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "dropdown_get_option_count", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_dropdown_get_selected_str_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "dropdown_get_selected_str", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_dropdown_get_option_index_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "dropdown_get_option_index", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_dropdown_get_symbol_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "dropdown_get_symbol", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_dropdown_get_selected_highlight_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "dropdown_get_selected_highlight", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_dropdown_get_dir_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "dropdown_get_dir", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_dropdown_open_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "dropdown_open", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_dropdown_close_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "dropdown_close", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_dropdown_is_open_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "dropdown_is_open", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_dropdown_bind_value_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "dropdown_bind_value", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_gif_set_color_format_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "gif_set_color_format", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_gif_set_src_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "gif_set_src", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_gif_restart_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "gif_restart", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_gif_pause_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "gif_pause", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_gif_resume_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "gif_resume", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_gif_is_loaded_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "gif_is_loaded", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_gif_get_loop_count_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "gif_get_loop_count", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_gif_set_loop_count_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "gif_set_loop_count", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_gif_set_auto_pause_invisible_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "gif_set_auto_pause_invisible", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_gif_get_size_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "gif_get_size", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_gif_get_frame_count_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "gif_get_frame_count", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_gif_get_current_frame_index_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "gif_get_current_frame_index", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_imagebutton_set_src_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "imagebutton_set_src", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_imagebutton_set_src_left_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "imagebutton_set_src_left", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_imagebutton_set_src_right_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "imagebutton_set_src_right", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_imagebutton_set_src_mid_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "imagebutton_set_src_mid", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_imagebutton_set_state_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "imagebutton_set_state", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_imagebutton_get_src_left_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "imagebutton_get_src_left", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_imagebutton_get_src_middle_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "imagebutton_get_src_middle", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_imagebutton_get_src_right_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "imagebutton_get_src_right", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_keyboard_set_textarea_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "keyboard_set_textarea", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_keyboard_set_mode_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "keyboard_set_mode", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_keyboard_set_popovers_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "keyboard_set_popovers", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_keyboard_set_map_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "keyboard_set_map", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_keyboard_get_textarea_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "keyboard_get_textarea", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_keyboard_get_mode_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "keyboard_get_mode", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_keyboard_get_popovers_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "keyboard_get_popovers", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_keyboard_get_selected_button_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "keyboard_get_selected_button", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_keyboard_get_button_text_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "keyboard_get_button_text", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_keyboard_def_event_cb_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "keyboard_def_event_cb", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_led_set_color_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "led_set_color", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_led_set_brightness_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "led_set_brightness", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_led_on_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "led_on", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_led_off_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "led_off", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_led_toggle_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "led_toggle", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_led_get_brightness_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "led_get_brightness", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_led_get_color_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "led_get_color", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_line_set_points_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "line_set_points", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_line_set_points_mutable_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "line_set_points_mutable", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_line_set_y_invert_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "line_set_y_invert", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_line_get_points_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "line_get_points", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_line_get_point_count_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "line_get_point_count", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_line_is_point_array_mutable_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "line_is_point_array_mutable", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_line_get_points_mutable_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "line_get_points_mutable", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_line_get_y_invert_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "line_get_y_invert", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_list_add_text_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "list_add_text", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_list_add_button_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "list_add_button", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_list_get_button_text_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "list_get_button_text", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_list_set_button_text_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "list_set_button_text", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_menu_set_page_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "menu_set_page", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_menu_set_page_title_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "menu_set_page_title", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_menu_set_page_title_static_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "menu_set_page_title_static", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_menu_set_sidebar_page_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "menu_set_sidebar_page", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_menu_set_mode_header_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "menu_set_mode_header", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_menu_set_mode_root_back_button_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "menu_set_mode_root_back_button", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_menu_set_load_page_event_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "menu_set_load_page_event", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_menu_get_cur_main_page_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "menu_get_cur_main_page", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_menu_get_cur_sidebar_page_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "menu_get_cur_sidebar_page", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_menu_get_main_header_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "menu_get_main_header", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_menu_get_main_header_back_button_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "menu_get_main_header_back_button", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_menu_get_sidebar_header_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "menu_get_sidebar_header", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_menu_get_sidebar_header_back_button_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "menu_get_sidebar_header_back_button", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_menu_back_button_is_root_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "menu_back_button_is_root", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_menu_get_mode_header_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "menu_get_mode_header", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_menu_get_mode_root_back_button_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "menu_get_mode_root_back_button", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_menu_clear_history_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "menu_clear_history", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_msgbox_add_title_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "msgbox_add_title", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_msgbox_add_header_button_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "msgbox_add_header_button", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_msgbox_add_text_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "msgbox_add_text", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_msgbox_add_text_fmt_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "msgbox_add_text_fmt", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_msgbox_add_footer_button_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "msgbox_add_footer_button", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_msgbox_add_close_button_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "msgbox_add_close_button", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_msgbox_get_header_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "msgbox_get_header", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_msgbox_get_footer_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "msgbox_get_footer", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_msgbox_get_content_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "msgbox_get_content", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_msgbox_get_title_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "msgbox_get_title", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_msgbox_close_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "msgbox_close", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_msgbox_close_async_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "msgbox_close_async", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_roller_set_options_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "roller_set_options", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_roller_set_selected_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "roller_set_selected", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_roller_set_selected_str_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "roller_set_selected_str", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_roller_set_visible_row_count_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "roller_set_visible_row_count", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_roller_get_selected_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "roller_get_selected", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_roller_get_selected_str_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "roller_get_selected_str", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_roller_get_options_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "roller_get_options", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_roller_get_option_count_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "roller_get_option_count", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_roller_get_option_str_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "roller_get_option_str", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_roller_bind_value_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "roller_bind_value", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_scale_set_mode_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "scale_set_mode", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_scale_set_total_tick_count_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "scale_set_total_tick_count", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_scale_set_major_tick_every_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "scale_set_major_tick_every", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_scale_set_label_show_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "scale_set_label_show", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_scale_set_range_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "scale_set_range", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_scale_set_min_value_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "scale_set_min_value", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_scale_set_max_value_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "scale_set_max_value", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_scale_set_angle_range_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "scale_set_angle_range", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_scale_set_rotation_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "scale_set_rotation", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_scale_set_line_needle_value_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "scale_set_line_needle_value", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_scale_set_image_needle_value_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "scale_set_image_needle_value", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_scale_set_text_src_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "scale_set_text_src", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_scale_set_post_draw_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "scale_set_post_draw", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_scale_set_draw_ticks_on_top_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "scale_set_draw_ticks_on_top", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_scale_add_section_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "scale_add_section", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_scale_section_set_range_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "scale_section_set_range", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_scale_set_section_range_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "scale_set_section_range", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_scale_set_section_min_value_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "scale_set_section_min_value", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_scale_set_section_max_value_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "scale_set_section_max_value", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_scale_section_set_style_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "scale_section_set_style", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_scale_set_section_style_main_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "scale_set_section_style_main", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_scale_set_section_style_indicator_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "scale_set_section_style_indicator", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_scale_set_section_style_items_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "scale_set_section_style_items", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_scale_get_mode_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "scale_get_mode", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_scale_get_total_tick_count_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "scale_get_total_tick_count", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_scale_get_major_tick_every_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "scale_get_major_tick_every", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_scale_get_rotation_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "scale_get_rotation", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_scale_get_label_show_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "scale_get_label_show", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_scale_get_angle_range_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "scale_get_angle_range", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_scale_get_range_min_value_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "scale_get_range_min_value", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_scale_get_range_max_value_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "scale_get_range_max_value", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_scale_bind_section_min_value_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "scale_bind_section_min_value", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_scale_bind_section_max_value_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "scale_bind_section_max_value", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_slider_set_value_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "slider_set_value", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_slider_set_start_value_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "slider_set_start_value", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_slider_set_range_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "slider_set_range", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_slider_set_min_value_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "slider_set_min_value", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_slider_set_max_value_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "slider_set_max_value", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_slider_set_mode_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "slider_set_mode", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_slider_set_orientation_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "slider_set_orientation", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_slider_get_value_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "slider_get_value", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_slider_get_left_value_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "slider_get_left_value", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_slider_get_min_value_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "slider_get_min_value", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_slider_get_max_value_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "slider_get_max_value", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_slider_is_dragged_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "slider_is_dragged", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_slider_get_mode_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "slider_get_mode", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_slider_get_orientation_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "slider_get_orientation", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_slider_is_symmetrical_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "slider_is_symmetrical", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_slider_bind_value_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "slider_bind_value", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_span_stack_init_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "span_stack_init", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_span_stack_deinit_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "span_stack_deinit", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_spangroup_add_span_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "spangroup_add_span", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_spangroup_delete_span_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "spangroup_delete_span", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_span_set_text_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "span_set_text", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_span_set_text_fmt_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "span_set_text_fmt", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_span_set_text_static_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "span_set_text_static", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_spangroup_set_span_text_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "spangroup_set_span_text", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_spangroup_set_span_text_static_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "spangroup_set_span_text_static", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_spangroup_set_span_text_fmt_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "spangroup_set_span_text_fmt", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_span_set_text_static_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "span_set_text_static", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_spangroup_set_span_style_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "spangroup_set_span_style", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_spangroup_set_align_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "spangroup_set_align", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_spangroup_set_overflow_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "spangroup_set_overflow", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_spangroup_set_indent_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "spangroup_set_indent", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_spangroup_set_mode_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "spangroup_set_mode", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_spangroup_set_max_lines_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "spangroup_set_max_lines", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_span_get_style_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "span_get_style", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_span_get_text_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "span_get_text", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_spangroup_get_child_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "spangroup_get_child", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_spangroup_get_span_count_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "spangroup_get_span_count", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_spangroup_get_align_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "spangroup_get_align", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_spangroup_get_overflow_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "spangroup_get_overflow", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_spangroup_get_indent_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "spangroup_get_indent", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_spangroup_get_mode_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "spangroup_get_mode", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_spangroup_get_max_lines_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "spangroup_get_max_lines", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_spangroup_get_max_line_height_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "spangroup_get_max_line_height", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_spangroup_get_expand_width_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "spangroup_get_expand_width", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_spangroup_get_expand_height_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "spangroup_get_expand_height", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_spangroup_get_span_coords_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "spangroup_get_span_coords", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_spangroup_get_span_by_point_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "spangroup_get_span_by_point", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_spangroup_refresh_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "spangroup_refresh", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_spangroup_bind_span_text_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "spangroup_bind_span_text", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_textarea_add_char_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "textarea_add_char", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_textarea_add_text_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "textarea_add_text", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_textarea_delete_char_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "textarea_delete_char", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_textarea_delete_char_forward_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "textarea_delete_char_forward", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_textarea_set_text_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "textarea_set_text", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_textarea_set_placeholder_text_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "textarea_set_placeholder_text", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_textarea_set_cursor_pos_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "textarea_set_cursor_pos", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_textarea_set_cursor_click_pos_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "textarea_set_cursor_click_pos", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_textarea_set_password_mode_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "textarea_set_password_mode", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_textarea_set_password_bullet_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "textarea_set_password_bullet", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_textarea_set_one_line_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "textarea_set_one_line", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_textarea_set_accepted_chars_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "textarea_set_accepted_chars", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_textarea_set_accepted_chars_static_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "textarea_set_accepted_chars_static", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_textarea_set_max_length_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "textarea_set_max_length", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_textarea_set_insert_replace_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "textarea_set_insert_replace", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_textarea_set_text_selection_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "textarea_set_text_selection", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_textarea_set_password_show_time_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "textarea_set_password_show_time", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_textarea_set_align_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "textarea_set_align", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_textarea_get_text_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "textarea_get_text", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_textarea_get_placeholder_text_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "textarea_get_placeholder_text", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_textarea_get_label_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "textarea_get_label", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_textarea_get_cursor_pos_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "textarea_get_cursor_pos", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_textarea_get_cursor_click_pos_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "textarea_get_cursor_click_pos", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_textarea_get_password_mode_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "textarea_get_password_mode", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_textarea_get_password_bullet_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "textarea_get_password_bullet", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_textarea_get_one_line_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "textarea_get_one_line", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_textarea_get_accepted_chars_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "textarea_get_accepted_chars", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_textarea_get_max_length_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "textarea_get_max_length", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_textarea_text_is_selected_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "textarea_text_is_selected", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_textarea_get_text_selection_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "textarea_get_text_selection", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_textarea_get_password_show_time_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "textarea_get_password_show_time", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_textarea_get_current_char_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "textarea_get_current_char", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_textarea_clear_selection_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "textarea_clear_selection", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_textarea_cursor_right_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "textarea_cursor_right", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_textarea_cursor_left_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "textarea_cursor_left", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_textarea_cursor_down_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "textarea_cursor_down", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_textarea_cursor_up_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "textarea_cursor_up", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_spinbox_set_value_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "spinbox_set_value", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_spinbox_set_rollover_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "spinbox_set_rollover", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_spinbox_set_digit_format_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "spinbox_set_digit_format", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_spinbox_set_digit_count_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "spinbox_set_digit_count", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_spinbox_set_dec_point_pos_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "spinbox_set_dec_point_pos", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_spinbox_set_step_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "spinbox_set_step", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_spinbox_set_range_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "spinbox_set_range", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_spinbox_set_min_value_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "spinbox_set_min_value", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_spinbox_set_max_value_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "spinbox_set_max_value", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_spinbox_set_cursor_pos_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "spinbox_set_cursor_pos", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_spinbox_set_digit_step_direction_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "spinbox_set_digit_step_direction", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_spinbox_get_rollover_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "spinbox_get_rollover", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_spinbox_get_value_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "spinbox_get_value", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_spinbox_get_step_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "spinbox_get_step", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_spinbox_get_digit_count_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "spinbox_get_digit_count", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_spinbox_get_dec_point_pos_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "spinbox_get_dec_point_pos", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_spinbox_get_min_value_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "spinbox_get_min_value", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_spinbox_get_max_value_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "spinbox_get_max_value", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_spinbox_get_digit_step_direction_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "spinbox_get_digit_step_direction", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_spinbox_step_next_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "spinbox_step_next", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_spinbox_step_prev_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "spinbox_step_prev", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_spinbox_increment_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "spinbox_increment", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_spinbox_decrement_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "spinbox_decrement", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_spinbox_bind_value_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "spinbox_bind_value", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_spinner_set_anim_params_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "spinner_set_anim_params", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_spinner_set_anim_duration_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "spinner_set_anim_duration", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_spinner_set_arc_sweep_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "spinner_set_arc_sweep", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_spinner_get_anim_duration_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "spinner_get_anim_duration", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_spinner_get_arc_sweep_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "spinner_get_arc_sweep", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_switch_set_orientation_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "switch_set_orientation", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_switch_get_orientation_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "switch_get_orientation", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_table_set_cell_value_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "table_set_cell_value", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_table_set_cell_value_fmt_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "table_set_cell_value_fmt", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_table_set_row_count_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "table_set_row_count", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_table_set_column_count_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "table_set_column_count", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_table_set_column_width_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "table_set_column_width", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_table_set_cell_ctrl_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "table_set_cell_ctrl", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_table_clear_cell_ctrl_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "table_clear_cell_ctrl", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_table_set_cell_user_data_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "table_set_cell_user_data", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_table_set_selected_cell_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "table_set_selected_cell", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_table_get_cell_value_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "table_get_cell_value", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_table_get_row_count_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "table_get_row_count", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_table_get_column_count_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "table_get_column_count", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_table_get_column_width_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "table_get_column_width", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_table_has_cell_ctrl_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "table_has_cell_ctrl", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_table_get_selected_cell_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "table_get_selected_cell", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_table_get_cell_user_data_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "table_get_cell_user_data", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_tabview_add_tab_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "tabview_add_tab", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_tabview_set_tab_text_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "tabview_set_tab_text", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_tabview_set_active_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "tabview_set_active", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_tabview_set_tab_bar_position_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "tabview_set_tab_bar_position", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_tabview_set_tab_bar_size_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "tabview_set_tab_bar_size", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_tabview_get_tab_count_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "tabview_get_tab_count", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_tabview_get_tab_active_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "tabview_get_tab_active", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_tabview_get_tab_button_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "tabview_get_tab_button", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_tabview_get_content_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "tabview_get_content", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_tabview_get_tab_bar_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "tabview_get_tab_bar", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_tabview_get_tab_bar_position_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "tabview_get_tab_bar_position", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_tileview_add_tile_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "tileview_add_tile", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_tileview_set_tile_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "tileview_set_tile", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_tileview_set_tile_by_index_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "tileview_set_tile_by_index", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_tileview_get_tile_active_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "tileview_get_tile_active", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_win_add_title_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "win_add_title", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_win_add_button_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "win_add_button", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_win_get_header_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "win_get_header", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_win_get_content_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "win_get_content", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_barcode_set_dark_color_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "barcode_set_dark_color", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_barcode_set_light_color_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "barcode_set_light_color", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_barcode_set_scale_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "barcode_set_scale", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_barcode_set_direction_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "barcode_set_direction", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_barcode_set_tiled_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "barcode_set_tiled", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_barcode_set_encoding_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "barcode_set_encoding", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_barcode_update_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "barcode_update", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_barcode_get_dark_color_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "barcode_get_dark_color", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_barcode_get_light_color_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "barcode_get_light_color", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_barcode_get_scale_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "barcode_get_scale", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_barcode_get_encoding_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "barcode_get_encoding", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_bin_decoder_init_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "bin_decoder_init", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_bin_decoder_info_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "bin_decoder_info", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_bin_decoder_get_area_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "bin_decoder_get_area", fn) < 0) return NULL; }
@@ -109503,12 +106959,6 @@ PyMODINIT_FUNC PyInit_lvgl(void)
     { PyObject *fn = PyCFunction_New(&py_lv_fs_memfs_init_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "fs_memfs_init", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_lodepng_init_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "lodepng_init", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_lodepng_deinit_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "lodepng_deinit", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_qrcode_set_size_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "qrcode_set_size", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_qrcode_set_dark_color_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "qrcode_set_dark_color", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_qrcode_set_light_color_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "qrcode_set_light_color", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_qrcode_update_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "qrcode_update", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_qrcode_set_data_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "qrcode_set_data", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_qrcode_set_quiet_zone_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "qrcode_set_quiet_zone", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_draw_sw_i1_to_argb8888_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "draw_sw_i1_to_argb8888", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_draw_sw_rgb565_swap_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "draw_sw_rgb565_swap", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_draw_sw_i1_invert_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "draw_sw_i1_invert", fn) < 0) return NULL; }
@@ -109586,18 +107036,6 @@ PyMODINIT_FUNC PyInit_lvgl(void)
     { PyObject *fn = PyCFunction_New(&py_lv_cache_entry_alloc_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "cache_entry_alloc", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_cache_entry_init_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "cache_entry_init", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_cache_entry_delete_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "cache_entry_delete", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_header_cache_init_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_header_cache_init", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_header_cache_resize_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_header_cache_resize", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_header_cache_drop_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_header_cache_drop", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_header_cache_is_enabled_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_header_cache_is_enabled", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_header_cache_iter_create_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_header_cache_iter_create", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_header_cache_dump_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_header_cache_dump", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_cache_init_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_cache_init", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_cache_resize_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_cache_resize", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_cache_drop_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_cache_drop", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_cache_is_enabled_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_cache_is_enabled", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_cache_iter_create_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_cache_iter_create", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_cache_dump_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_cache_dump", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_cache_create_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "cache_create", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_cache_destroy_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "cache_destroy", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_cache_acquire_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "cache_acquire", fn) < 0) return NULL; }
@@ -109649,25 +107087,12 @@ PyMODINIT_FUNC PyInit_lvgl(void)
     { PyObject *fn = PyCFunction_New(&py_lv_cache_entry_has_flag_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "cache_entry_has_flag", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_draw_image_normal_helper_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "draw_image_normal_helper", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_draw_image_tiled_helper_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "draw_image_tiled_helper", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_buf_get_transformed_area_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_buf_get_transformed_area", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_decoder_init_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_decoder_init", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_image_decoder_deinit_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "image_decoder_deinit", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_refr_init_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "refr_init", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_refr_deinit_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "refr_deinit", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_inv_area_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "inv_area", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_refr_get_disp_refreshing_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "refr_get_disp_refreshing", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_refr_set_disp_refreshing_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "refr_set_disp_refreshing", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_refr_get_top_obj_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "refr_get_top_obj", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_refr_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_refr", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_style_init_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_style_init", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_style_deinit_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_style_deinit", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_style_create_transition_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_style_create_transition", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_style_state_compare_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_style_state_compare", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_update_layer_type_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_update_layer_type", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_scroll_by_raw_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_scroll_by_raw", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_ext_draw_size_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_ext_draw_size", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_get_layer_type_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_get_layer_type", fn) < 0) return NULL; }
-    { PyObject *fn = PyCFunction_New(&py_lv_obj_destruct_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "obj_destruct", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_group_init_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "group_init", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_group_deinit_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "group_deinit", fn) < 0) return NULL; }
     { PyObject *fn = PyCFunction_New(&py_lv_area_set_pos_def, NULL); if (fn == NULL) return NULL; if (PyModule_AddObject(m, "area_set_pos", fn) < 0) return NULL; }
