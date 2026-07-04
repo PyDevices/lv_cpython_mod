@@ -94,8 +94,40 @@ jobs:
           name: cibw-wheels-${{ matrix.os }}
           path: wheelhouse/*.whl
 
+  build-android-wheels:
+    needs: prepare
+    runs-on: ubuntu-latest
+    if: github.repository == 'PyDevices/lv_cpython_mod'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: android-actions/setup-android@v3
+
+      - name: Write VERSION file
+        shell: bash
+        run: echo "${{ needs.prepare.outputs.version }}" > VERSION
+
+      - name: Build Android wheels
+        uses: pypa/cibuildwheel@v4.1.0
+        env:
+          CIBW_PLATFORM: android
+          ANDROID_HOME: ${{ env.ANDROID_SDK_ROOT }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cibw-wheels-android
+          path: wheelhouse/*.whl
+
   publish:
-    needs: [prepare, build-wheels]
+    needs: [prepare, build-wheels, build-android-wheels]
     runs-on: ubuntu-latest
     if: github.repository == 'PyDevices/lv_cpython_mod'
     steps:
