@@ -14,7 +14,7 @@ version = {file = "VERSION"}
 [tool.setuptools]
 packages = []
 
-# Wheel CI: one wheel per CPython minor (cp310…cp314) × Linux + Windows — see README.
+# Wheel CI: one wheel per CPython minor (cp310…cp314) × Linux + Windows + Android — see README.
 # Local reproduction: PUBLISHING.md § "Local wheel builds (cibuildwheel)" (Linux needs Docker).
 [tool.cibuildwheel]
 build = "cp310-* cp311-* cp312-* cp313-* cp314-*"
@@ -29,3 +29,17 @@ manylinux-x86_64-image = "manylinux_2_28"
 
 [tool.cibuildwheel.windows]
 archs = ["AMD64"]
+
+# PEP 738 Android tags: android_<api>_<arch> (e.g. android_21_arm64_v8a).
+# cibuildwheel 4.x builds Android wheels for CPython 3.13–3.14 only (matches p4a).
+# p4a / buildozer install these via --extra-index-url when a matching prebuilt wheel exists.
+[tool.cibuildwheel.android]
+archs = ["arm64_v8a", "x86_64"]
+environment = { ANDROID_API_LEVEL = "21" }
+test-command = "python -c \"import lvgl as lv; lv.init(); lv.deinit()\""
+# Emulator tests are optional in CI; wheels are smoke-tested on device via pydisplay APK.
+test-skip = "*"
+
+[[tool.cibuildwheel.overrides]]
+select = "*-android_*"
+build-frontend = "build"

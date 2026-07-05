@@ -19,7 +19,7 @@ lv_cpython_mod: Sync and release
            │
            ▼
 lv_cpython_mod: Publish TestPyPI             (on tag push v*.*.* or workflow_dispatch)
-  cibuildwheel → Linux manylinux + Windows amd64 → smoke tests → twine upload
+  cibuildwheel → Linux manylinux + Windows amd64 + Android (PEP 738) → smoke tests → twine upload
 ```
 
 ## Version numbers
@@ -161,7 +161,7 @@ Preview without tagging:
 | Workflow | Trigger | What it does |
 |----------|---------|--------------|
 | [sync-and-release.yml](.github/workflows/sync-and-release.yml) | Manual; called from lv_bindings | Sync from GitHub → commit `main` → push next tag → dispatch publish |
-| [publish-testpypi.yml](.github/workflows/publish-testpypi.yml) | Tag push `v*.*.*` (local/manual tags); workflow_dispatch | **cibuildwheel**: Linux manylinux + Windows amd64 wheels, smoke tests, TestPyPI upload |
+| [publish-testpypi.yml](.github/workflows/publish-testpypi.yml) | Tag push `v*.*.*` (local/manual tags); workflow_dispatch | **cibuildwheel**: Linux manylinux + Windows amd64 + Android (`android_21_arm64_v8a`, `android_21_x86_64`) wheels, smoke tests, TestPyPI upload |
 
 ### Reading the Sync and release job in the Actions UI
 
@@ -217,6 +217,14 @@ Install [Docker Engine](https://docs.docker.com/engine/install/) (or Docker Desk
 
 **Windows** does not need Docker: run `pipx run cibuildwheel --platform windows` on a native Windows shell with MSVC Build Tools (same as a normal `pip install -e .` build).
 
+**Android (PEP 738):** needs the Android SDK on Linux or macOS (cibuildwheel installs packages via `sdkmanager`). API level and archs are set in `pyproject.toml` under `[tool.cibuildwheel.android]` (`ANDROID_API_LEVEL=21` → tags like `android_21_arm64_v8a`). Emulator tests are skipped in CI; validate on device with the [usdl2 LVGL demo](https://github.com/PyDevices/usdl2/tree/main/android_demo).
+
+```bash
+echo "0.0.0.dev" > VERSION
+pipx run cibuildwheel --platform android
+ls wheelhouse/*android*.whl
+```
+
 **Without Docker (dev-only Linux wheel):** a non-manylinux wheel is enough to smoke-test the packaging path:
 
 ```bash
@@ -236,6 +244,8 @@ End-user install commands are in **[README.md](README.md#install)**. CI publishe
 |----------|-----------|
 | Linux x86_64 | `manylinux_*` |
 | Windows x64 | `win_amd64` |
+| Android arm64 | `android_21_arm64_v8a` (`cp313`, `cp314` only) |
+| Android x86_64 (emulator) | `android_21_x86_64` (`cp313`, `cp314` only) |
 
 Releases before the multi-Python wheel matrix may only have `cp312` wheels; upgrade to the latest tag. To add a new Python line (e.g. 3.15), extend `build` in `pyproject.toml` `[tool.cibuildwheel]` and publish a new version.
 
