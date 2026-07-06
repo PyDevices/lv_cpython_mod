@@ -149,7 +149,7 @@ Release pipeline: **[PUBLISHING.md](PUBLISHING.md)**.
 
 ## Android (python-for-android)
 
-Prefer installing a **prebuilt** `lvgl-cpython` wheel tagged `android_21_arm64_v8a` (or `android_21_x86_64`) from TestPyPI when building a pydisplay APK. The [usdl2 `lvglcpython` p4a recipe](https://github.com/PyDevices/usdl2/tree/main/p4a_recipes/lvglcpython) uses `PyProjectRecipe` to install a matching wheel when `--extra-index-url` points at TestPyPI, otherwise cross-compiles from this tree (requires `git submodule update --init lvgl`).
+Prefer installing a **prebuilt** `lvgl-cpython` wheel tagged `android_21_arm64_v8a` (or `android_21_x86_64`) from TestPyPI when building a pydisplay APK. The [pydisplay_android `lvglcpython` p4a recipe](https://github.com/PyDevices/pydisplay_android/tree/main/p4a_recipes/lvglcpython) uses `PyProjectRecipe` to install a matching wheel when `--extra-index-url` points at TestPyPI, otherwise cross-compiles from this tree (requires `git submodule update --init lvgl`).
 
 ```bash
 export P4A_lvgl_cpython_DIR=/path/to/lv_cpython_mod   # optional: in-tree source fallback
