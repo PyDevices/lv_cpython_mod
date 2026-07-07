@@ -217,7 +217,7 @@ Install [Docker Engine](https://docs.docker.com/engine/install/) (or Docker Desk
 
 **Windows** does not need Docker: run `pipx run cibuildwheel --platform windows` on a native Windows shell with MSVC Build Tools (same as a normal `pip install -e .` build).
 
-**Android (PEP 738):** needs the Android SDK on Linux or macOS (cibuildwheel installs packages via `sdkmanager`). API level and archs are set in `pyproject.toml` under `[tool.cibuildwheel.android]` (`ANDROID_API_LEVEL=21` → tags like `android_21_arm64_v8a`). Emulator tests are skipped in CI; validate on device with the [usdl2 LVGL demo](https://github.com/PyDevices/usdl2/tree/main/android_demo).
+**Android (PEP 738):** needs the Android SDK on Linux or macOS (cibuildwheel installs packages via `sdkmanager`). API level and archs are set in `pyproject.toml` under `[tool.cibuildwheel.android]` (`ANDROID_API_LEVEL=21` → tags like `android_21_arm64_v8a`). Emulator tests are skipped in CI; validate on device with the [pydisplay_android LVGL demo](https://github.com/PyDevices/pydisplay_android/tree/main/android_demo).
 
 ```bash
 echo "0.0.0.dev" > VERSION
