@@ -1,4 +1,4 @@
-# Build lvgl-cpython wheels (Linux + Windows) with cibuildwheel and upload to TestPyPI.
+# Build lvgl-cpython wheels (Linux + Windows + Android) with cibuildwheel and upload to TestPyPI.
 #
 # Release trigger: push an annotated semver tag vX.Y.Z (see scripts/publish_release_tag.sh),
 # or workflow_dispatch (also used by sync-and-release via RELEASE_WORKFLOW_TOKEN).
