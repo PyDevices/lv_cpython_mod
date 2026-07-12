@@ -40,7 +40,7 @@ include_dirs = [
     str(LVGL_DIR),
 ]
 
-define_macros = [("CMODS_CPYTHON_BUILD", "1")]
+define_macros = [("LV_CPYTHON_BUILD", "1")]
 
 if sys.platform == "win32":
     extra_compile_args = ["/wd4101", "/wd4244", "/wd4267", "/wd4996"]

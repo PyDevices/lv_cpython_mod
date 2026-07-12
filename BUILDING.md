@@ -78,12 +78,12 @@ Quick import check:
 
 You can keep the repo on the WSL filesystem and install into **Windows** Python using `pip.exe`. `setup.py` resolves the sibling `lv_bindings` tree via relative paths.
 
-From a WSL bash shell (use a Linux cwd such as `~`, not a UNC path):
+From a WSL bash shell (use a Linux cwd such as `~`, not a UNC path). Assumes `lv_bindings/` and `lv_cpython_mod/` are sibling clones (e.g. `~/workspace/lv_bindings`, `~/workspace/lv_cpython_mod`):
 
 ```bash
-cd ~/github/cmods/lv_bindings && ./regenerate_lvpy.sh
+cd ~/workspace/lv_bindings && ./regenerate_lvpy.sh
 
-pip.exe install -e "$(wslpath -w ~/github/cmods/lv_cpython_mod)"
+pip.exe install -e "$(wslpath -w ~/workspace/lv_cpython_mod)"
 ```
 
 The first build compiles every LVGL source file and may take several minutes over `\\wsl.localhost\...`. Install completes into Windows `site-packages`; the extension module is also written beside this repo (e.g. `lvgl.cp314-win_amd64.pyd`).
@@ -99,7 +99,7 @@ python.exe -c "import lvgl as lv; lv.init(); print('ok'); lv.deinit()"
 With the repo on a Windows drive (or accessed via `\\wsl.localhost\...` in PowerShell/cmd):
 
 ```powershell
-cd C:\path\to\cmods\lv_bindings
+cd C:\path\to\workspace\lv_bindings
 # regenerate from WSL if gcc is not available on Windows:
 #   wsl ./regenerate_lvpy.sh
 
@@ -193,4 +193,4 @@ Phases 1–7 are enabled in the generator today.
 ## Related projects
 
 - [PyDevices/lv_bindings](https://github.com/PyDevices/lv_bindings) — binding generator (MicroPython, CircuitPython, CPython targets)
-- [PyDevices/cmods](https://github.com/PyDevices/cmods) — parent workspace for LVGL mod experiments
+- [PyDevices/cmods](https://github.com/PyDevices/cmods) — optional workspace wrapper that clones this repo and its siblings for you (not required)
