@@ -2,7 +2,7 @@
 
 Native CPython extension for [LVGL](https://lvgl.io/), generated from [`lv_bindings`](https://github.com/PyDevices/lv_bindings) with **no MicroPython runtime**. Import the module as `lvgl`.
 
-## Install
+## 🚀 Install
 
 Prebuilt wheels are published as **`lvgl-cpython`** on [TestPyPI](https://test.pypi.org/project/lvgl-cpython/) (import as `lvgl`). CI builds a separate wheel for each CPython minor (3.10–3.14) on Linux x86_64 and Windows x64, plus **Android** wheels for **3.13–3.14** (`android_21_arm64_v8a`, `android_21_x86_64` per [PEP 738](https://peps.python.org/pep-0738/)) — pip selects `cp312`, `cp314`, etc. to match your interpreter.
 
