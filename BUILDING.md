@@ -157,6 +157,40 @@ export P4A_lvgl_cpython_DIR=/path/to/lv_cpython_mod   # optional: in-tree source
 
 Wheel tags follow [PEP 738](https://peps.python.org/pep-0738/); CI sets `ANDROID_API_LEVEL=21` in `pyproject.toml`.
 
+## Pyodide / WebAssembly
+
+Desktop Linux/macOS/Windows wheels from TestPyPI are **not** loadable in Pyodide (wrong ABI, native `.so`/`.pyd`). Build a `pyemscripten_2026_0` wheel that matches Pyodide **314.x** (Python 3.14, Emscripten 5.0.3) — the same ABI pydisplay vendors under `web/pyscript/vendor/pyodide`.
+
+### Requirements
+
+- Host **Python 3.14** (must match the xbuildenv CPython; `uv python install 3.14` is fine)
+- Node.js (for Emscripten)
+- Network on first run (downloads xbuildenv + emsdk)
+
+### Build
+
+```bash
+./scripts/build_pyodide_wheel.sh
+# optional: leave wheel in dist/ only
+./scripts/build_pyodide_wheel.sh --no-copy
+# pin a Pyodide release:
+PYODIDE_VERSION=314.0.0 ./scripts/build_pyodide_wheel.sh
+```
+
+Produces `dist/lvgl_cpython-*-cp314-cp314-pyemscripten_2026_0_wasm32.whl` (may briefly write an `emscripten_*` intermediate that pyodide-build remaps) and copies it to `web/wheels/` for GitHub Pages / local serving, plus `web/wheels/lvgl.json` (`{"wheel": "<filename>"}`) so pydisplay `pyodide.html` can micropip-install without hard-coding the version.
+
+### Smoke test (pyodide venv)
+
+```bash
+source .venv-pyodide-build/bin/activate
+pyodide venv .venv-pyodide
+source .venv-pyodide/bin/activate
+pip install web/wheels/lvgl_cpython-*-pyemscripten_*_wasm32.whl
+python -c "import lvgl as lv; lv.init(); lv.deinit(); print('ok')"
+```
+
+Browser use is via `micropip.install` against a URL that serves the wheel (e.g. this repo’s Pages `wheels/` or a local static server). pydisplay’s Pyodide loader wiring is separate.
+
 ## Architecture
 
 | Component | Role |

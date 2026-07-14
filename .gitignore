@@ -1,4 +1,8 @@
 .venv/
+.venv-pyodide-build/
+.venv-pyodide/
+.pyodide_build/
+*.profraw
 __pycache__/
 *.py[cod]
 *.so
