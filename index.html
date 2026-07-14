@@ -57,6 +57,20 @@ python -c "import lvgl as lv; lv.init(); print('ok')"</code></pre>
     </div>
 
     <div class="section-head" style="margin-top: 36px;">
+      <h2>Pyodide / WebAssembly</h2>
+    </div>
+    <p style="max-width: 42rem; margin: 0 0 1rem; opacity: 0.9;">
+      Native TestPyPI wheels do not run in Pyodide. Build a
+      <code>pyemscripten_2026_0</code> wheel (Pyodide 314.x / Python 3.14) with
+      <code>./scripts/build_pyodide_wheel.sh</code>; artifacts land in
+      <a href="./wheels/"><code>wheels/</code></a> with
+      <code>lvgl.json</code> pointing at the current wheel for
+      pydisplay <code>pyodide.html</code> / same-origin
+      <code>micropip.install</code>. See
+      <a href="https://github.com/PyDevices/lv_cpython_mod/blob/main/BUILDING.md#pyodide--webassembly">BUILDING.md</a>.
+    </p>
+
+    <div class="section-head" style="margin-top: 36px;">
       <h2>Related</h2>
     </div>
     <ul class="linklist">
