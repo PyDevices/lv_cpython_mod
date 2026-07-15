@@ -15,3 +15,7 @@ dist/
 # flock file used by cmods' build_target.sh to serialize cpy-unix vs
 # cpy-windows builds against this editable-install tree.
 .build.lock
+
+# Cursor IDE throwaways (do not ignore the whole .cursor/ tree)
+.cursor/debug*
+.cursor/plans/
