@@ -19,7 +19,9 @@ lv_cpython_mod: Sync and release
            │
            ▼
 lv_cpython_mod: Publish TestPyPI             (on tag push v*.*.* or workflow_dispatch)
-  cibuildwheel → Linux manylinux + Windows amd64 + Android (PEP 738) → smoke tests → twine upload
+  cibuildwheel → Linux manylinux + Windows amd64 + Android (PEP 738)
+  + scripts/build_pyodide_wheel.sh → pyemscripten_2026_0 wasm32
+  → smoke tests (native) → twine upload
 ```
 
 ## Version numbers
@@ -161,7 +163,7 @@ Preview without tagging:
 | Workflow | Trigger | What it does |
 |----------|---------|--------------|
 | [sync-and-release.yml](.github/workflows/sync-and-release.yml) | Manual; called from lv_bindings | Sync from GitHub → commit `main` → push next tag → dispatch publish |
-| [publish-testpypi.yml](.github/workflows/publish-testpypi.yml) | Tag push `v*.*.*` (local/manual tags); workflow_dispatch | **cibuildwheel**: Linux manylinux + Windows amd64 + Android (`android_21_arm64_v8a`, `android_21_x86_64`) wheels, smoke tests, TestPyPI upload |
+| [publish-testpypi.yml](.github/workflows/publish-testpypi.yml) | Tag push `v*.*.*` (local/manual tags); workflow_dispatch | **cibuildwheel**: Linux manylinux + Windows amd64 + Android (`android_21_*`) + **Pyodide** `pyemscripten_2026_0_wasm32` wheel; TestPyPI upload |
 
 ### Reading the Sync and release job in the Actions UI
 
@@ -246,6 +248,17 @@ End-user install commands are in **[README.md](README.md#install)**. CI publishe
 | Windows x64 | `win_amd64` |
 | Android arm64 | `android_21_arm64_v8a` (`cp313`, `cp314` only) |
 | Android x86_64 (emulator) | `android_21_x86_64` (`cp313`, `cp314` only) |
+| Pyodide / browser (WASM) | `pyemscripten_2026_0_wasm32` (`cp314` only) |
+
+Pyodide / micropip (same TestPyPI project; micropip selects the wasm tag):
+
+```python
+import micropip
+await micropip.install("lvgl-cpython", index_urls="https://test.pypi.org/simple/")
+import lvgl as lv
+```
+
+Local `web/wheels/` + Pages remain useful for smoke-testing a wheel before the next tag; **releases** ship the wasm wheel on TestPyPI alongside the native ones.
 
 Releases before the multi-Python wheel matrix may only have `cp312` wheels; upgrade to the latest tag. To add a new Python line (e.g. 3.15), extend `build` in `pyproject.toml` `[tool.cibuildwheel]` and publish a new version.
 

@@ -1,4 +1,4 @@
-# Build lvgl-cpython wheels (Linux + Windows + Android) with cibuildwheel and upload to TestPyPI.
+# Build lvgl-cpython wheels (Linux + Windows + Android + Pyodide/wasm) and upload to TestPyPI.
 #
 # Release trigger: push an annotated semver tag vX.Y.Z (see scripts/publish_release_tag.sh),
 # or workflow_dispatch (also used by sync-and-release via RELEASE_WORKFLOW_TOKEN).
@@ -8,6 +8,8 @@
 #
 # Install from TestPyPI (wheels are platform-specific):
 #   pip install -i https://test.pypi.org/simple/ lvgl-cpython
+# Pyodide / micropip (pyemscripten_2026_0 wasm32 wheel, same release version):
+#   await micropip.install("lvgl-cpython", index_urls="https://test.pypi.org/simple/")
 
 name: Publish TestPyPI
 
@@ -126,8 +128,56 @@ jobs:
           name: cibw-wheels-android
           path: wheelhouse/*.whl
 
+  build-pyodide-wheel:
+    needs: prepare
+    runs-on: ubuntu-latest
+    if: github.repository == 'PyDevices/lv_cpython_mod'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      - name: Write VERSION file
+        run: echo "${{ needs.prepare.outputs.version }}" > VERSION
+
+      - name: Install uv (host Python 3.14 for xbuildenv)
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Install Node.js (Emscripten / pyodide-build)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Build pyemscripten_2026_0 wasm wheel
+        run: |
+          set -euo pipefail
+          uv python install 3.14
+          ./scripts/build_pyodide_wheel.sh --no-copy
+          mkdir -p wheelhouse
+          shopt -s nullglob
+          wheels=(
+            dist/lvgl_cpython-*-pyemscripten_*_wasm32.whl
+            dist/lvgl_cpython-*-pyodide_*_wasm32.whl
+            dist/lvgl_cpython-*-emscripten_*_wasm32.whl
+          )
+          if ((${#wheels[@]} == 0)); then
+            echo "error: no wasm wheel in dist/" >&2
+            ls -la dist/ >&2 || true
+            exit 1
+          fi
+          cp -f "${wheels[@]}" wheelhouse/
+          ls -la wheelhouse/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cibw-wheels-pyodide
+          path: wheelhouse/*.whl
+
   publish:
-    needs: [prepare, build-wheels, build-android-wheels]
+    needs: [prepare, build-wheels, build-android-wheels, build-pyodide-wheel]
     runs-on: ubuntu-latest
     if: github.repository == 'PyDevices/lv_cpython_mod'
     steps:
