@@ -144,6 +144,9 @@ fi
 cat <<EOF
 
 Next:
+  # After a tagged Publish TestPyPI release (preferred for pydisplay):
+  #   await micropip.install("lvgl-cpython", index_urls="https://test.pypi.org/simple/")
+  #
   # Local micropip (needs COI-friendly server if testing from a page):
   #   await micropip.install('./wheels/<wheel-name>')
   #

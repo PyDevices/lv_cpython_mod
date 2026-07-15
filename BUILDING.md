@@ -159,25 +159,30 @@ Wheel tags follow [PEP 738](https://peps.python.org/pep-0738/); CI sets `ANDROID
 
 ## Pyodide / WebAssembly
 
-Desktop Linux/macOS/Windows wheels from TestPyPI are **not** loadable in Pyodide (wrong ABI, native `.so`/`.pyd`). Build a `pyemscripten_2026_0` wheel that matches Pyodide **314.x** (Python 3.14, Emscripten 5.0.3) — the same ABI pydisplay vendors under `web/pyscript/vendor/pyodide`.
+Native Linux/macOS/Windows wheels from TestPyPI are **not** loadable in Pyodide (wrong ABI). Each **Publish TestPyPI** release also builds a `pyemscripten_2026_0` wasm32 wheel (same semver as the native wheels) via `scripts/build_pyodide_wheel.sh`, matching Pyodide **314.x** (Python 3.14, Emscripten 5.0.3) — the ABI pydisplay vendors under `web/pyscript/vendor/pyodide`.
 
-### Requirements
+**Preferred install (browser / pydisplay gallery):**
+
+```python
+import micropip
+await micropip.install("lvgl-cpython", index_urls="https://test.pypi.org/simple/")
+```
+
+### Local rebuild (optional)
 
 - Host **Python 3.14** (must match the xbuildenv CPython; `uv python install 3.14` is fine)
 - Node.js (for Emscripten)
 - Network on first run (downloads xbuildenv + emsdk)
 
-### Build
-
 ```bash
 ./scripts/build_pyodide_wheel.sh
-# optional: leave wheel in dist/ only
+# optional: leave wheel in dist/ only (CI uses this)
 ./scripts/build_pyodide_wheel.sh --no-copy
 # pin a Pyodide release:
 PYODIDE_VERSION=314.0.0 ./scripts/build_pyodide_wheel.sh
 ```
 
-Produces `dist/lvgl_cpython-*-cp314-cp314-pyemscripten_2026_0_wasm32.whl` (may briefly write an `emscripten_*` intermediate that pyodide-build remaps) and copies it to `web/wheels/` for GitHub Pages / local serving, plus `web/wheels/lvgl.json` (`{"wheel": "<filename>"}`) so pydisplay `pyodide.html` can micropip-install without hard-coding the version.
+Produces `dist/lvgl_cpython-*-cp314-cp314-pyemscripten_2026_0_wasm32.whl` and optionally copies it to `web/wheels/` (+ `lvgl.json`) for Pages / local serving before the next tagged release.
 
 ### Smoke test (pyodide venv)
 
@@ -188,8 +193,6 @@ source .venv-pyodide/bin/activate
 pip install web/wheels/lvgl_cpython-*-pyemscripten_*_wasm32.whl
 python -c "import lvgl as lv; lv.init(); lv.deinit(); print('ok')"
 ```
-
-Browser use is via `micropip.install` against a URL that serves the wheel (e.g. this repo’s Pages `wheels/` or a local static server). pydisplay’s Pyodide loader wiring is separate.
 
 ## Architecture
 
