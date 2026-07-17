@@ -1,8 +1,10 @@
-# lv_cpython_mod
+# lvgl-cpython
 
-Native CPython extension for [LVGL](https://lvgl.io/), generated from [`lv_bindings`](https://github.com/PyDevices/lv_bindings) with **no MicroPython runtime**. Import the module as `lvgl`.
+Native CPython extension for [LVGL](https://lvgl.io/), generated from [`lv_bindings`](https://github.com/PyDevices/lv_bindings) with **no MicroPython runtime**.
 
-## 🚀 Install
+> **Pip name:** `lvgl-cpython` · **Import:** `import lvgl as lv`
+
+## Install
 
 Prebuilt wheels are published as **`lvgl-cpython`** on [TestPyPI](https://test.pypi.org/project/lvgl-cpython/) (import as `lvgl`). CI builds a separate wheel for each CPython minor (3.10–3.14) on Linux x86_64 and Windows x64, **Android** wheels for **3.13–3.14** (`android_21_arm64_v8a`, `android_21_x86_64` per [PEP 738](https://peps.python.org/pep-0738/)), plus a **Pyodide** `pyemscripten_2026_0_wasm32` wheel (`cp314`) — pip/micropip select the tag that matches your interpreter.
 
@@ -106,3 +108,15 @@ Display configuration uses module-level functions (`lv.display_set_flush_cb`, et
 - **Prefer module functions if a widget method acts wrong.** Some widgets share similar LVGL internals, so an occasional method on one widget type may not map to the function you expect. If something looks off, try the matching `lv.*` module function (same name as in the LVGL C API).
 - **Low-level pointer helpers are incomplete.** A few advanced pointer utilities are not fully exposed in Python yet; the binding uses a small placeholder where needed.
 - **Keep widgets alive while they have callbacks.** When you call `add_event_cb(handler, ...)` with `user_data=None`, the binding stores your handler on that widget. If Python garbage-collects the widget while LVGL still uses it, the callback can stop working. Hold a reference (e.g. keep it in a variable or list) for as long as the callback should run. Callbacks are removed when you delete the event or destroy the widget.
+
+## Links
+
+- [Source](https://github.com/PyDevices/lv_cpython_mod)
+- [Issues](https://github.com/PyDevices/lv_cpython_mod/issues)
+- [BUILDING.md](BUILDING.md) — build from source
+- [PUBLISHING.md](PUBLISHING.md) — releases and TestPyPI CI
+- Related: [lv_bindings](https://github.com/PyDevices/lv_bindings), [pydisplay](https://github.com/PyDevices/pydisplay)
+
+## License
+
+MIT — see [LICENSE](LICENSE).

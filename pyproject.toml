@@ -5,8 +5,10 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "lvgl-cpython"
 dynamic = ["version"]
-description = "LVGL bindings for CPython (generated)"
+description = "LVGL bindings for CPython (generated); import as lvgl"
+readme = "README.md"
 requires-python = ">=3.10"
+urls = { Homepage = "https://github.com/PyDevices/lv_cpython_mod", Documentation = "https://github.com/PyDevices/lv_cpython_mod#readme", Issues = "https://github.com/PyDevices/lv_cpython_mod/issues" }
 
 [tool.setuptools.dynamic]
 version = {file = "VERSION"}
