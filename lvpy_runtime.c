@@ -538,7 +538,11 @@ PyObject *lv_to_mp(lv_obj_t *lv_obj)
         self->callbacks = NULL;
         lv_obj->user_data = self;
         lv_obj_add_event_cb(lv_obj, py_lv_delete_cb, LV_EVENT_DELETE, NULL);
+        /* PyObject_New → refcnt 1; return transfers that new reference. */
+        return (PyObject *)self;
     }
+    /* Cache hit: user_data is a borrowed association. Caller needs a new ref. */
+    Py_INCREF((PyObject *)self);
     return (PyObject *)self;
 }
 
