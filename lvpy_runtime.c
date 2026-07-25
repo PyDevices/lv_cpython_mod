@@ -300,6 +300,88 @@ static PyMethodDef py_base_struct_methods[] = {
     {NULL, NULL, 0, NULL}
 };
 
+/* Match MicroPython lv_struct_subscr: Struct(N) allocates N elements; s[i] views element i. */
+static PyObject *py_lv_struct_subscript(PyObject *self, PyObject *key)
+{
+    if (!PyLong_Check(key)) {
+        PyErr_SetString(PyExc_TypeError, "struct indices must be integers");
+        return NULL;
+    }
+    Py_ssize_t index = PyLong_AsSsize_t(key);
+    if (index == -1 && PyErr_Occurred()) {
+        return NULL;
+    }
+    if (index < 0) {
+        PyErr_SetString(PyExc_IndexError, "struct index out of range");
+        return NULL;
+    }
+    size_t element_size = lv_struct_get_size(Py_TYPE(self));
+    if (element_size == 0) {
+        PyErr_SetString(PyExc_TypeError, "struct has unknown size");
+        return NULL;
+    }
+    py_lv_struct_t *inst = (py_lv_struct_t *)self;
+    if (!inst->data) {
+        PyErr_SetString(PyLvReferenceError, "struct data is NULL");
+        return NULL;
+    }
+    py_lv_struct_t *out = PyObject_New(py_lv_struct_t, Py_TYPE(self));
+    if (!out) {
+        return NULL;
+    }
+    out->data = (char *)inst->data + element_size * (size_t)index;
+    out->owns_data = 0;
+    return (PyObject *)out;
+}
+
+static int py_lv_struct_ass_subscript(PyObject *self, PyObject *key, PyObject *value)
+{
+    if (!PyLong_Check(key)) {
+        PyErr_SetString(PyExc_TypeError, "struct indices must be integers");
+        return -1;
+    }
+    Py_ssize_t index = PyLong_AsSsize_t(key);
+    if (index == -1 && PyErr_Occurred()) {
+        return -1;
+    }
+    if (index < 0) {
+        PyErr_SetString(PyExc_IndexError, "struct index out of range");
+        return -1;
+    }
+    size_t element_size = lv_struct_get_size(Py_TYPE(self));
+    if (element_size == 0) {
+        PyErr_SetString(PyExc_TypeError, "struct has unknown size");
+        return -1;
+    }
+    py_lv_struct_t *inst = (py_lv_struct_t *)self;
+    if (!inst->data) {
+        PyErr_SetString(PyLvReferenceError, "struct data is NULL");
+        return -1;
+    }
+    void *element_addr = (char *)inst->data + element_size * (size_t)index;
+    if (value == NULL) {
+        memset(element_addr, 0, element_size);
+        return 0;
+    }
+    if (!PyObject_TypeCheck(value, Py_TYPE(self))) {
+        PyErr_Format(PyExc_TypeError, "expected %s", Py_TYPE(self)->tp_name);
+        return -1;
+    }
+    py_lv_struct_t *other = (py_lv_struct_t *)value;
+    if (!other->data) {
+        PyErr_SetString(PyLvReferenceError, "struct data is NULL");
+        return -1;
+    }
+    memcpy(element_addr, other->data, element_size);
+    return 0;
+}
+
+static PyMappingMethods py_lv_struct_as_mapping = {
+    .mp_length = NULL,
+    .mp_subscript = py_lv_struct_subscript,
+    .mp_ass_subscript = py_lv_struct_ass_subscript,
+};
+
 static PyMethodDef py_blob_methods[] = {
     {"__dereference__", py_lv_dereference, METH_VARARGS, NULL},
     {"__cast__", py_blob_cast, METH_VARARGS, NULL},
@@ -804,6 +886,7 @@ PyTypeObject py_lv_base_struct_type = {
     .tp_basicsize = sizeof(py_lv_struct_t),
     .tp_dealloc = (destructor)py_lv_struct_dealloc,
     .tp_flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,
+    .tp_as_mapping = &py_lv_struct_as_mapping,
     .tp_methods = py_base_struct_methods,
 };
 
