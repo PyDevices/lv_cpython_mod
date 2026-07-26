@@ -1,21 +1,24 @@
+# Shared minimum (PyDevices package / cmod repos)
 .venv/
-.venv-pyodide-build/
-.venv-pyodide/
-.pyodide_build/
-*.profraw
 __pycache__/
 *.py[cod]
-*.so
-*.pyd
 *.egg-info/
+.eggs/
 build/
 dist/
-*.egg
-
-# flock file used by cmods' build_target.sh to serialize cpy-unix vs
-# cpy-windows builds against this editable-install tree.
-.build.lock
+*.so
+*.pyd
 
 # Cursor IDE throwaways (do not ignore the whole .cursor/ tree)
 .cursor/debug*
 .cursor/plans/
+
+# Repo-specific
+.venv-pyodide-build/
+.venv-pyodide/
+.pyodide_build/
+*.profraw
+*.egg
+# flock file used by cmods' build_target.sh to serialize cpy-unix vs
+# cpy-windows builds against this editable-install tree.
+.build.lock
