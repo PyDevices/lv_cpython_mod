@@ -2,7 +2,8 @@
 
 Native CPython extension for [LVGL](https://lvgl.io/), generated from [`lv_bindings`](https://github.com/PyDevices/lv_bindings) with **no MicroPython runtime**.
 
-> **Pip name:** `lvgl-cpython` · **Import:** `import lvgl as lv`
+> **Pip name:** `lvgl-cpython` · **Import:** `import lvgl as lv
+# import display_driver  # optional; needs pydisplay board_config`
 
 ## Install
 

@@ -61,7 +61,7 @@ jobs:
             echo "changed=false" >> "$GITHUB_OUTPUT"
             echo "Already in sync with lv_bindings ${LV_BINDINGS_REF}."
           else
-            git add generated/lvgl_python.c lv_conf.h lvgl
+            git add generated/lvgl_python.c generated/lvgl.pyi lv_conf.h display_driver.py lvgl
             git commit -m "Sync bindings and LVGL from lv_bindings ${LV_BINDINGS_REF}."
             git push origin HEAD:main
             echo "changed=true" >> "$GITHUB_OUTPUT"

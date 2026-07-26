@@ -7,7 +7,7 @@ Build and develop the native CPython extension locally. To install a prebuilt wh
 ### All platforms
 
 - Python 3.9+ with `pip` and `setuptools`
-- `generated/lvgl_python.c` and `lv_conf.h` (committed in this repo; sync from lv_bindings with `./scripts/sync_from_lv_bindings.sh`)
+- `generated/lvgl_python.c`, `lv_conf.h`, `display_driver.py`, and `display_driver.py` (committed in this repo; sync from lv_bindings with `./scripts/sync_from_lv_bindings.sh`)
 - LVGL sources: `lvgl/` git submodule (`git submodule update --init lvgl`)
 
 ### WSL / Linux / macOS
@@ -232,7 +232,7 @@ Phases 1–7 are enabled in the generator today.
 
 ## Known limitations
 
-- **Build inputs are vendored here**: `generated/lvgl_python.c`, `lv_conf.h`, and the `lvgl` submodule are synced from lv_bindings; generator work still happens in lv_bindings.
+- **Build inputs are vendored here**: `generated/lvgl_python.c`, `lv_conf.h`, `display_driver.py`, and the `lvgl` submodule are synced from lv_bindings; generator work still happens in lv_bindings.
 - **Windows toolchain**: python.org CPython on Windows requires MSVC Build Tools; MinGW cannot build this extension for that interpreter.
 - **Regenerate in lv_bindings first**: after generator changes, run `regenerate_lvpy.sh` there, then sync into this repo (see [Changing API coverage](#changing-api-coverage) and [PUBLISHING.md](PUBLISHING.md) for release).
 
