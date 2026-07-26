@@ -1,7 +1,0 @@
-# Local dev and wheel builds for lv_cpython_mod.
-# Requires sibling lv_bindings with generated/lvgl_python.c — see README.md.
-
--e .
-build>=1.0
-setuptools>=61
-wheel

@@ -66,7 +66,7 @@ From WSL, using Linux Python in a venv:
 git clone --recurse-submodules https://github.com/PyDevices/lv_cpython_mod.git
 cd lv_cpython_mod
 python3 -m venv .venv
-.venv/bin/pip install -r requirements.txt
+.venv/bin/pip install -r requirements-dev.txt
 .venv/bin/pip install -e .
 ```
 
