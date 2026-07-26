@@ -1,6 +1,6 @@
 # Building from source
 
-Build and develop the native CPython extension locally. To install a prebuilt wheel instead, see **[README.md](README.md#install)**.
+Build and develop the native CPython extension locally. To install a prebuilt wheel instead, see **[README.md](../README.md#install)**.
 
 ## Requirements
 

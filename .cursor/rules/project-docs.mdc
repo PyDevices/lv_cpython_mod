@@ -8,8 +8,8 @@ alwaysApply: true
 Native CPython extension module `lvgl` (no MicroPython runtime). Use these docs:
 
 - **[README.md](README.md)** — what it is, TestPyPI install, usage and API style
-- **[BUILDING.md](BUILDING.md)** — clone, requirements, build from source (`pip install -e .` or `pip.exe`)
-- **[PUBLISHING.md](PUBLISHING.md)** — sync from lv_bindings, releases, TestPyPI CI
+- **[BUILDING.md](docs/BUILDING.md)** — clone, requirements, build from source (`pip install -e .` or `pip.exe`)
+- **[PUBLISHING.md](docs/PUBLISHING.md)** — sync from lv_bindings, releases, TestPyPI CI
 
 ## Build / test (quick)
 

@@ -90,7 +90,7 @@ Work only in **lv_bindings**:
    - `lv_conf.h`
    - `lvgl` (submodule pin)
 
-Pushing those paths starts [trigger-lv-cpython-mod-release.yml](https://github.com/PyDevices/lv_bindings/blob/main/.github/workflows/trigger-lv-cpython-mod-release.yml), which runs [sync-and-release.yml](.github/workflows/sync-and-release.yml) here with the lv_bindings commit SHA.
+Pushing those paths starts [trigger-lv-cpython-mod-release.yml](https://github.com/PyDevices/lv_bindings/blob/main/.github/workflows/trigger-lv-cpython-mod-release.yml), which runs [sync-and-release.yml](../.github/workflows/sync-and-release.yml) here with the lv_bindings commit SHA.
 
 If the sync produces changes, this repo commits to `main`, pushes the next tag, and dispatches **Publish TestPyPI** (tag pushes from `GITHUB_TOKEN` do not trigger other workflows).
 
@@ -162,8 +162,8 @@ Preview without tagging:
 
 | Workflow | Trigger | What it does |
 |----------|---------|--------------|
-| [sync-and-release.yml](.github/workflows/sync-and-release.yml) | Manual; called from lv_bindings | Sync from GitHub → commit `main` → push next tag → dispatch publish |
-| [publish-testpypi.yml](.github/workflows/publish-testpypi.yml) | Tag push `v*.*.*` (local/manual tags); workflow_dispatch | **cibuildwheel**: Linux manylinux + Windows amd64 + Android (`android_21_*`) + **Pyodide** `pyemscripten_2026_0_wasm32` wheel; TestPyPI upload |
+| [sync-and-release.yml](../.github/workflows/sync-and-release.yml) | Manual; called from lv_bindings | Sync from GitHub → commit `main` → push next tag → dispatch publish |
+| [publish-testpypi.yml](../.github/workflows/publish-testpypi.yml) | Tag push `v*.*.*` (local/manual tags); workflow_dispatch | **cibuildwheel**: Linux manylinux + Windows amd64 + Android (`android_21_*`) + **Pyodide** `pyemscripten_2026_0_wasm32` wheel; TestPyPI upload |
 
 ### Reading the Sync and release job in the Actions UI
 
@@ -240,7 +240,7 @@ That wheel is not TestPyPI-ready (`linux_x86_64` tag, not `manylinux_*`); use ci
 
 ## Install from TestPyPI
 
-End-user install commands are in **[README.md](README.md#install)**. CI publishes wheels for **CPython 3.10–3.14** (one wheel per minor × platform). Pip picks the tag that matches your interpreter (`cp312`, `cp314`, …).
+End-user install commands are in **[README.md](../README.md#install)**. CI publishes wheels for **CPython 3.10–3.14** (one wheel per minor × platform). Pip picks the tag that matches your interpreter (`cp312`, `cp314`, …).
 
 | Platform | Wheel tag |
 |----------|-----------|

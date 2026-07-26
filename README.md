@@ -47,7 +47,7 @@ pip.exe install -i https://test.pypi.org/simple/ --extra-index-url https://pypi.
 python.exe -c "import lvgl as lv; lv.init(); lv.deinit(); print('ok')"
 ```
 
-To build from source instead, see **[BUILDING.md](BUILDING.md)**. Release and packaging details: **[PUBLISHING.md](PUBLISHING.md)**.
+To build from source instead, see **[BUILDING.md](docs/BUILDING.md)**. Release and packaging details: **[PUBLISHING.md](docs/PUBLISHING.md)**.
 
 ## Usage
 
@@ -113,8 +113,8 @@ Display configuration uses module-level functions (`lv.display_set_flush_cb`, et
 
 - [Source](https://github.com/PyDevices/lv_cpython_mod)
 - [Issues](https://github.com/PyDevices/lv_cpython_mod/issues)
-- [BUILDING.md](BUILDING.md) — build from source
-- [PUBLISHING.md](PUBLISHING.md) — releases and TestPyPI CI
+- [BUILDING.md](docs/BUILDING.md) — build from source
+- [PUBLISHING.md](docs/PUBLISHING.md) — releases and TestPyPI CI
 - Related: [lv_bindings](https://github.com/PyDevices/lv_bindings), [pydisplay](https://github.com/PyDevices/pydisplay)
 
 ## License
