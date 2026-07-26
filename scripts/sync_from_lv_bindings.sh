@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Sync generated/lvgl_python.c, lv_conf.h, and the lvgl submodule pin from PyDevices/lv_bindings
+# Sync generated/lvgl_python.c, lv_conf.h, python/display_driver.py, and the lvgl submodule pin
+# from PyDevices/lv_bindings
 # on GitHub (not the local workspace).
 #
 # Usage:
@@ -44,8 +45,8 @@ echo "Fetching ${LV_BINDINGS_REPO} @ ${REF}..."
 echo "(using temp clone ${TMP}/lv_bindings — removed on exit)"
 git clone --filter=blob:none --no-checkout "${LV_BINDINGS_REPO}" "${TMP}/lv_bindings"
 
-echo "Checking out generated/lvgl_python.c, generated/lvgl.pyi, and lv_conf.h..."
-git -C "${TMP}/lv_bindings" checkout "${REF}" -- generated/lvgl_python.c generated/lvgl.pyi lv_conf.h
+echo "Checking out generated/lvgl_python.c, generated/lvgl.pyi, lv_conf.h, and python/display_driver.py..."
+git -C "${TMP}/lv_bindings" checkout "${REF}" -- generated/lvgl_python.c generated/lvgl.pyi lv_conf.h python/display_driver.py
 
 LVPY_SRC="${TMP}/lv_bindings/generated/lvgl_python.c"
 LVPYI_SRC="${TMP}/lv_bindings/generated/lvgl.pyi"
@@ -78,6 +79,13 @@ cp "$LVPY_SRC" "${SOURCE_REPO}/generated/lvgl_python.c"
 cp "$LVPYI_SRC" "${SOURCE_REPO}/generated/lvgl.pyi"
 cp "$LV_CONF_SRC" "${SOURCE_REPO}/lv_conf.h"
 
+DD_SRC="${TMP}/lv_bindings/python/display_driver.py"
+if [[ ! -f "$DD_SRC" ]]; then
+    echo "Error: python/display_driver.py not found on ${REF}." >&2
+    exit 1
+fi
+cp "$DD_SRC" "${SOURCE_REPO}/display_driver.py"
+
 cd "${SOURCE_REPO}"
 if [[ ! -f .gitmodules ]]; then
     echo "Error: lvgl submodule not configured in this repo." >&2
@@ -94,8 +102,9 @@ echo "Synced from lv_bindings ${REF}:"
 echo "  generated/lvgl_python.c"
 echo "  generated/lvgl.pyi"
 echo "  lv_conf.h"
+echo "  display_driver.py"
 echo "  lvgl @ ${LVGL_SHA}"
 echo
 echo "Commit when ready:"
-echo "  git add generated/lvgl_python.c generated/lvgl.pyi lv_conf.h lvgl"
+echo "  git add generated/lvgl_python.c generated/lvgl.pyi lv_conf.h display_driver.py lvgl"
 echo "  git commit -m \"Sync bindings and LVGL from lv_bindings ${REF}.\""

@@ -194,7 +194,7 @@ To reproduce CI wheels locally with cibuildwheel, see **[Local wheel builds (cib
 
 | Script | Purpose |
 |--------|---------|
-| `scripts/sync_from_lv_bindings.sh` | Copy `generated/lvgl_python.c`, `lv_conf.h`; pin `lvgl` from **PyDevices/lv_bindings on GitHub** |
+| `scripts/sync_from_lv_bindings.sh` | Copy `generated/lvgl_python.c`, `lv_conf.h`, `display_driver.py`; pin `lvgl` from **PyDevices/lv_bindings on GitHub** |
 | `scripts/next_release_version.sh` | Print next `<LVGL_major>.<minor>.<N>` version |
 | `scripts/publish_release_tag.sh` | Create annotated tag `vX.Y.Z` and optionally push (triggers publish) |
 
