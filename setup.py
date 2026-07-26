@@ -31,12 +31,13 @@ lvgl_sources = [
 ]
 
 runtime_sources = [
-    "lvpy_runtime.c",
+    "src/lvpy_runtime.c",
     "generated/lvgl_python.c",
 ]
 
 include_dirs = [
     str(ROOT),
+    str(ROOT / "src"),
     str(LVGL_DIR),
 ]
 
