@@ -35,10 +35,12 @@ sudo apt install python3-dev build-essential
 ```text
 lv_cpython_mod/
 ├── generated/lvgl_python.c    # CPython binding (synced from lv_bindings)
-├── lv_conf.h           # LVGL config (synced from lv_bindings)
-├── lvgl/               # LVGL git submodule
+├── lv_conf.h                  # LVGL config (synced from lv_bindings)
+├── lvgl/                      # LVGL git submodule
 ├── src/lvpy_runtime.c
 ├── src/lvpy_runtime.h
+├── tests/                     # unit tests only
+├── scripts/                   # maintainer sync / publish
 └── setup.py
 ```
 
@@ -72,6 +74,13 @@ Quick import check:
 
 ```bash
 .venv/bin/python -c "import lvgl as lv; lv.init(); lv.deinit(); print('ok')"
+```
+
+Unit tests (`tests/` only — cross-runtime smoke lives in
+`lv_bindings/tools/test_lvgl_smoke.py`):
+
+```bash
+.venv/bin/python -m unittest discover -s tests
 ```
 
 ### Windows Python from WSL (no copy to `C:\`)
