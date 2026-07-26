@@ -19,7 +19,7 @@ Native CPython extension module `lvgl` (no MicroPython runtime). Use these docs:
 git submodule update --init lvgl
 python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
-.venv/bin/pip install -e .    # rebuild after lvpy_runtime.c or generated/lvgl_python.c changes
+.venv/bin/pip install -e .    # rebuild after src/lvpy_runtime.c or generated/lvgl_python.c changes
 
 .venv/bin/python -c "import lvgl as lv; lv.init(); lv.deinit(); print('ok')"
 ```

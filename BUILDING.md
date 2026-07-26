@@ -37,8 +37,8 @@ lv_cpython_mod/
 ├── generated/lvgl_python.c    # CPython binding (synced from lv_bindings)
 ├── lv_conf.h           # LVGL config (synced from lv_bindings)
 ├── lvgl/               # LVGL git submodule
-├── lvpy_runtime.c
-├── lvpy_runtime.h
+├── src/lvpy_runtime.c
+├── src/lvpy_runtime.h
 └── setup.py
 ```
 
@@ -52,7 +52,7 @@ git submodule update --init lvgl
 
 ## Build and install
 
-`pip install` compiles `lvpy_runtime.c`, `generated/lvgl_python.c`, and all LVGL sources under `lvgl/src`.
+`pip install` compiles `src/lvpy_runtime.c`, `generated/lvgl_python.c`, and all LVGL sources under `lvgl/src`.
 
 Use **editable** install (`-e`) while developing so the `.so` / `.pyd` in this directory stays in sync with rebuilds.
 
@@ -136,7 +136,7 @@ After the first full build, incremental rebuilds are much faster (only changed s
 
 With an editable install (`pip install -e .`), the updated `.so` / `.pyd` beside this repo is picked up immediately — no reinstall step needed. Editable install does **not** recompile on import; rerun `pip install -e .` (or `build_ext --inplace`) after C source changes.
 
-Generator work lives in the [`lv_bindings`](https://github.com/PyDevices/lv_bindings) repository (`binding/emit_py_native.py`, `binding/emit_py_cp.py`, `binding/emit_cpython.py`). Runtime fixes and CPython-specific behavior belong here in `lvpy_runtime.c`.
+Generator work lives in the [`lv_bindings`](https://github.com/PyDevices/lv_bindings) repository (`binding/emit_py_native.py`, `binding/emit_py_cp.py`, `binding/emit_cpython.py`). Runtime fixes and CPython-specific behavior belong here in `src/lvpy_runtime.c`.
 
 Sync binding updates from GitHub:
 
@@ -200,7 +200,7 @@ python -c "import lvgl as lv; lv.init(); lv.deinit(); print('ok')"
 |-----------|------|
 | `lv_bindings/binding/emit_*.py` | Code generator (`emit_cpython.py` sets `max_phase`) |
 | `lv_bindings/generated/lvgl_python.c` | Generated types, methods, module functions, callbacks |
-| `lvpy_runtime.c` / `lvpy_runtime.h` | CPython glue: object/struct wrappers, convertors, callback dicts, GIL handling |
+| `src/lvpy_runtime.c` / `src/lvpy_runtime.h` | CPython glue: object/struct wrappers, convertors, callback dicts, GIL handling |
 | `setup.py` | Builds the `lvgl` extension module |
 
 **Object wrappers** (`py_lv_obj_t`) map `lv_obj_t *` to Python and keep per-object callback dicts. **Struct wrappers** (`py_lv_struct_t`) expose LVGL structs; pointers returned from LVGL are borrowed (`owns_data = 0`), while copies own their buffer.
