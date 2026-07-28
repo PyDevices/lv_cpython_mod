@@ -70,15 +70,33 @@ jobs:
 
       - name: Create and push release tag
         if: inputs.skip_publish != true && steps.commit.outputs.changed == 'true'
+        id: tag
         env:
           LV_BINDINGS_REF: ${{ steps.lv_bindings_ref.outputs.ref }}
-          # Same PAT class as lv_bindings' LVCPYTHON_MOD_DISPATCH_TOKEN — needed because
-          # tag pushes from GITHUB_TOKEN do not trigger other workflows.
-          RELEASE_WORKFLOW_TOKEN: ${{ secrets.RELEASE_WORKFLOW_TOKEN }}
         run: |
           set -euo pipefail
           git fetch --tags origin
-          ./scripts/publish_release_tag.sh --push
+          VERSION="$(./scripts/next_release_version.sh)"
+          ./scripts/publish_release_tag.sh "$VERSION" --push
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+
+      # Tag pushes from GITHUB_TOKEN do not start other workflows — dispatch Publish
+      # TestPyPI with a PAT that has actions:write (same secret class as lv_bindings).
+      - name: Dispatch Publish TestPyPI
+        if: inputs.skip_publish != true && steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_WORKFLOW_TOKEN }}
+          VERSION: ${{ steps.tag.outputs.version }}
+        run: |
+          set -euo pipefail
+          if [[ -z "${GH_TOKEN:-}" ]]; then
+            echo "Error: RELEASE_WORKFLOW_TOKEN secret is not set; cannot dispatch Publish TestPyPI." >&2
+            exit 1
+          fi
+          gh workflow run publish-testpypi.yml \
+            --repo "${{ github.repository }}" \
+            -f "version=${VERSION}"
+          echo "Dispatched Publish TestPyPI for ${VERSION}"
 
       - name: No release tag
         if: inputs.skip_publish != true && steps.commit.outputs.changed != 'true'
