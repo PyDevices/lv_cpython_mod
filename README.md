@@ -2,6 +2,8 @@
 
 Native CPython extension for [LVGL](https://lvgl.io/), generated from [`lv_bindings`](https://github.com/PyDevices/lv_bindings) with **no MicroPython runtime**.
 
+This is the publishing endpoint in the LVGL family: lv_bindings owns the upstream binding tags, and this repo turns those updates into versioned `lvgl-cpython` wheels on TestPyPI. The CircuitPython and MicroPython consumer repos rebuild from the synced bindings rather than publishing their own packages.
+
 > **Pip name:** `lvgl-cpython` · **Import:** `import lvgl as lv
 # import display_driver  # optional; needs pydisplay board_config`
 

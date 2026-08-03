@@ -2,6 +2,8 @@
 
 How bindings changes in [lv_bindings](https://github.com/PyDevices/lv_bindings) become a versioned **`lvgl-cpython`** wheel on [TestPyPI](https://test.pypi.org/project/lvgl-cpython/), and how to install those prebuilt wheels.
 
+This repo is the publish path in the LVGL family. lv_bindings provides the binding tags and generated sources; lv_circuitpython_mod and lv_micropython_cmod sync from those updates and rebuild their targets, but they do not publish separate packages.
+
 You do **not** need a local clone of this repo for release — GitHub Actions can sync, tag, build, and upload from the web UI or `gh` CLI.
 
 ## Pipeline overview
