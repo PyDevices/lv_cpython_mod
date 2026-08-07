@@ -85,9 +85,8 @@ Wheels install `lvgl.pyi` next to the `lvgl` extension module. For editable
 builds, `pip install -e .` copies `generated/lvgl.pyi` at build time.
 
 If your checker does not pick it up, set `python.analysis.stubPath` (Pylance) or
-`stubPath` (pyright) to a directory containing `lvgl.pyi`, or use a
-`typings/lvgl/__init__.pyi` that symlinks to the stub file from
-[`lv_bindings`](https://github.com/PyDevices/lv_bindings) `generated/lvgl.pyi`.
+`stubPath` (pyright) to a directory containing `lvgl.pyi`, or symlink
+`typings/lvgl/__init__.pyi` to this repo’s vendored `generated/lvgl.pyi`.
 
 ### API style
 
