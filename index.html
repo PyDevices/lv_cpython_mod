@@ -5,7 +5,7 @@
   <script>try{if(localStorage.getItem('pydevices-theme')==='light'){document.documentElement.setAttribute('data-theme','light');}}catch(e){}</script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>lv_cpython_mod — PyDevices</title>
-  <meta name="description" content="Native CPython LVGL extension — import lvgl. Package lvgl-cpython on TestPyPI, generated from lv_bindings.">
+  <meta name="description" content="CPython LVGL extension — lvgl-cpython wheels for Linux, Windows, Android, and Pyodide. Generated from lv_bindings.">
   <link rel="icon" type="image/svg+xml" href="https://pydevices.github.io/assets/img/logo.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,11 +16,15 @@
   <div id="pydevices-site-header"></div>
 
   <section class="hero wrap">
-    <div class="logo-badge product-mark"><img src="img/product.svg" alt="lv_cpython_mod" width="112" height="112"></div>
-    <span class="eyebrow">PyDevices / lv_cpython_mod</span>
-    <h1>lv_cpython_mod</h1>
-    <p>Native CPython extension for <a href="https://lvgl.io/">LVGL</a> — <code>import lvgl</code>, with no MicroPython runtime. Generated C comes from <a href="https://pydevices.github.io/lv_bindings/">lv_bindings</a> (<code>generated/lvgl_python.c</code>) and is auto-synced on push to <code>main</code>. Prebuilt wheels ship as <strong>lvgl-cpython</strong> on TestPyPI for CPython 3.10–3.14 (Linux x86_64, Windows x64) plus Android wheels for 3.13–3.14.</p>
-    <p>Use it when you want LVGL widgets beside pydisplay on the host, in CI, or inside an APK via <a href="https://pydevices.github.io/pydisplay_android/">pydisplay_android</a>.</p>
+    <div class="hero-lead">
+      <div class="hero-brand">
+        <div class="logo-badge product-mark"><img src="img/product.svg" alt="lv_cpython_mod" width="112" height="112"></div>
+        <span class="eyebrow">PyDevices / lv_cpython_mod</span>
+      </div>
+      <h1>lv_cpython_mod</h1>
+    </div>
+    <p>CPython extension for <a href="https://lvgl.io/">LVGL</a> — <code>import lvgl</code>, no MicroPython runtime. Binding C is generated from <a href="https://pydevices.github.io/lv_bindings/">lv_bindings</a> (<code>generated/lvgl_python.c</code>) and synced on push to <code>main</code>. Prebuilt <strong>lvgl-cpython</strong> wheels on TestPyPI cover CPython 3.10–3.14 on Linux x86_64 and Windows x64, Android API 21 (<code>arm64_v8a</code> and <code>x86_64</code>, CPython 3.13–3.14), and a Pyodide <code>pyemscripten</code> wasm32 wheel.</p>
+    <p>Use it for LVGL beside pydisplay on the host, in CI, in the browser via micropip, or in an APK through <a href="https://pydevices.github.io/pydisplay_android/">pydisplay_android</a>.</p>
     <div class="cta">
       <a class="btn primary" href="https://test.pypi.org/project/lvgl-cpython/">TestPyPI</a>
       <a class="btn" href="https://github.com/PyDevices/lv_cpython_mod">GitHub</a>
