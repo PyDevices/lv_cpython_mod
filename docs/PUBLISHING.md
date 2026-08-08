@@ -248,7 +248,8 @@ End-user install commands are in **[README.md](../README.md#install)**. CI publi
 |----------|-----------|
 | Linux x86_64 | `manylinux_*` |
 | Windows x64 | `win_amd64` |
-| Android arm64 | `android_21_arm64_v8a` (`cp313`, `cp314` only) |
+| Android arm64 (phones / TVs) | `android_21_arm64_v8a` (`cp313`, `cp314` only) |
+| Android armv7 (older devices) | `android_21_armeabi_v7a` (`cp313`, `cp314` only) |
 | Android x86_64 (emulator) | `android_21_x86_64` (`cp313`, `cp314` only) |
 | Pyodide / browser (WASM) | `pyemscripten_2026_0_wasm32` (`cp314` only) |
 

@@ -36,8 +36,12 @@ archs = ["AMD64"]
 # PEP 738 Android tags: android_<api>_<arch> (e.g. android_21_arm64_v8a).
 # cibuildwheel 4.x builds Android wheels for CPython 3.13–3.14 only (matches p4a).
 # p4a / buildozer install these via --extra-index-url when a matching prebuilt wheel exists.
+#
+# Phones/TVs: arm64_v8a (primary) + armeabi_v7a (older 32-bit devices/sticks).
+# Emulators: x86_64 (typical PC AVD). API 21 tags remain installable when the
+# app minSdk is higher (e.g. p4a android.minapi = 24).
 [tool.cibuildwheel.android]
-archs = ["arm64_v8a", "x86_64"]
+archs = ["arm64_v8a", "armeabi_v7a", "x86_64"]
 environment = { ANDROID_API_LEVEL = "21" }
 test-command = "python -c \"import lvgl as lv; lv.init(); lv.deinit()\""
 # Emulator tests are optional in CI; wheels are smoke-tested on device via pydisplay APK.
