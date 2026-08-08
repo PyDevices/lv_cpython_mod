@@ -191,7 +191,7 @@ Editable install does **not** recompile on import; rerun `pip install -e .` (or
 ## Android (python-for-android)
 
 Prefer a **prebuilt** `lvgl-cpython` wheel tagged `android_21_*` for your ABI
-(`arm64_v8a`, `armeabi_v7a`, or `x86_64`) from TestPyPI. The
+(`arm64_v8a` or `x86_64`) from TestPyPI. The
 [pydisplay_android `lvglcpython` p4a recipe](https://github.com/PyDevices/pydisplay_android/tree/main/p4a_recipes/lvglcpython)
 installs a matching wheel when `--extra-index-url` points at TestPyPI, otherwise
 cross-compiles from this tree (`git submodule update --init lvgl`).

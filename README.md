@@ -9,7 +9,7 @@ This is the publishing endpoint in the LVGL family: lv_bindings owns the upstrea
 
 ## Install
 
-Prebuilt wheels are published as **`lvgl-cpython`** on [TestPyPI](https://test.pypi.org/project/lvgl-cpython/) (import as `lvgl`). CI builds a separate wheel for each CPython minor (3.10–3.14) on Linux x86_64 and Windows x64, **Android** wheels for **3.13–3.14** (`android_21_arm64_v8a`, `android_21_armeabi_v7a`, `android_21_x86_64` per [PEP 738](https://peps.python.org/pep-0738/)), plus a **Pyodide** `pyemscripten_2026_0_wasm32` wheel (`cp314`) — pip/micropip select the tag that matches your interpreter.
+Prebuilt wheels are published as **`lvgl-cpython`** on [TestPyPI](https://test.pypi.org/project/lvgl-cpython/) (import as `lvgl`). CI builds a separate wheel for each CPython minor (3.10–3.14) on Linux x86_64 and Windows x64, **Android** wheels for **3.13–3.14** (`android_21_arm64_v8a`, `android_21_x86_64` per [PEP 738](https://peps.python.org/pep-0738/); cibuildwheel has no `armeabi_v7a` yet), plus a **Pyodide** `pyemscripten_2026_0_wasm32` wheel (`cp314`) — pip/micropip select the tag that matches your interpreter.
 
 **Android (python-for-android / pydisplay):** install the matching wheel from TestPyPI when building an APK, or let the `lvglcpython` p4a recipe fetch it (see [pydisplay_android](https://github.com/PyDevices/pydisplay_android)):
 
