@@ -41,7 +41,7 @@ extern py_lv_obj_type_t *py_lv_obj_types[];
 
 PyTypeObject *py_get_base_obj_type(void);
 
-/* LVGL global lock (pydisplay may call task_handler from a timer thread). */
+/* LVGL global lock (an application may call task_handler from a timer thread). */
 void lvpy_lock(void);
 void lvpy_unlock(void);
 void lvpy_release_lock_for_python(void);

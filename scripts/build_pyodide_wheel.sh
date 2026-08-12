@@ -2,7 +2,7 @@
 # Build an Emscripten / Pyodide wheel for import lvgl (micropip-installable).
 #
 # Target ABI: pyemscripten_2026_0 (Python 3.14 / Pyodide 314.x) — matches the
-# Pyodide vendored by pydisplay (web/pyscript/vendor/pyodide).
+# Pyodide vendored by pydevices-examples (web/pyscript/vendor/pyodide).
 #
 # Usage (from repo root):
 #   ./scripts/build_pyodide_wheel.sh
@@ -129,7 +129,7 @@ if [[ "$COPY_TO_WEB" -eq 1 ]]; then
         "$OUT_WHEELS"/lvgl_cpython-*-pyodide_*_wasm32.whl \
         "$OUT_WHEELS"/lvgl_cpython-*-emscripten_*_wasm32.whl
   cp -f "${wheels[@]}" "$OUT_WHEELS/"
-  # Index for micropip consumers (pydisplay pyodide.html): must name a real wheel file.
+  # Index for micropip consumers (pydevices-examples pyodide.html): must name a real wheel file.
   primary="${wheels[0]}"
   for w in "${wheels[@]}"; do
     if [[ "$w" == *pyemscripten_2026_0_wasm32.whl ]]; then
@@ -147,7 +147,7 @@ fi
 cat <<EOF
 
 Next:
-  # After a tagged Publish TestPyPI release (preferred for pydisplay):
+  # After a tagged Publish TestPyPI release (preferred for pydevices-examples):
   #   await micropip.install("pydevices-lvgl", index_urls="https://test.pypi.org/simple/")
   #
   # Local micropip (needs COI-friendly server if testing from a page):

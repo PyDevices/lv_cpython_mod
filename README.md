@@ -15,7 +15,7 @@ import lvgl as lv
 
 Prebuilt wheels are published as **`pydevices-lvgl`** on [TestPyPI](https://test.pypi.org/project/pydevices-lvgl/) (import as `lvgl`). CI builds a separate wheel for each CPython minor (3.10–3.14) on Linux x86_64 and Windows x64, **Android** wheels for **3.13–3.14** (`android_21_arm64_v8a`, `android_21_x86_64` per [PEP 738](https://peps.python.org/pep-0738/); cibuildwheel has no `armeabi_v7a` yet), plus a **Pyodide** `pyemscripten_2026_0_wasm32` wheel (`cp314`) — pip/micropip select the tag that matches your interpreter.
 
-**Android (python-for-android / pydisplay):** install the matching wheel from TestPyPI when building an APK, or let the `pydeviceslvgl` p4a recipe fetch it (see [pydisplay_android](https://github.com/PyDevices/pydisplay_android)):
+**Android (python-for-android / PyDevices):** install the matching wheel from TestPyPI when building an APK, or let the `pydeviceslvgl` p4a recipe fetch it (see [pydevices-android-template](https://github.com/PyDevices/pydevices-android-template)):
 
 ```bash
 pip install -i https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ \
@@ -121,7 +121,7 @@ Display configuration uses module-level functions (`lv.display_set_flush_cb`, et
 - [Issues](https://github.com/PyDevices/lvgl-python/issues)
 - [BUILDING.md](docs/BUILDING.md) — build from source
 - [PUBLISHING.md](docs/PUBLISHING.md) — releases and TestPyPI CI
-- Related: [lvgl-bindings](https://github.com/PyDevices/lvgl-bindings), [pydisplay](https://github.com/PyDevices/pydisplay)
+- Related: [lvgl-bindings](https://github.com/PyDevices/lvgl-bindings), [pydevices-examples](https://github.com/PyDevices/pydevices-examples)
 
 ## License
 

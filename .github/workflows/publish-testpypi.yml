@@ -4,7 +4,7 @@
 # or workflow_dispatch (also used by sync-and-release via RELEASE_WORKFLOW_TOKEN).
 #
 # Required repository secret (Settings → Secrets and variables → Actions):
-#   TESTPYPI_API_TOKEN — TestPyPI API token (same as PyDevices/pydisplay)
+#   TESTPYPI_API_TOKEN — TestPyPI API token (same as PyDevices/pydevices-examples)
 #
 # Install from TestPyPI (wheels are platform-specific):
 #   pip install -i https://test.pypi.org/simple/ pydevices-lvgl

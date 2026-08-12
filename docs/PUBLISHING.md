@@ -64,7 +64,7 @@ Preview the next version:
 
 Settings → Secrets and variables → Actions on [PyDevices/lvgl-python](https://github.com/PyDevices/lvgl-python).
 
-Use the same TestPyPI token as [pydisplay](https://github.com/PyDevices/pydisplay) if you already have one.
+Use the same TestPyPI token as [pydevices-examples](https://github.com/PyDevices/pydevices-examples) if you already have one.
 
 `RELEASE_WORKFLOW_TOKEN` can be the **same fine-grained PAT** as `LVCPYTHON_MOD_DISPATCH_TOKEN` on lvgl-bindings (add it to both repos). Sync and release pushes tags with `GITHUB_TOKEN`, which does **not** start Publish TestPyPI on its own; the script dispatches that workflow with this PAT after tagging.
 
@@ -221,7 +221,7 @@ Install [Docker Engine](https://docs.docker.com/engine/install/) (or Docker Desk
 
 **Windows** does not need Docker: run `pipx run cibuildwheel --platform windows` on a native Windows shell with MSVC Build Tools (same as a normal `pip install -e .` build).
 
-**Android (PEP 738):** needs the Android SDK on Linux or macOS (cibuildwheel installs packages via `sdkmanager`). API level and archs are set in `pyproject.toml` under `[tool.cibuildwheel.android]` (`ANDROID_API_LEVEL=21` → tags like `android_21_arm64_v8a`). Emulator tests are skipped in CI; validate on device with the [pydisplay_android LVGL demo](https://github.com/PyDevices/pydisplay_android/tree/main/android_demo).
+**Android (PEP 738):** needs the Android SDK on Linux or macOS (cibuildwheel installs packages via `sdkmanager`). API level and archs are set in `pyproject.toml` under `[tool.cibuildwheel.android]` (`ANDROID_API_LEVEL=21` → tags like `android_21_arm64_v8a`). Emulator tests are skipped in CI; validate on device with the [pydevices-android-template LVGL demo](https://github.com/PyDevices/pydevices-android-template/tree/main/android_demo).
 
 ```bash
 echo "0.0.0.dev" > VERSION

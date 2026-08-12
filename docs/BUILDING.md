@@ -192,7 +192,7 @@ Editable install does **not** recompile on import; rerun `pip install -e .` (or
 
 Prefer a **prebuilt** `pydevices-lvgl` wheel tagged `android_21_*` for your ABI
 (`arm64_v8a` or `x86_64`) from TestPyPI. The
-[pydisplay_android `pydeviceslvgl` p4a recipe](https://github.com/PyDevices/pydisplay_android/tree/main/p4a_recipes/pydeviceslvgl)
+[pydevices-android-template `pydeviceslvgl` p4a recipe](https://github.com/PyDevices/pydevices-android-template/tree/main/p4a_recipes/pydeviceslvgl)
 installs a matching wheel when `--extra-index-url` points at TestPyPI, otherwise
 cross-compiles from this tree (`git submodule update --init lvgl`).
 
@@ -263,4 +263,4 @@ Phases 1–7 are enabled in the generator today.
 ## Related projects
 
 - [PyDevices/lvgl-bindings](https://github.com/PyDevices/lvgl-bindings) — binding generator
-- [PyDevices/pydisplay](https://github.com/PyDevices/pydisplay) — consumer of `import lvgl`
+- [PyDevices/pydevices-examples](https://github.com/PyDevices/pydevices-examples) — consumer of `import lvgl`
