@@ -48,7 +48,7 @@ To refresh vendored files from GitHub **without** a sibling clone, use:
 ```
 
 That script clones lvgl-bindings into a temp directory, copies the generated
-files, and updates the `lvgl` submodule pin. Release flow: **[PUBLISHING.md](PUBLISHING.md)**.
+files, and updates the `lvgl` submodule pin. Release flow: **[publishing.md](publishing.md)**.
 
 ## Requirements
 

@@ -280,6 +280,6 @@ TestPyPI rejects re-uploading the same version — each release needs a new tag 
 | Publish fails: `linux_x86_64` unsupported | Old hand-rolled workflow without wheel repair (use current cibuildwheel workflow) |
 | Publish fails on Windows only | Check MSVC build logs in the `windows-latest` matrix job; local Windows builds need Visual Studio Build Tools |
 | Publish fails: 403 on TestPyPI | Bad or missing `TESTPYPI_API_TOKEN` |
-| Local cibuildwheel: `FileNotFoundError: 'docker'` | Linux manylinux builds need Docker locally; CI has it. See [Local wheel builds (cibuildwheel)](PUBLISHING.md#local-wheel-builds-cibuildwheel) |
+| Local cibuildwheel: `FileNotFoundError: 'docker'` | Linux manylinux builds need Docker locally; CI has it. See [Local wheel builds (cibuildwheel)](publishing.md#local-wheel-builds-cibuildwheel) |
 | pip: `pydevices-lvgl==X.Y.Z (from versions: none)` | No wheel for your **CPython minor** on that platform — check files on TestPyPI; extend `[tool.cibuildwheel] build` and publish a new version |
 | Publish fails: 400 duplicate version | Tag already uploaded; bump version with a new tag |
