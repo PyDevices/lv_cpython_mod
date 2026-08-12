@@ -8,7 +8,7 @@ This is the publishing endpoint in the LVGL family: lvgl-bindings owns the upstr
 
 ```python
 import lvgl as lv
-# import display_driver  # optional; needs pydisplay board_config
+# import display_driver  # optional; needs a PyDevices board_config
 ```
 
 ## Install
