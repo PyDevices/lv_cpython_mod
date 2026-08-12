@@ -1,18 +1,18 @@
 #!/usr/bin/env bash
 # Sync generated/lvgl_python.c, lv_conf.h, python/display_driver.py, and the lvgl submodule pin
-# from PyDevices/lv_bindings
+# from PyDevices/lvgl-bindings
 # on GitHub (not the local workspace).
 #
 # Usage:
-#   ./scripts/sync_from_lv_bindings.sh
-#   ./scripts/sync_from_lv_bindings.sh --ref abc1234
-#   LV_BINDINGS_REF=main ./scripts/sync_from_lv_bindings.sh
+#   ./scripts/sync_from_lvgl_bindings.sh
+#   ./scripts/sync_from_lvgl_bindings.sh --ref abc1234
+#   LV_BINDINGS_REF=main ./scripts/sync_from_lvgl_bindings.sh
 #
 # After syncing, commit the updated files and lvgl submodule SHA in this repo.
 
 set -euo pipefail
 
-LV_BINDINGS_REPO="${LV_BINDINGS_REPO:-https://github.com/PyDevices/lv_bindings.git}"
+LV_BINDINGS_REPO="${LV_BINDINGS_REPO:-https://github.com/PyDevices/lvgl-bindings.git}"
 LV_BINDINGS_REF="${LV_BINDINGS_REF:-main}"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -36,29 +36,29 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-# Short-lived clone under /tmp so we never read the local sibling lv_bindings tree.
+# Short-lived clone under /tmp so we never read the local sibling lvgl-bindings tree.
 TMP=$(mktemp -d)
 cleanup() { rm -rf "$TMP"; }
 trap cleanup EXIT
 
 echo "Fetching ${LV_BINDINGS_REPO} @ ${REF}..."
-echo "(using temp clone ${TMP}/lv_bindings — removed on exit)"
-git clone --filter=blob:none --no-checkout "${LV_BINDINGS_REPO}" "${TMP}/lv_bindings"
+echo "(using temp clone ${TMP}/lvgl-bindings — removed on exit)"
+git clone --filter=blob:none --no-checkout "${LV_BINDINGS_REPO}" "${TMP}/lvgl-bindings"
 
 echo "Checking out generated/lvgl_python.c, generated/lvgl.pyi, lv_conf.h, and python/display_driver.py..."
-git -C "${TMP}/lv_bindings" checkout "${REF}" -- generated/lvgl_python.c generated/lvgl.pyi lv_conf.h python/display_driver.py
+git -C "${TMP}/lvgl-bindings" checkout "${REF}" -- generated/lvgl_python.c generated/lvgl.pyi lv_conf.h python/display_driver.py
 
-LVPY_SRC="${TMP}/lv_bindings/generated/lvgl_python.c"
-LVPYI_SRC="${TMP}/lv_bindings/generated/lvgl.pyi"
-LV_CONF_SRC="${TMP}/lv_bindings/lv_conf.h"
+LVPY_SRC="${TMP}/lvgl-bindings/generated/lvgl_python.c"
+LVPYI_SRC="${TMP}/lvgl-bindings/generated/lvgl.pyi"
+LV_CONF_SRC="${TMP}/lvgl-bindings/lv_conf.h"
 if [[ ! -f "$LVPY_SRC" ]]; then
     echo "Error: generated/lvgl_python.c not found on ${REF}." >&2
-    echo "Regenerate and commit generated/lvgl_python.c in lv_bindings first." >&2
+    echo "Regenerate and commit generated/lvgl_python.c in lvgl-bindings first." >&2
     exit 1
 fi
 if [[ ! -f "$LVPYI_SRC" ]]; then
     echo "Error: generated/lvgl.pyi not found on ${REF}." >&2
-    echo "Regenerate and commit generated/lvgl.pyi in lv_bindings first." >&2
+    echo "Regenerate and commit generated/lvgl.pyi in lvgl-bindings first." >&2
     exit 1
 fi
 if [[ ! -f "$LV_CONF_SRC" ]]; then
@@ -67,10 +67,10 @@ if [[ ! -f "$LV_CONF_SRC" ]]; then
 fi
 
 # Read the pinned lvgl commit from git metadata — no submodule clone (avoids SSH URLs).
-echo "Reading lvgl submodule pin from lv_bindings..."
-LVGL_SHA=$(git -C "${TMP}/lv_bindings" ls-tree "${REF}" lvgl | awk '{print $3}')
+echo "Reading lvgl submodule pin from lvgl-bindings..."
+LVGL_SHA=$(git -C "${TMP}/lvgl-bindings" ls-tree "${REF}" lvgl | awk '{print $3}')
 if [[ -z "$LVGL_SHA" || "$LVGL_SHA" == "lvgl" ]]; then
-    echo "Error: could not read lvgl submodule commit from lv_bindings ${REF}." >&2
+    echo "Error: could not read lvgl submodule commit from lvgl-bindings ${REF}." >&2
     exit 1
 fi
 
@@ -79,7 +79,7 @@ cp "$LVPY_SRC" "${SOURCE_REPO}/generated/lvgl_python.c"
 cp "$LVPYI_SRC" "${SOURCE_REPO}/generated/lvgl.pyi"
 cp "$LV_CONF_SRC" "${SOURCE_REPO}/lv_conf.h"
 
-DD_SRC="${TMP}/lv_bindings/python/display_driver.py"
+DD_SRC="${TMP}/lvgl-bindings/python/display_driver.py"
 if [[ ! -f "$DD_SRC" ]]; then
     echo "Error: python/display_driver.py not found on ${REF}." >&2
     exit 1
@@ -98,7 +98,7 @@ git -C lvgl fetch origin "${LVGL_SHA}" 2>/dev/null || git -C lvgl fetch origin
 git -C lvgl checkout "${LVGL_SHA}"
 
 echo
-echo "Synced from lv_bindings ${REF}:"
+echo "Synced from lvgl-bindings ${REF}:"
 echo "  generated/lvgl_python.c"
 echo "  generated/lvgl.pyi"
 echo "  lv_conf.h"
@@ -107,4 +107,4 @@ echo "  lvgl @ ${LVGL_SHA}"
 echo
 echo "Commit when ready:"
 echo "  git add generated/lvgl_python.c generated/lvgl.pyi lv_conf.h display_driver.py lvgl"
-echo "  git commit -m \"Sync bindings and LVGL from lv_bindings ${REF}.\""
+echo "  git commit -m \"Sync bindings and LVGL from lvgl-bindings ${REF}.\""

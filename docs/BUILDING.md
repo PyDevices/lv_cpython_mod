@@ -10,7 +10,7 @@ orchestrator is required.
 ## What is already vendored
 
 These files are **committed in this repo** (they track the latest published
-binding sync from [lv_bindings](https://github.com/PyDevices/lv_bindings)):
+binding sync from [lvgl-bindings](https://github.com/PyDevices/lvgl-bindings)):
 
 | Path | Role |
 |------|------|
@@ -21,33 +21,33 @@ binding sync from [lv_bindings](https://github.com/PyDevices/lv_bindings)):
 | `lvgl/` | LVGL C sources (git submodule) |
 
 A normal `pip install -e .` compiles those vendored sources. You do **not** need
-a local `lv_bindings` tree to build or test this package.
+a local `lvgl-bindings` tree to build or test this package.
 
-## When to clone `lv_bindings` (optional)
+## When to clone `lvgl-bindings` (optional)
 
-Clone [lv_bindings](https://github.com/PyDevices/lv_bindings) as a **sibling**
+Clone [lvgl-bindings](https://github.com/PyDevices/lvgl-bindings) as a **sibling**
 only when you are changing the **generator** or regenerating bindings:
 
 ```text
 workspace/
-  lv_bindings/      # optional — generator + regenerate_lvpy.sh
-  lv_cpython_mod/   # this repo
+  lvgl-bindings/      # optional — generator + regenerate_lvpy.sh
+  lvgl-python/   # this repo
 ```
 
 Do that when you need to:
 
-- Edit `lv_bindings/binding/emit_cpython.py` (e.g. `max_phase`) or other emitters
-- Run `./regenerate_lvpy.sh` in lv_bindings, then sync the output into this repo
-- Run the shared cross-runtime smoke script at `lv_bindings/tools/test_lvgl_smoke.py`
+- Edit `lvgl-bindings/binding/emit_cpython.py` (e.g. `max_phase`) or other emitters
+- Run `./regenerate_lvpy.sh` in lvgl-bindings, then sync the output into this repo
+- Run the shared cross-runtime smoke script at `lvgl-bindings/tools/test_lvgl_smoke.py`
 
 To refresh vendored files from GitHub **without** a sibling clone, use:
 
 ```bash
-./scripts/sync_from_lv_bindings.sh          # lv_bindings main
-./scripts/sync_from_lv_bindings.sh --ref SHA  # pin a commit/tag/branch
+./scripts/sync_from_lvgl_bindings.sh          # lvgl-bindings main
+./scripts/sync_from_lvgl_bindings.sh --ref SHA  # pin a commit/tag/branch
 ```
 
-That script clones lv_bindings into a temp directory, copies the generated
+That script clones lvgl-bindings into a temp directory, copies the generated
 files, and updates the `lvgl` submodule pin. Release flow: **[PUBLISHING.md](PUBLISHING.md)**.
 
 ## Requirements
@@ -83,8 +83,8 @@ limits).
 ## Repository layout
 
 ```text
-lv_cpython_mod/
-├── generated/lvgl_python.c    # vendored binding (synced from lv_bindings)
+lvgl-python/
+├── generated/lvgl_python.c    # vendored binding (synced from lvgl-bindings)
 ├── generated/lvgl.pyi
 ├── lv_conf.h
 ├── display_driver.py
@@ -99,7 +99,7 @@ lv_cpython_mod/
 Clone with submodules:
 
 ```bash
-git clone --recurse-submodules https://github.com/PyDevices/lv_cpython_mod.git
+git clone --recurse-submodules https://github.com/PyDevices/lvgl-python.git
 # or after a plain clone:
 git submodule update --init lvgl
 ```
@@ -115,8 +115,8 @@ this directory stays in sync with rebuilds.
 ### WSL (Linux Python)
 
 ```bash
-git clone --recurse-submodules https://github.com/PyDevices/lv_cpython_mod.git
-cd lv_cpython_mod
+git clone --recurse-submodules https://github.com/PyDevices/lvgl-python.git
+cd lvgl-python
 python3 -m venv .venv
 .venv/bin/pip install -r requirements-dev.txt
 .venv/bin/pip install -e .
@@ -140,7 +140,7 @@ Keep the repo on the WSL filesystem and install into **Windows** Python with
 `pip.exe`:
 
 ```bash
-cd /path/to/lv_cpython_mod
+cd /path/to/lvgl-python
 pip.exe install -e "$(wslpath -w "$PWD")"
 python.exe -c "import lvgl as lv; lv.init(); lv.deinit(); print('ok')"
 ```
@@ -151,7 +151,7 @@ The first build compiles every LVGL source and may take several minutes over
 ### Windows (native shell)
 
 ```powershell
-cd C:\path\to\lv_cpython_mod
+cd C:\path\to\lvgl-python
 git submodule update --init lvgl
 py -m pip install -e .
 py -c "import lvgl as lv; lv.init(); lv.deinit(); print('ok')"
@@ -159,16 +159,16 @@ py -c "import lvgl as lv; lv.init(); lv.deinit(); print('ok')"
 
 Open a **new** terminal after installing Build Tools so `cl.exe` is on `PATH`.
 
-### Changing API coverage (needs lv_bindings)
+### Changing API coverage (needs lvgl-bindings)
 
-To change how much of the API is emitted, clone lv_bindings as a sibling, edit
-`max_phase` in `lv_bindings/binding/emit_cpython.py`, regenerate, sync, then
+To change how much of the API is emitted, clone lvgl-bindings as a sibling, edit
+`max_phase` in `lvgl-bindings/binding/emit_cpython.py`, regenerate, sync, then
 reinstall:
 
 ```bash
-cd ../lv_bindings && ./regenerate_lvpy.sh
-cd ../lv_cpython_mod
-./scripts/sync_from_lv_bindings.sh   # or copy generated files by hand
+cd ../lvgl-bindings && ./regenerate_lvpy.sh
+cd ../lvgl-python
+./scripts/sync_from_lvgl_bindings.sh   # or copy generated files by hand
 .venv/bin/pip install -e .           # or pip.exe on Windows
 ```
 
@@ -185,19 +185,19 @@ Editable install does **not** recompile on import; rerun `pip install -e .` (or
 `build_ext --inplace`) after C source changes (`src/lvpy_runtime.c` or
 `generated/lvgl_python.c`).
 
-- Generator work: [`lv_bindings`](https://github.com/PyDevices/lv_bindings)
+- Generator work: [`lvgl-bindings`](https://github.com/PyDevices/lvgl-bindings)
 - CPython runtime / packaging: this repo (`src/lvpy_runtime.c`, `setup.py`)
 
 ## Android (python-for-android)
 
-Prefer a **prebuilt** `lvgl-cpython` wheel tagged `android_21_*` for your ABI
+Prefer a **prebuilt** `pydevices-lvgl` wheel tagged `android_21_*` for your ABI
 (`arm64_v8a` or `x86_64`) from TestPyPI. The
-[pydisplay_android `lvglcpython` p4a recipe](https://github.com/PyDevices/pydisplay_android/tree/main/p4a_recipes/lvglcpython)
+[pydisplay_android `pydeviceslvgl` p4a recipe](https://github.com/PyDevices/pydisplay_android/tree/main/p4a_recipes/pydeviceslvgl)
 installs a matching wheel when `--extra-index-url` points at TestPyPI, otherwise
 cross-compiles from this tree (`git submodule update --init lvgl`).
 
 ```bash
-export P4A_lvgl_cpython_DIR=/path/to/lv_cpython_mod   # optional in-tree fallback
+export P4A_pydeviceslvgl_DIR=/path/to/lvgl-python   # optional in-tree fallback
 ```
 
 ## Pyodide / WebAssembly
@@ -208,7 +208,7 @@ wheel. Preferred install in the browser:
 
 ```python
 import micropip
-await micropip.install("lvgl-cpython", index_urls="https://test.pypi.org/simple/")
+await micropip.install("pydevices-lvgl", index_urls="https://test.pypi.org/simple/")
 ```
 
 ### Local rebuild (optional)
@@ -230,7 +230,7 @@ PYODIDE_VERSION=314.0.0 ./scripts/build_pyodide_wheel.sh
 | `generated/lvgl_python.c` (vendored) | Types, methods, module functions, callbacks |
 | `src/lvpy_runtime.c` / `src/lvpy_runtime.h` | CPython glue: wrappers, convertors, GIL |
 | `setup.py` | Builds the `lvgl` extension module |
-| `lv_bindings` (optional sibling) | Generator only — not required to compile |
+| `lvgl-bindings` (optional sibling) | Generator only — not required to compile |
 
 **Object wrappers** (`py_lv_obj_t`) map `lv_obj_t *` to Python and keep
 per-object callback dicts. **Struct wrappers** (`py_lv_struct_t`) expose LVGL
@@ -256,11 +256,11 @@ Phases 1–7 are enabled in the generator today.
 ## Known limitations
 
 - **Vendored build inputs**: you can compile from this repo alone; regenerate in
-  lv_bindings only when changing the generator, then sync.
+  lvgl-bindings only when changing the generator, then sync.
 - **Windows toolchain**: python.org CPython on Windows requires MSVC Build Tools;
   MinGW cannot build this extension for that interpreter.
 
 ## Related projects
 
-- [PyDevices/lv_bindings](https://github.com/PyDevices/lv_bindings) — binding generator
+- [PyDevices/lvgl-bindings](https://github.com/PyDevices/lvgl-bindings) — binding generator
 - [PyDevices/pydisplay](https://github.com/PyDevices/pydisplay) — consumer of `import lvgl`

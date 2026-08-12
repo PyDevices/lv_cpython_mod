@@ -1,20 +1,20 @@
-# Sync generated/lvgl_python.c, lv_conf.h, and lvgl from PyDevices/lv_bindings on GitHub,
+# Sync generated/lvgl_python.c, lv_conf.h, and lvgl from PyDevices/lvgl-bindings on GitHub,
 # commit to main, push the next auto-version tag, and trigger Publish TestPyPI.
 #
 # Run from the GitHub Actions tab (workflow_dispatch) or without cloning this repo:
-#   gh workflow run sync-and-release.yml --repo PyDevices/lv_cpython_mod
-#   gh workflow run sync-and-release.yml --repo PyDevices/lv_cpython_mod -f lv_bindings_ref=abc1234
+#   gh workflow run sync-and-release.yml --repo PyDevices/lvgl-python
+#   gh workflow run sync-and-release.yml --repo PyDevices/lvgl-python -f lvgl_bindings_ref=abc1234
 #
 # Prerequisite: commit regenerated generated/lvgl_python.c (and lv_conf.h if changed) to
-# lv_bindings first — sync reads from GitHub, not your local machine.
+# lvgl-bindings first — sync reads from GitHub, not your local machine.
 
 name: Sync and release
 
 on:
   workflow_dispatch:
     inputs:
-      lv_bindings_ref:
-        description: lv_bindings branch, tag, or commit SHA
+      lvgl_bindings_ref:
+        description: lvgl-bindings branch, tag, or commit SHA
         type: string
         default: main
       skip_publish:
@@ -28,30 +28,30 @@ permissions:
 jobs:
   sync-and-release:
     runs-on: ubuntu-latest
-    if: github.repository == 'PyDevices/lv_cpython_mod'
+    if: github.repository == 'PyDevices/lvgl-python'
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           submodules: recursive
 
-      - name: Resolve lv_bindings ref
-        id: lv_bindings_ref
+      - name: Resolve lvgl-bindings ref
+        id: lvgl_bindings_ref
         run: |
-          REF="${{ inputs.lv_bindings_ref }}"
+          REF="${{ inputs.lvgl_bindings_ref }}"
           if [[ -z "$REF" ]]; then
             REF="main"
           fi
           echo "ref=${REF}" >> "$GITHUB_OUTPUT"
-          echo "Syncing from lv_bindings @ ${REF}"
+          echo "Syncing from lvgl-bindings @ ${REF}"
 
-      - name: Sync from lv_bindings
-        run: ./scripts/sync_from_lv_bindings.sh --ref "${{ steps.lv_bindings_ref.outputs.ref }}"
+      - name: Sync from lvgl-bindings
+        run: ./scripts/sync_from_lvgl_bindings.sh --ref "${{ steps.lvgl_bindings_ref.outputs.ref }}"
 
       - name: Commit sync
         id: commit
         env:
-          LV_BINDINGS_REF: ${{ steps.lv_bindings_ref.outputs.ref }}
+          LV_BINDINGS_REF: ${{ steps.lvgl_bindings_ref.outputs.ref }}
         run: |
           set -euo pipefail
           git config user.name 'github-actions[bot]'
@@ -59,20 +59,20 @@ jobs:
 
           if git diff --quiet && git diff --cached --quiet; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
-            echo "Already in sync with lv_bindings ${LV_BINDINGS_REF}."
+            echo "Already in sync with lvgl-bindings ${LV_BINDINGS_REF}."
           else
             git add generated/lvgl_python.c generated/lvgl.pyi lv_conf.h display_driver.py lvgl
-            git commit -m "Sync bindings and LVGL from lv_bindings ${LV_BINDINGS_REF}."
+            git commit -m "Sync bindings and LVGL from lvgl-bindings ${LV_BINDINGS_REF}."
             git push origin HEAD:main
             echo "changed=true" >> "$GITHUB_OUTPUT"
-            echo "Committed and pushed sync from lv_bindings ${LV_BINDINGS_REF}."
+            echo "Committed and pushed sync from lvgl-bindings ${LV_BINDINGS_REF}."
           fi
 
       - name: Create and push release tag
         if: inputs.skip_publish != true && steps.commit.outputs.changed == 'true'
         id: tag
         env:
-          LV_BINDINGS_REF: ${{ steps.lv_bindings_ref.outputs.ref }}
+          LV_BINDINGS_REF: ${{ steps.lvgl_bindings_ref.outputs.ref }}
         run: |
           set -euo pipefail
           git fetch --tags origin
@@ -81,7 +81,7 @@ jobs:
           echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
 
       # Tag pushes from GITHUB_TOKEN do not start other workflows — dispatch Publish
-      # TestPyPI with a PAT that has actions:write (same secret class as lv_bindings).
+      # TestPyPI with a PAT that has actions:write (same secret class as lvgl-bindings).
       - name: Dispatch Publish TestPyPI
         if: inputs.skip_publish != true && steps.commit.outputs.changed == 'true'
         env:

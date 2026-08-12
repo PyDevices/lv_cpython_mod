@@ -1,4 +1,4 @@
-# Build lvgl-cpython wheels (Linux + Windows + Android + Pyodide/wasm) and upload to TestPyPI.
+# Build pydevices-lvgl wheels (Linux + Windows + Android + Pyodide/wasm) and upload to TestPyPI.
 #
 # Release trigger: push an annotated semver tag vX.Y.Z (see scripts/publish_release_tag.sh),
 # or workflow_dispatch (also used by sync-and-release via RELEASE_WORKFLOW_TOKEN).
@@ -7,9 +7,9 @@
 #   TESTPYPI_API_TOKEN — TestPyPI API token (same as PyDevices/pydisplay)
 #
 # Install from TestPyPI (wheels are platform-specific):
-#   pip install -i https://test.pypi.org/simple/ lvgl-cpython
+#   pip install -i https://test.pypi.org/simple/ pydevices-lvgl
 # Pyodide / micropip (pyemscripten_2026_0 wasm32 wheel, same release version):
-#   await micropip.install("lvgl-cpython", index_urls="https://test.pypi.org/simple/")
+#   await micropip.install("pydevices-lvgl", index_urls="https://test.pypi.org/simple/")
 
 name: Publish TestPyPI
 
@@ -30,7 +30,7 @@ permissions:
 jobs:
   prepare:
     runs-on: ubuntu-latest
-    if: github.repository == 'PyDevices/lv_cpython_mod'
+    if: github.repository == 'PyDevices/lvgl-python'
     outputs:
       version: ${{ steps.version.outputs.version }}
     steps:
@@ -68,12 +68,12 @@ jobs:
           fi
 
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-          echo "Publishing lvgl-cpython release $VERSION"
+          echo "Publishing pydevices-lvgl release $VERSION"
 
   build-wheels:
     needs: prepare
     runs-on: ${{ matrix.os }}
-    if: github.repository == 'PyDevices/lv_cpython_mod'
+    if: github.repository == 'PyDevices/lvgl-python'
     strategy:
       fail-fast: false
       matrix:
@@ -99,7 +99,7 @@ jobs:
   build-android-wheels:
     needs: prepare
     runs-on: ubuntu-latest
-    if: github.repository == 'PyDevices/lv_cpython_mod'
+    if: github.repository == 'PyDevices/lvgl-python'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -131,7 +131,7 @@ jobs:
   build-pyodide-wheel:
     needs: prepare
     runs-on: ubuntu-latest
-    if: github.repository == 'PyDevices/lv_cpython_mod'
+    if: github.repository == 'PyDevices/lvgl-python'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -159,9 +159,9 @@ jobs:
           mkdir -p wheelhouse
           shopt -s nullglob
           wheels=(
-            dist/lvgl_cpython-*-pyemscripten_*_wasm32.whl
-            dist/lvgl_cpython-*-pyodide_*_wasm32.whl
-            dist/lvgl_cpython-*-emscripten_*_wasm32.whl
+            dist/pydevices_lvgl-*-pyemscripten_*_wasm32.whl
+            dist/pydevices_lvgl-*-pyodide_*_wasm32.whl
+            dist/pydevices_lvgl-*-emscripten_*_wasm32.whl
           )
           if ((${#wheels[@]} == 0)); then
             echo "error: no wasm wheel in dist/" >&2
@@ -179,7 +179,7 @@ jobs:
   publish:
     needs: [prepare, build-wheels, build-android-wheels, build-pyodide-wheel]
     runs-on: ubuntu-latest
-    if: github.repository == 'PyDevices/lv_cpython_mod'
+    if: github.repository == 'PyDevices/lvgl-python'
     steps:
       - uses: actions/download-artifact@v4
         with:

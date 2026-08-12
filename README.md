@@ -1,38 +1,42 @@
-# lvgl-cpython
+# lvgl-python
 
-Native CPython extension for [LVGL](https://lvgl.io/), generated from [`lv_bindings`](https://github.com/PyDevices/lv_bindings) with **no MicroPython runtime**.
+Native CPython extension for [LVGL](https://lvgl.io/), generated from [`lvgl-bindings`](https://github.com/PyDevices/lvgl-bindings) with **no MicroPython runtime**.
 
-This is the publishing endpoint in the LVGL family: lv_bindings owns the upstream binding tags, and this repo turns those updates into versioned `lvgl-cpython` wheels on TestPyPI. The CircuitPython and MicroPython consumer repos rebuild from the synced bindings rather than publishing their own packages.
+This is the publishing endpoint in the LVGL family: lvgl-bindings owns the upstream binding tags, and this repo turns those updates into versioned `pydevices-lvgl` wheels on TestPyPI. The CircuitPython and MicroPython consumer repos rebuild from the synced bindings rather than publishing their own packages.
 
-> **Pip name:** `lvgl-cpython` · **Import:** `import lvgl as lv
-# import display_driver  # optional; needs pydisplay board_config`
+> **Pip name:** `pydevices-lvgl` · **Import:** `import lvgl as lv`
+
+```python
+import lvgl as lv
+# import display_driver  # optional; needs pydisplay board_config
+```
 
 ## Install
 
-Prebuilt wheels are published as **`lvgl-cpython`** on [TestPyPI](https://test.pypi.org/project/lvgl-cpython/) (import as `lvgl`). CI builds a separate wheel for each CPython minor (3.10–3.14) on Linux x86_64 and Windows x64, **Android** wheels for **3.13–3.14** (`android_21_arm64_v8a`, `android_21_x86_64` per [PEP 738](https://peps.python.org/pep-0738/); cibuildwheel has no `armeabi_v7a` yet), plus a **Pyodide** `pyemscripten_2026_0_wasm32` wheel (`cp314`) — pip/micropip select the tag that matches your interpreter.
+Prebuilt wheels are published as **`pydevices-lvgl`** on [TestPyPI](https://test.pypi.org/project/pydevices-lvgl/) (import as `lvgl`). CI builds a separate wheel for each CPython minor (3.10–3.14) on Linux x86_64 and Windows x64, **Android** wheels for **3.13–3.14** (`android_21_arm64_v8a`, `android_21_x86_64` per [PEP 738](https://peps.python.org/pep-0738/); cibuildwheel has no `armeabi_v7a` yet), plus a **Pyodide** `pyemscripten_2026_0_wasm32` wheel (`cp314`) — pip/micropip select the tag that matches your interpreter.
 
-**Android (python-for-android / pydisplay):** install the matching wheel from TestPyPI when building an APK, or let the `lvglcpython` p4a recipe fetch it (see [pydisplay_android](https://github.com/PyDevices/pydisplay_android)):
+**Android (python-for-android / pydisplay):** install the matching wheel from TestPyPI when building an APK, or let the `pydeviceslvgl` p4a recipe fetch it (see [pydisplay_android](https://github.com/PyDevices/pydisplay_android)):
 
 ```bash
 pip install -i https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ \
-  --only-binary=:all: --platform android_21_arm64_v8a lvgl-cpython
+  --only-binary=:all: --platform android_21_arm64_v8a pydevices-lvgl
 ```
 
 ```bash
-pip install -i https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ lvgl-cpython
+pip install -i https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ pydevices-lvgl
 ```
 
 **Pyodide / micropip** (browser WASM; same project):
 
 ```python
 import micropip
-await micropip.install("lvgl-cpython", index_urls="https://test.pypi.org/simple/")
+await micropip.install("pydevices-lvgl", index_urls="https://test.pypi.org/simple/")
 ```
 
 Pin a release:
 
 ```bash
-pip install -i https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ lvgl-cpython==9.5.0
+pip install -i https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ pydevices-lvgl==9.5.25
 ```
 
 `--extra-index-url https://pypi.org/simple/` lets pip fetch dependencies (e.g. setuptools) from PyPI. Use the same `pip` / `python` you will run (e.g. `pip.exe` with Windows 3.14).
@@ -46,7 +50,7 @@ python -c "import lvgl as lv; lv.init(); lv.deinit(); print('ok')"
 **WSL + Windows Python** — `pip.exe` / `python.exe` on PATH:
 
 ```bash
-pip.exe install -i https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ lvgl-cpython==9.5.0
+pip.exe install -i https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ pydevices-lvgl==9.5.25
 python.exe -c "import lvgl as lv; lv.init(); lv.deinit(); print('ok')"
 ```
 
@@ -113,11 +117,11 @@ Display configuration uses module-level functions (`lv.display_set_flush_cb`, et
 
 ## Links
 
-- [Source](https://github.com/PyDevices/lv_cpython_mod)
-- [Issues](https://github.com/PyDevices/lv_cpython_mod/issues)
+- [Source](https://github.com/PyDevices/lvgl-python)
+- [Issues](https://github.com/PyDevices/lvgl-python/issues)
 - [BUILDING.md](docs/BUILDING.md) — build from source
 - [PUBLISHING.md](docs/PUBLISHING.md) — releases and TestPyPI CI
-- Related: [lv_bindings](https://github.com/PyDevices/lv_bindings), [pydisplay](https://github.com/PyDevices/pydisplay)
+- Related: [lvgl-bindings](https://github.com/PyDevices/lvgl-bindings), [pydisplay](https://github.com/PyDevices/pydisplay)
 
 ## License
 

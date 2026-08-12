@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <script>try{if(localStorage.getItem('pydevices-theme')==='light'){document.documentElement.setAttribute('data-theme','light');}}catch(e){}</script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>lv_cpython_mod — PyDevices</title>
-  <meta name="description" content="CPython LVGL extension — lvgl-cpython wheels for Linux, Windows, Android, and Pyodide. Generated from lv_bindings.">
+  <title>lvgl-python — PyDevices</title>
+  <meta name="description" content="CPython LVGL extension — pydevices-lvgl wheels for Linux, Windows, Android, and Pyodide. Generated from lvgl-bindings.">
   <link rel="icon" type="image/svg+xml" href="https://pydevices.github.io/assets/img/logo.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,28 +18,28 @@
   <section class="hero wrap">
     <div class="hero-lead">
       <div class="hero-brand">
-        <div class="logo-badge product-mark"><img src="img/product.svg" alt="lv_cpython_mod" width="112" height="112"></div>
-        <span class="eyebrow">PyDevices / lv_cpython_mod</span>
+        <div class="logo-badge product-mark"><img src="img/product.svg" alt="lvgl-python" width="112" height="112"></div>
+        <span class="eyebrow">PyDevices / lvgl-python</span>
       </div>
-      <h1>lv_cpython_mod</h1>
+      <h1>lvgl-python</h1>
     </div>
-    <p>CPython extension for <a href="https://lvgl.io/">LVGL</a> — <code>import lvgl</code>, no MicroPython runtime. Binding C is generated from <a href="https://pydevices.github.io/lv_bindings/">lv_bindings</a> (<code>generated/lvgl_python.c</code>) and synced on push to <code>main</code>. Prebuilt <strong>lvgl-cpython</strong> wheels on TestPyPI cover CPython 3.10–3.14 on Linux x86_64 and Windows x64, Android API 21 (<code>arm64_v8a</code> and <code>x86_64</code>, CPython 3.13–3.14), and a Pyodide <code>pyemscripten</code> wasm32 wheel.</p>
+    <p>CPython extension for <a href="https://lvgl.io/">LVGL</a> — <code>import lvgl</code>, no MicroPython runtime. Binding C is generated from <a href="https://pydevices.github.io/lvgl-bindings/">lvgl-bindings</a> (<code>generated/lvgl_python.c</code>) and synced on push to <code>main</code>. Prebuilt <strong>pydevices-lvgl</strong> wheels on TestPyPI cover CPython 3.10–3.14 on Linux x86_64 and Windows x64, Android API 21 (<code>arm64_v8a</code> and <code>x86_64</code>, CPython 3.13–3.14), and a Pyodide <code>pyemscripten</code> wasm32 wheel.</p>
     <p>Use it for LVGL beside pydisplay on the host, in CI, in the browser via micropip, or in an APK through <a href="https://pydevices.github.io/pydisplay_android/">pydisplay_android</a>.</p>
     <div class="cta">
-      <a class="btn primary" href="https://test.pypi.org/project/lvgl-cpython/">TestPyPI</a>
-      <a class="btn" href="https://github.com/PyDevices/lv_cpython_mod">GitHub</a>
-      <a class="btn" href="https://pydevices.github.io/lv_bindings/">lv_bindings</a>
+      <a class="btn primary" href="https://test.pypi.org/project/pydevices-lvgl/">TestPyPI</a>
+      <a class="btn" href="https://github.com/PyDevices/lvgl-python">GitHub</a>
+      <a class="btn" href="https://pydevices.github.io/lvgl-bindings/">lvgl-bindings</a>
     </div>
   </section>
 
   <main class="cards wrap">
     <div class="section-head">
       <h2>Install from TestPyPI</h2>
-      <span class="hint">Import as <code>lvgl</code>; package name is <code>lvgl-cpython</code></span>
+      <span class="hint">Import as <code>lvgl</code>; package name is <code>pydevices-lvgl</code></span>
     </div>
     <div class="install-block">
       <pre><code>pip install -i https://test.pypi.org/simple/ \
-  --extra-index-url https://pypi.org/simple/ lvgl-cpython
+  --extra-index-url https://pypi.org/simple/ pydevices-lvgl
 
 python -c "import lvgl as lv; lv.init(); lv.deinit(); print('ok')"</code></pre>
     </div>
@@ -67,12 +67,12 @@ lv.deinit()</code></pre>
       </div>
       <div class="snippet-card">
         <h3>Android wheel</h3>
-        <p>Install a platform wheel when building an APK, or let the <code>lvglcpython</code> p4a recipe fetch it.</p>
+        <p>Install a platform wheel when building an APK, or let the <code>pydeviceslvgl</code> p4a recipe fetch it.</p>
         <pre><code>pip install -i https://test.pypi.org/simple/ \
   --extra-index-url https://pypi.org/simple/ \
   --only-binary=:all: \
   --platform android_21_arm64_v8a \
-  lvgl-cpython</code></pre>
+  pydevices-lvgl</code></pre>
       </div>
     </div>
 
@@ -84,14 +84,14 @@ lv.deinit()</code></pre>
       <code>pyemscripten_2026_0</code> wheel with
       <code>./scripts/build_pyodide_wheel.sh</code>; artifacts land in
       <a href="./wheels/"><code>wheels/</code></a>. See
-      <a href="https://github.com/PyDevices/lv_cpython_mod/blob/main/docs/BUILDING.md#pyodide--webassembly">BUILDING.md</a>.
+      <a href="https://github.com/PyDevices/lvgl-python/blob/main/docs/BUILDING.md#pyodide--webassembly">BUILDING.md</a>.
     </p>
 
     <div class="section-head" style="margin-top: 36px;">
       <h2>Related</h2>
     </div>
     <ul class="linklist">
-      <li><a href="https://pydevices.github.io/lv_bindings/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>lv_bindings — binding generator (optional for local builds)</a></li>
+      <li><a href="https://pydevices.github.io/lvgl-bindings/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>lvgl-bindings — binding generator (optional for local builds)</a></li>
       <li><a href="https://pydevices.github.io/pydisplay/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>pydisplay</a></li>
       <li><a href="https://pydevices.github.io/pydisplay_android/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>pydisplay_android — APK path</a></li>
     </ul>

@@ -40,7 +40,7 @@ for arg in "$@"; do
 done
 
 if [[ ! -f generated/lvgl_python.c ]]; then
-  echo "error: generated/lvgl_python.c missing — run scripts/sync_from_lv_bindings.sh" >&2
+  echo "error: generated/lvgl_python.c missing — run scripts/sync_from_lvgl_bindings.sh" >&2
   exit 1
 fi
 if [[ ! -f lvgl/lvgl.h ]]; then
@@ -96,7 +96,7 @@ echo "Installing / selecting xbuildenv ${PYODIDE_VERSION} …"
 pyodide xbuildenv install "${PYODIDE_VERSION}"
 pyodide xbuildenv use "${PYODIDE_VERSION}"
 
-echo "Building lvgl-cpython for Pyodide ${PYODIDE_VERSION} (emscripten $(pyodide config get emscripten_version)) …"
+echo "Building pydevices-lvgl for Pyodide ${PYODIDE_VERSION} (emscripten $(pyodide config get emscripten_version)) …"
 rm -rf dist
 mkdir -p dist
 
@@ -105,9 +105,9 @@ pyodide build . -o dist/ -v
 
 shopt -s nullglob
 wheels=(
-  dist/lvgl_cpython-*-pyemscripten_*_wasm32.whl
-  dist/lvgl_cpython-*-pyodide_*_wasm32.whl
-  dist/lvgl_cpython-*-emscripten_*_wasm32.whl
+  dist/pydevices_lvgl-*-pyemscripten_*_wasm32.whl
+  dist/pydevices_lvgl-*-pyodide_*_wasm32.whl
+  dist/pydevices_lvgl-*-emscripten_*_wasm32.whl
 )
 if ((${#wheels[@]} == 0)); then
   echo "error: no Pyodide/wasm wheel produced in dist/" >&2
@@ -121,10 +121,13 @@ printf '  %s\n' "${wheels[@]}"
 if [[ "$COPY_TO_WEB" -eq 1 ]]; then
   mkdir -p "$OUT_WHEELS"
   # Keep only current wasm wheels in the Pages-served folder.
-  rm -f "$OUT_WHEELS"/lvgl_cpython-*-pyemscripten_*_wasm32.whl \
+  rm -f "$OUT_WHEELS"/pydevices_lvgl-*-pyemscripten_*_wasm32.whl \
+        "$OUT_WHEELS"/pydevices_lvgl-*-pyodide_*_wasm32.whl \
+        "$OUT_WHEELS"/pydevices_lvgl-*-emscripten_*_wasm32.whl \
+        "$OUT_WHEELS"/pydevices_lvgl-pyemscripten_2026_0_wasm32.whl \
+        "$OUT_WHEELS"/lvgl_cpython-*-pyemscripten_*_wasm32.whl \
         "$OUT_WHEELS"/lvgl_cpython-*-pyodide_*_wasm32.whl \
-        "$OUT_WHEELS"/lvgl_cpython-*-emscripten_*_wasm32.whl \
-        "$OUT_WHEELS"/lvgl_cpython-pyemscripten_2026_0_wasm32.whl
+        "$OUT_WHEELS"/lvgl_cpython-*-emscripten_*_wasm32.whl
   cp -f "${wheels[@]}" "$OUT_WHEELS/"
   # Index for micropip consumers (pydisplay pyodide.html): must name a real wheel file.
   primary="${wheels[0]}"
@@ -137,7 +140,7 @@ if [[ "$COPY_TO_WEB" -eq 1 ]]; then
   primary_base="$(basename "$primary")"
   printf '%s\n' "{\"wheel\": \"${primary_base}\"}" > "$OUT_WHEELS/lvgl.json"
   echo "Copied to $OUT_WHEELS/"
-  printf '  %s\n' "$OUT_WHEELS"/lvgl_cpython-*.whl
+  printf '  %s\n' "$OUT_WHEELS"/pydevices_lvgl-*.whl
   echo "  $OUT_WHEELS/lvgl.json → ${primary_base}"
 fi
 
@@ -145,7 +148,7 @@ cat <<EOF
 
 Next:
   # After a tagged Publish TestPyPI release (preferred for pydisplay):
-  #   await micropip.install("lvgl-cpython", index_urls="https://test.pypi.org/simple/")
+  #   await micropip.install("pydevices-lvgl", index_urls="https://test.pypi.org/simple/")
   #
   # Local micropip (needs COI-friendly server if testing from a page):
   #   await micropip.install('./wheels/<wheel-name>')

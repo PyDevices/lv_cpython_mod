@@ -16,7 +16,7 @@ GENERATED_PYI = ROOT / "generated" / "lvgl.pyi"
 
 if not GENERATED.is_file():
     raise SystemExit(
-        f"{GENERATED} not found. Run: {ROOT / 'scripts/sync_from_lv_bindings.sh'}"
+        f"{GENERATED} not found. Run: {ROOT / 'scripts/sync_from_lvgl_bindings.sh'}"
     )
 
 if not (LVGL_DIR / "lvgl.h").is_file():
@@ -160,7 +160,7 @@ class Win32LinkRspBuildExt(build_ext):
 
 
 setup(
-    name="lvgl-cpython",
+    name="pydevices-lvgl",
     description="LVGL bindings for CPython (generated)",
     ext_modules=[ext],
     py_modules=["display_driver"],
