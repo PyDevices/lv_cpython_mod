@@ -58,6 +58,29 @@ To build from source instead, see **[building.md](docs/building.md)**. Release a
 
 ## Usage
 
+### 1. PyDevices Standard Quickstart (Recommended)
+
+When using `pydevices` board configs, `display_driver` sets up the display, input devices, and background timer automatically:
+
+```python
+import display_driver  # noqa: F401 - initializes display, input, and timer
+import lvgl as lv
+from display_driver import runtime
+
+scr = lv.screen_active()
+label = lv.label(scr)
+label.set_text("Hello from PyDevices LVGL!")
+label.center()
+
+# Standalone scripts: keep the process alive
+# Interactive REPL (python -i): run_forever() returns immediately so the prompt is usable!
+runtime.run_forever()
+```
+
+### 2. Standalone Raw LVGL Setup (Custom backends)
+
+For custom setups without a `pydevices` board config:
+
 ```python
 import lvgl as lv
 
@@ -82,6 +105,7 @@ scr.send_event(lv.EVENT.CLICKED, None)
 
 lv.deinit()
 ```
+
 
 ## Type checking
 
