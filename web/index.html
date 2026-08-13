@@ -4,13 +4,13 @@
   <meta charset="utf-8">
   <script>try{if(localStorage.getItem('pydevices-theme')==='light'){document.documentElement.setAttribute('data-theme','light');}}catch(e){}</script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>lvgl-python — PyDevices</title>
-  <meta name="description" content="CPython LVGL extension — pydevices-lvgl wheels for Linux, Windows, Android, and Pyodide. Generated from lvgl-bindings.">
+  <title>lvgl-python — CPython &amp; Pyodide WASM LVGL Extension</title>
+  <meta name="description" content="CPython LVGL extension with binary wheels for Linux, Windows, macOS, Android, and Pyodide WebAssembly.">
   <link rel="icon" type="image/svg+xml" href="https://pydevices.github.io/assets/img/logo.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap">
-  <link rel="stylesheet" href="https://pydevices.github.io/assets/css/site.css">
+  <link rel="stylesheet" href="./vendor/pydevices-chrome/site.css">
 </head>
 <body>
   <div id="pydevices-site-header"></div>
@@ -18,87 +18,42 @@
   <section class="hero wrap">
     <div class="hero-lead">
       <div class="hero-brand">
-        <div class="logo-badge product-mark"><img src="img/product.svg" alt="lvgl-python" width="112" height="112"></div>
-        <span class="eyebrow">PyDevices / lvgl-python</span>
+        <div class="logo-badge product-mark" style="background: linear-gradient(135deg, var(--tier-3-blue), #2563eb);"><img src="img/product.svg" alt="lvgl-python" width="112" height="112"></div>
+        <span class="eyebrow">lvgl-python</span>
       </div>
-      <h1>lvgl-python</h1>
+      <h1>lvgl-python — CPython &amp; Pyodide WASM LVGL extension.</h1>
     </div>
-    <p>CPython extension for <a href="https://lvgl.io/">LVGL</a> — <code>import lvgl</code>, no MicroPython runtime. Binding C is generated from <a href="https://pydevices.github.io/lvgl-bindings/">lvgl-bindings</a> (<code>generated/lvgl_python.c</code>) and synced on push to <code>main</code>. Prebuilt <strong>pydevices-lvgl</strong> wheels on TestPyPI cover CPython 3.10–3.14 on Linux x86_64 and Windows x64, Android API 21 (<code>arm64_v8a</code> and <code>x86_64</code>, CPython 3.13–3.14), and a Pyodide <code>pyemscripten</code> wasm32 wheel.</p>
-    <p>Use it with PyDevices on the host, in CI, in the browser via micropip, or in an APK through <a href="https://pydevices.github.io/pydevices-android-template/">pydevices-android-template</a>.</p>
+    <p><code>lvgl-python</code> provides the desktop CPython extension and WebAssembly wheels for LVGL. It allows the exact same LVGL python code to run on Linux, Windows, macOS, Android (via python-for-android), and inside desktop web browsers via Pyodide.</p>
     <div class="cta">
-      <a class="btn primary" href="https://test.pypi.org/project/pydevices-lvgl/">TestPyPI</a>
-      <a class="btn" href="https://github.com/PyDevices/lvgl-python">GitHub</a>
-      <a class="btn" href="https://pydevices.github.io/lvgl-bindings/">lvgl-bindings</a>
+      <a class="btn primary" style="background: #24292e; color: #fff; border-color: #24292e;" href="https://github.com/PyDevices/lvgl-python">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.9a3.4 3.4 0 0 0-1-2.6c3-.3 6-1.5 6-6.5a5 5 0 0 0-1.4-3.5 4.6 4.6 0 0 0-.1-3.5s-1.1-.3-3.5 1.3a12 12 0 0 0-6 0C6.6 1.7 5.5 2 5.5 2a4.6 4.6 0 0 0-.1 3.5A5 5 0 0 0 4 9c0 5 3 6.2 6 6.5a3.4 3.4 0 0 0-1 2.6V22"/></svg>
+        GitHub Repo
+      </a>
+      <a class="btn" style="border-color: var(--tier-3-blue); color: var(--tier-3-blue);" href="https://pydevices.github.io/lvgl-bindings/">lvgl-bindings</a>
+      <a class="btn" style="border-color: var(--tier-5-steel); color: var(--tier-5-steel);" href="https://github.com/PyDevices/cmods">cmods Workspace</a>
+      <a class="btn" style="border-color: var(--tier-1-amber); color: var(--tier-1-amber);" href="https://pydevices.github.io/pydevices/">pydevices Core</a>
     </div>
   </section>
 
-  <main class="cards wrap">
+  <main class="wrap" style="padding-bottom: 60px;">
     <div class="section-head">
-      <h2>Install from TestPyPI</h2>
-      <span class="hint">Import as <code>lvgl</code>; package name is <code>pydevices-lvgl</code></span>
-    </div>
-    <div class="install-block">
-      <pre><code>pip install -i https://test.pypi.org/simple/ \
-  --extra-index-url https://pypi.org/simple/ pydevices-lvgl
-
-python -c "import lvgl as lv; lv.init(); lv.deinit(); print('ok')"</code></pre>
+      <h2>Installation Workflows</h2>
+      <span class="hint">Precompiled binary wheels published on TestPyPI &amp; GitHub Releases</span>
     </div>
 
-    <div class="section-head" style="margin-top: 36px;">
-      <h2>Usage excerpt</h2>
-    </div>
-    <div class="snippet-grid">
-      <div class="snippet-card">
-        <h3>Hello label</h3>
-        <p>Display setup uses module-level functions, not methods on the display object.</p>
-        <pre><code>import lvgl as lv
+    <div class="spec-block">
+      <pre><code># Install CPython extension on Desktop (Linux / Windows / macOS):
+pip install --extra-index-url https://test.pypi.org/simple/ pydevices-lvgl
 
-lv.init()
-disp = lv.display_create(240, 240)
-lv.display_set_color_format(disp, lv.COLOR_FORMAT.RGB565)
-buf = lv.draw_buf_create(240, 240, lv.COLOR_FORMAT.RGB565, 0)
-lv.display_set_draw_buffers(disp, buf, None)
-lv.display_set_render_mode(disp, lv.DISPLAY_RENDER_MODE.PARTIAL)
-
-scr = lv.screen_active()
-label = lv.label(scr)
-label.set_text("Hello")
-lv.deinit()</code></pre>
-      </div>
-      <div class="snippet-card">
-        <h3>Android wheel</h3>
-        <p>Install a platform wheel when building an APK, or let the <code>pydeviceslvgl</code> p4a recipe fetch it.</p>
-        <pre><code>pip install -i https://test.pypi.org/simple/ \
-  --extra-index-url https://pypi.org/simple/ \
-  --only-binary=:all: \
-  --platform android_21_arm64_v8a \
-  pydevices-lvgl</code></pre>
-      </div>
+# Pyodide / PyScript Browser Integration:
+import pyodide
+await pyodide.loadPackage("https://pydevices.github.io/pydevices-examples/web/pyscript/wheels/lvgl-0.1.0-cp311-cp311-emscripten_3_1_46_wasm32.whl")</code></pre>
     </div>
-
-    <div class="section-head" style="margin-top: 36px;">
-      <h2>Pyodide / WebAssembly</h2>
-    </div>
-    <p style="max-width: 42rem; margin: 0 0 1rem; color: var(--ink-soft);">
-      Native TestPyPI wheels do not run in Pyodide. Build a
-      <code>pyemscripten_2026_0</code> wheel with
-      <code>./scripts/build_pyodide_wheel.sh</code>; artifacts land in
-      <a href="./wheels/"><code>wheels/</code></a>. See
-      <a href="https://github.com/PyDevices/lvgl-python/blob/main/docs/building.md#pyodide--webassembly">building.md</a>.
-    </p>
-
-    <div class="section-head" style="margin-top: 36px;">
-      <h2>Related</h2>
-    </div>
-    <ul class="linklist">
-      <li><a href="https://pydevices.github.io/lvgl-bindings/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>lvgl-bindings — binding generator (optional for local builds)</a></li>
-      <li><a href="https://pydevices.github.io/pydevices-examples/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>pydevices-examples</a></li>
-      <li><a href="https://pydevices.github.io/pydevices-android-template/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>pydevices-android-template — APK path</a></li>
-    </ul>
   </main>
 
-    <div id="pydevices-site-footer"></div>
-  <script src="https://pydevices.github.io/assets/js/site-chrome.js"></script>
-  <script src="https://pydevices.github.io/assets/js/theme-toggle.js"></script>
+  <div id="pydevices-site-footer"></div>
+  <script src="./vendor/pydevices-chrome/site-chrome.js"></script>
+  <script src="./vendor/pydevices-chrome/theme-toggle.js"></script>
+  <script src="./vendor/pydevices-chrome/tree-nav.js"></script>
 </body>
 </html>
