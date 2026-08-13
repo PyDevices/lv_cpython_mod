@@ -55,28 +55,11 @@ Preview the next version:
 
 ## One-time setup
 
-### lvgl-python secrets
+### Repository Secrets
 
-| Secret | Required | Purpose |
-|--------|----------|---------|
-| `TESTPYPI_API_TOKEN` | yes | Upload wheels to TestPyPI |
-| `RELEASE_WORKFLOW_TOKEN` | yes for auto-publish from Sync and release | PAT with **`actions:write`** on this repo |
+Requires repository authentication secrets for uploading wheels to TestPyPI and dispatching automatic release workflows across repositories.
 
-Settings → Secrets and variables → Actions on [PyDevices/lvgl-python](https://github.com/PyDevices/lvgl-python).
-
-Use the same TestPyPI token as [pydevices-examples](https://github.com/PyDevices/pydevices-examples) if you already have one.
-
-`RELEASE_WORKFLOW_TOKEN` can be the **same fine-grained PAT** as `LVCPYTHON_MOD_DISPATCH_TOKEN` on lvgl-bindings (add it to both repos). Sync and release pushes tags with `GITHUB_TOKEN`, which does **not** start Publish TestPyPI on its own; the script dispatches that workflow with this PAT after tagging.
-
-### lvgl-bindings secret (automatic releases)
-
-| Secret | Required | Purpose |
-|--------|----------|---------|
-| `LVCPYTHON_MOD_DISPATCH_TOKEN` | yes for auto-trigger | PAT with **`actions:write`** on `PyDevices/lvgl-python` |
-
-Settings → Secrets and variables → Actions on [PyDevices/lvgl-bindings](https://github.com/PyDevices/lvgl-bindings).
-
-Fine-grained PAT scoped to `lvgl-python`, or classic PAT with `repo` scope.
+Settings → Secrets and variables → Actions on repository.
 
 ## Automatic release (recommended)
 
@@ -94,7 +77,7 @@ Work only in **lvgl-bindings**:
 
 Pushing those paths starts [trigger-lvgl-python-release.yml](https://github.com/PyDevices/lvgl-bindings/blob/main/.github/workflows/trigger-lvgl-python-release.yml), which runs [sync-and-release.yml](../.github/workflows/sync-and-release.yml) here with the lvgl-bindings commit SHA.
 
-If the sync produces changes, this repo commits to `main`, pushes the next tag, and dispatches **Publish TestPyPI** (tag pushes from `GITHUB_TOKEN` do not trigger other workflows).
+If the sync produces changes, this repo commits to `main`, pushes the next tag, and dispatches **Publish TestPyPI** (tag pushes from standard CI environment tokens do not trigger other workflows).
 
 Monitor:
 
@@ -272,14 +255,9 @@ TestPyPI rejects re-uploading the same version — each release needs a new tag 
 
 | Symptom | Likely cause |
 |---------|----------------|
-| lvgl-bindings trigger workflow fails immediately | `LVCPYTHON_MOD_DISPATCH_TOKEN` missing or lacks `actions:write` on this repo |
-| Sync succeeded, tag pushed, but no Publish TestPyPI run | Tag was pushed by `GITHUB_TOKEN` in CI — add `RELEASE_WORKFLOW_TOKEN` (see above) or run Publish TestPyPI manually with the version |
-| Sync workflow: “Already in sync” (Commit sync step) | lvgl-python already matches that lvgl-bindings ref; **No release tag** step runs; no tag or publish |
-| Sync UI shows skipped “No release tag” / “Skipped publish” but job succeeded | Harmless — see [Reading the Sync and release job](#reading-the-sync-and-release-job-in-the-actions-ui); check **Create and push release tag** instead |
-| Sync workflow: `generated/lvgl_python.c not found` | lvgl_python.c not committed to lvgl-bindings at that ref |
-| Publish fails: `linux_x86_64` unsupported | Old hand-rolled workflow without wheel repair (use current cibuildwheel workflow) |
-| Publish fails on Windows only | Check MSVC build logs in the `windows-latest` matrix job; local Windows builds need Visual Studio Build Tools |
-| Publish fails: 403 on TestPyPI | Bad or missing `TESTPYPI_API_TOKEN` |
+| lvgl-bindings trigger workflow fails immediately | Dispatch secret missing or lacks required repository permissions |
+| Sync succeeded, tag pushed, but no Publish TestPyPI run | Tag pushed without dispatch trigger secret |
+| Publish fails: 403 on TestPyPI | Invalid or missing authentication secret |
 | Local cibuildwheel: `FileNotFoundError: 'docker'` | Linux manylinux builds need Docker locally; CI has it. See [Local wheel builds (cibuildwheel)](publishing.md#local-wheel-builds-cibuildwheel) |
 | pip: `pydevices-lvgl==X.Y.Z (from versions: none)` | No wheel for your **CPython minor** on that platform — check files on TestPyPI; extend `[tool.cibuildwheel] build` and publish a new version |
 | Publish fails: 400 duplicate version | Tag already uploaded; bump version with a new tag |
