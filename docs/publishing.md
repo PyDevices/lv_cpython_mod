@@ -23,7 +23,7 @@ lvgl-python: Sync and release
 lvgl-python: Publish release packages     (on published Release or exact-tag retry)
   cibuildwheel → Linux manylinux + Windows amd64 + Android (PEP 738)
   + scripts/build_pyodide_wheel.sh → pyemscripten_2026_0 wasm32
-  → smoke tests (native) → TestPyPI Trusted Publishing
+  → smoke tests (native) → TestPyPI API-token upload
 ```
 
 ## Version numbers
@@ -58,6 +58,9 @@ Preview the next version:
 ### Repository Secrets
 
 Requires repository authentication secrets for uploading wheels to TestPyPI and dispatching automatic release workflows across repositories.
+
+- `TESTPYPI_API_TOKEN`: token owned by `bdbarnett` while the PyDevices
+  TestPyPI organization request is pending.
 
 Settings → Secrets and variables → Actions on repository.
 
@@ -154,7 +157,7 @@ Preview without tagging:
 | Workflow | Trigger | What it does |
 |----------|---------|--------------|
 | [sync-and-release.yml](../.github/workflows/sync-and-release.yml) | Manual; called from lvgl-bindings | Sync from GitHub → commit versioned `main` → publish GitHub Release |
-| [publish-release-packages.yml](../.github/workflows/publish-release-packages.yml) | Published GitHub Release; exact-tag manual retry | Shared **cibuildwheel** matrix: Linux manylinux + Windows amd64 + Android (`android_21_*`) + **Pyodide** `pyemscripten_2026_0_wasm32`; Trusted Publishing to TestPyPI |
+| [publish-release-packages.yml](../.github/workflows/publish-release-packages.yml) | Published GitHub Release; exact-tag manual retry | Shared **cibuildwheel** matrix: Linux manylinux + Windows amd64 + Android (`android_21_*`) + **Pyodide** `pyemscripten_2026_0_wasm32`; API-token upload to TestPyPI |
 
 ### Reading the Sync and release job in the Actions UI
 
@@ -265,7 +268,7 @@ version; exact-tag retries use `skip-existing` to finish an interrupted upload.
 |---------|----------------|
 | lvgl-bindings trigger workflow fails immediately | Dispatch secret missing or lacks required repository permissions |
 | Sync committed but no GitHub Release appeared | `RELEASE_WORKFLOW_TOKEN` is missing or cannot create releases |
-| Publish fails: 403 on TestPyPI | Trusted Publisher repository, workflow, or `testpypi` environment does not match |
+| Publish fails: 403 on TestPyPI | `TESTPYPI_API_TOKEN` is missing, expired, or lacks access to the project |
 | Local cibuildwheel: `FileNotFoundError: 'docker'` | Linux manylinux builds need Docker locally; CI has it. See [Local wheel builds (cibuildwheel)](publishing.md#local-wheel-builds-cibuildwheel) |
 | pip: `pydevices-lvgl==X.Y.Z (from versions: none)` | No wheel for your **CPython minor** on that platform — check files on TestPyPI; extend `[tool.cibuildwheel] build` and publish a new version |
 | Publish fails: 400 duplicate version | Tag already uploaded; bump version with a new tag |
