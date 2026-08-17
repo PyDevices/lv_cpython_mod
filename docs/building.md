@@ -203,7 +203,7 @@ export P4A_pydeviceslvgl_DIR=/path/to/lvgl-python   # optional in-tree fallback
 ## Pyodide / WebAssembly
 
 Native Linux/macOS/Windows wheels from TestPyPI are **not** loadable in Pyodide.
-Each **Publish TestPyPI** release also builds a `pyemscripten_2026_0` wasm32
+Each **Publish release packages** run also builds a `pyemscripten_2026_0` wasm32
 wheel. Preferred install in the browser:
 
 ```python

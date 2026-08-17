@@ -147,7 +147,7 @@ fi
 cat <<EOF
 
 Next:
-  # After a tagged Publish TestPyPI release (preferred for pydevices-examples):
+  # After a published GitHub Release (preferred for pydevices-examples):
   #   await micropip.install("pydevices-lvgl", index_urls="https://test.pypi.org/simple/")
   #
   # Local micropip (needs COI-friendly server if testing from a page):

@@ -1,5 +1,5 @@
 # Sync generated/lvgl_python.c, lv_conf.h, and lvgl from PyDevices/lvgl-bindings on GitHub,
-# commit to main, push the next auto-version tag, and trigger Publish TestPyPI.
+# commit the next version to main and publish its GitHub Release.
 #
 # Run from the GitHub Actions tab (workflow_dispatch) or without cloning this repo:
 #   gh workflow run sync-and-release.yml --repo PyDevices/lvgl-python
@@ -48,7 +48,7 @@ jobs:
       - name: Sync from lvgl-bindings
         run: ./scripts/sync_from_lvgl_bindings.sh --ref "${{ steps.lvgl_bindings_ref.outputs.ref }}"
 
-      - name: Commit sync
+      - name: Commit versioned sync
         id: commit
         env:
           LV_BINDINGS_REF: ${{ steps.lvgl_bindings_ref.outputs.ref }}
@@ -61,47 +61,39 @@ jobs:
             echo "changed=false" >> "$GITHUB_OUTPUT"
             echo "Already in sync with lvgl-bindings ${LV_BINDINGS_REF}."
           else
-            git add generated/lvgl_python.c generated/lvgl.pyi lv_conf.h display_driver.py lvgl
+            git fetch --tags origin
+            VERSION="$(./scripts/next_release_version.sh)"
+            printf '%s\n' "$VERSION" > VERSION
+            git add VERSION generated/lvgl_python.c generated/lvgl.pyi lv_conf.h display_driver.py lvgl
             git commit -m "Sync bindings and LVGL from lvgl-bindings ${LV_BINDINGS_REF}."
             git push origin HEAD:main
             echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
             echo "Committed and pushed sync from lvgl-bindings ${LV_BINDINGS_REF}."
           fi
 
-      - name: Create and push release tag
-        if: inputs.skip_publish != true && steps.commit.outputs.changed == 'true'
-        id: tag
-        env:
-          LV_BINDINGS_REF: ${{ steps.lvgl_bindings_ref.outputs.ref }}
-        run: |
-          set -euo pipefail
-          git fetch --tags origin
-          VERSION="$(./scripts/next_release_version.sh)"
-          ./scripts/publish_release_tag.sh "$VERSION" --push
-          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
-
-      # Tag pushes from GITHUB_TOKEN do not start other workflows — dispatch Publish
-      # TestPyPI with a PAT that has actions:write (same secret class as lvgl-bindings).
-      - name: Dispatch Publish TestPyPI
+      - name: Publish GitHub Release
         if: inputs.skip_publish != true && steps.commit.outputs.changed == 'true'
         env:
           GH_TOKEN: ${{ secrets.RELEASE_WORKFLOW_TOKEN }}
-          VERSION: ${{ steps.tag.outputs.version }}
+          VERSION: ${{ steps.commit.outputs.version }}
         run: |
           set -euo pipefail
           if [[ -z "${GH_TOKEN:-}" ]]; then
-            echo "Error: RELEASE_WORKFLOW_TOKEN secret is not set; cannot dispatch Publish TestPyPI." >&2
+            echo "Error: RELEASE_WORKFLOW_TOKEN is required to publish the release." >&2
             exit 1
           fi
-          gh workflow run publish-testpypi.yml \
+          gh release create "v${VERSION}" \
             --repo "${{ github.repository }}" \
-            -f "version=${VERSION}"
-          echo "Dispatched Publish TestPyPI for ${VERSION}"
+            --target "$(git rev-parse HEAD)" \
+            --title "v${VERSION}" \
+            --generate-notes
+          echo "Published GitHub Release v${VERSION}"
 
       - name: No release tag
         if: inputs.skip_publish != true && steps.commit.outputs.changed != 'true'
-        run: echo "No changes after sync — release tag and TestPyPI publish skipped."
+        run: echo "No changes after sync — GitHub Release skipped."
 
       - name: Skipped publish
         if: inputs.skip_publish == true
-        run: echo "skip_publish=true — no tag pushed; TestPyPI publish not triggered."
+        run: echo "skip_publish=true — no GitHub Release was published."
