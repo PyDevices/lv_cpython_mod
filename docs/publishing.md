@@ -57,12 +57,11 @@ Preview the next version:
 
 ### Repository Secrets
 
-Requires repository authentication secrets for uploading wheels to TestPyPI and dispatching automatic release workflows across repositories.
-
-- `TESTPYPI_API_TOKEN`: token owned by `bdbarnett` while the PyDevices
-  TestPyPI organization request is pending.
-
-Settings → Secrets and variables → Actions on repository.
+Required secrets, their ownership, and how TestPyPI token auth is wired into the upload action
+are documented org-wide in
+[dotgithub/docs/publishing-automation.md — Automation and credentials](https://github.com/PyDevices/dotgithub/blob/main/docs/publishing-automation.md#automation-and-credentials).
+This repo needs `TESTPYPI_API_TOKEN` (and `RELEASE_WORKFLOW_TOKEN` for the cross-repo LVGL sync
+trigger); do not restate their ownership here.
 
 ## Automatic release (recommended)
 
