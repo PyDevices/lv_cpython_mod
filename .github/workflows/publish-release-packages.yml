@@ -15,50 +15,12 @@ permissions:
   contents: read
 
 jobs:
-  prepare-release:
-    runs-on: ubuntu-latest
-    outputs:
-      release-ref: ${{ steps.release.outputs.release-ref }}
-      version: ${{ steps.release.outputs.version }}
-    steps:
-      - name: Resolve and validate the release tag
-        id: release
-        env:
-          RELEASE_TAG: ${{ github.event.release.tag_name || inputs.release-ref }}
-        run: |
-          if [[ ! "$RELEASE_TAG" =~ ^v([0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
-            echo "Release ref must be an exact vX.Y.Z tag: $RELEASE_TAG" >&2
-            exit 1
-          fi
-          echo "release-ref=$RELEASE_TAG" >> "$GITHUB_OUTPUT"
-          echo "version=${BASH_REMATCH[1]}" >> "$GITHUB_OUTPUT"
-
-  build-native-and-wasm-testpypi-wheels:
-    needs: prepare-release
-    uses: PyDevices/.github/.github/workflows/reusable-build-native-and-wasm-wheels.yml@publishing-v1
+  publish:
+    uses: PyDevices/.github/.github/workflows/reusable-publish-release-packages.yml@publishing-v2
     with:
+      build-kind: native-and-wasm
       distribution-name: pydevices-lvgl
       wheel-filename-prefix: pydevices_lvgl
-      release-ref: ${{ needs.prepare-release.outputs.release-ref }}
-      version: ${{ needs.prepare-release.outputs.version }}
       checkout-submodules: true
-
-  publish-validated-wheels-to-testpypi:
-    needs:
-      - prepare-release
-      - build-native-and-wasm-testpypi-wheels
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download validated wheels
-        uses: actions/download-artifact@v4
-        with:
-          name: testpypi-pydevices-lvgl-${{ needs.prepare-release.outputs.version }}
-          path: dist
-
-      - name: Publish wheels to TestPyPI with API token
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          user: __token__
-          password: ${{ secrets.TESTPYPI_API_TOKEN }}
-          repository-url: https://test.pypi.org/legacy/
-          skip-existing: true
+      release-ref: ${{ inputs.release-ref }}
+    secrets: inherit
