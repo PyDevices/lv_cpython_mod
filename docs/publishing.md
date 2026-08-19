@@ -22,7 +22,7 @@ lvgl-python: Sync and release
            ▼
 lvgl-python: Publish release packages     (on published Release or exact-tag retry)
   cibuildwheel → Linux manylinux + Windows amd64 + Android (PEP 738)
-  + scripts/build_pyodide_wheel.sh → pyemscripten_2026_0 wasm32
+                 + Pyodide wasm32 (pyemscripten_2025_0 and _2026_0)
   → smoke tests (native) → TestPyPI API-token upload
 ```
 
@@ -252,7 +252,7 @@ await micropip.install("pydevices-lvgl", index_urls="https://test.pypi.org/simpl
 import lvgl as lv
 ```
 
-Local `web/wheels/` + Pages remain useful for smoke-testing a wheel before the next tag; **releases** ship the wasm wheel on TestPyPI alongside the native ones.
+**Releases** ship the wasm wheels on TestPyPI alongside the native ones. To smoke-test before tagging, build locally with `pipx run cibuildwheel --platform pyodide` and serve `wheelhouse/` yourself.
 
 Releases before the multi-Python wheel matrix may only have `cp312` wheels; upgrade to the latest tag. To add a new Python line (e.g. 3.15), extend `build` in `pyproject.toml` `[tool.cibuildwheel]` and publish a new version.
 

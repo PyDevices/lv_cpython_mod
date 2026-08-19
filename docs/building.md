@@ -213,15 +213,17 @@ await micropip.install("pydevices-lvgl", index_urls="https://test.pypi.org/simpl
 
 ### Local rebuild (optional)
 
-- Host **Python 3.14** (match the xbuildenv CPython)
-- Node.js (for Emscripten)
-- Network on first run (downloads xbuildenv + emsdk)
+- Network on first run (downloads the Pyodide xbuildenv + emsdk)
+
+cibuildwheel drives pyodide-build and the emscripten toolchain, so there is no
+separate script and no host-Python requirement to match:
 
 ```bash
-./scripts/build_pyodide_wheel.sh
-./scripts/build_pyodide_wheel.sh --no-copy   # dist/ only
-PYODIDE_VERSION=314.0.0 ./scripts/build_pyodide_wheel.sh
+pipx run cibuildwheel --platform pyodide
 ```
+
+Wheels land in `wheelhouse/`. This is the same command CI runs, and it builds
+every Pyodide target the `build` selector in `pyproject.toml` allows.
 
 ## Architecture
 
