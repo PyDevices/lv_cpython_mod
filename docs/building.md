@@ -192,7 +192,7 @@ Editable install does **not** recompile on import; rerun `pip install -e .` (or
 
 Prefer a **prebuilt** `pydevices-lvgl` wheel tagged `android_21_*` for your ABI
 (`arm64_v8a` or `x86_64`) from TestPyPI. The
-[pydevices-android-template `pydeviceslvgl` p4a recipe](https://github.com/PyDevices/pydevices-android-template/tree/main/p4a_recipes/pydeviceslvgl)
+[android-template `pydeviceslvgl` p4a recipe](https://github.com/PyDevices/android-template/tree/main/p4a_recipes/pydeviceslvgl)
 installs a matching wheel when `--extra-index-url` points at TestPyPI, otherwise
 cross-compiles from this tree (`git submodule update --init lvgl`).
 
