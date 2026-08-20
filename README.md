@@ -1,6 +1,6 @@
 # lvgl-python
 
-Native CPython extension for [LVGL](https://lvgl.io/), generated from [`lvgl-bindings`](https://github.com/PyDevices/lvgl-bindings) with **no MicroPython runtime**.
+Native CPython extension for [LVGL](https://lvgl.io/), generated from [`lvgl-bindings`](https://github.com/PyDevices/lvgl-bindings) with **no MicroPython interpreter**.
 
 This is the publishing endpoint in the LVGL family: it turns synced bindings into versioned `pydevices-lvgl` wheels on TestPyPI. See [lvgl-bindings — The LVGL family](https://github.com/PyDevices/lvgl-bindings#the-lvgl-family) for how the family fits together.
 
@@ -65,7 +65,7 @@ When using `pydevices` board configs, `display_driver` sets up the display, inpu
 ```python
 import display_driver  # noqa: F401 - initializes display, input, and timer
 import lvgl as lv
-from display_driver import runtime
+from display_driver import app
 
 scr = lv.screen_active()
 label = lv.label(scr)
@@ -73,8 +73,8 @@ label.set_text("Hello from PyDevices LVGL!")
 label.center()
 
 # Standalone scripts: keep the process alive
-# Interactive REPL (python -i): run_forever() returns immediately so the prompt is usable!
-runtime.run_forever()
+# Interactive REPL (python -i): app.run() returns immediately so the prompt is usable!
+app.run()
 ```
 
 ### 2. Standalone Raw LVGL Setup (Custom backends)

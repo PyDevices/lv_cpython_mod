@@ -38,7 +38,7 @@ Do that when you need to:
 
 - Edit `lvgl-bindings/binding/emit_cpython.py` (e.g. `max_phase`) or other emitters
 - Run `./regenerate_lvpy.sh` in lvgl-bindings, then sync the output into this repo
-- Run the shared cross-runtime smoke script at `lvgl-bindings/tools/test_lvgl_smoke.py`
+- Run the shared cross-interpreter smoke script at `lvgl-bindings/tools/test_lvgl_smoke.py`
 
 To refresh vendored files from GitHub **without** a sibling clone, use:
 
