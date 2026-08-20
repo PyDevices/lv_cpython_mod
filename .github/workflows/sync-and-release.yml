@@ -72,17 +72,27 @@ jobs:
             echo "Committed and pushed sync from lvgl-bindings ${LV_BINDINGS_REF}."
           fi
 
+      # Not GITHUB_TOKEN: a Release created with it does not trigger
+      # `on: release` workflows, so publish-release-packages.yml would never
+      # run and nothing would reach TestPyPI. An App installation token does
+      # trigger them.
+      - name: Mint an installation token for this repository
+        id: app-token
+        if: inputs.skip_publish != true && steps.commit.outputs.changed == 'true'
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.PYDEVICES_APP_ID }}
+          private-key: ${{ secrets.PYDEVICES_APP_PRIVATE_KEY }}
+          owner: PyDevices
+          repositories: lvgl-python
+
       - name: Publish GitHub Release
         if: inputs.skip_publish != true && steps.commit.outputs.changed == 'true'
         env:
-          GH_TOKEN: ${{ secrets.RELEASE_WORKFLOW_TOKEN }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
           VERSION: ${{ steps.commit.outputs.version }}
         run: |
           set -euo pipefail
-          if [[ -z "${GH_TOKEN:-}" ]]; then
-            echo "Error: RELEASE_WORKFLOW_TOKEN is required to publish the release." >&2
-            exit 1
-          fi
           gh release create "v${VERSION}" \
             --repo "${{ github.repository }}" \
             --target "$(git rev-parse HEAD)" \
